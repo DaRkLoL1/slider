@@ -1,5 +1,4 @@
 const webpackConfig = require('./webpack.config');
-const webpackPlugin = require('webpack');
 
 module.exports = function(config) {
     config.set({
@@ -22,23 +21,13 @@ module.exports = function(config) {
             'test/**/*.ts': ['webpack']
         },
         plugins: [
-          'karma-jasmine',
-          'karma-chrome-launcher',
-          'karma-jasmine-jquery',
-          'karma-jquery',
-          'karma-spec-reporter',
-          'karma-webpack', 
+          '@metahub/karma-jasmine-jquery',
+          'karma-*'
         ],
         webpack: {
             module: webpackConfig.module,
             resolve: webpackConfig.resolve,
             mode: webpackConfig.mode,
-            plugins:[
-               new webpackPlugin.ProvidePlugin({
-                    $: "jquery",
-                    jQuery: "jquery"
-                }),
-            ]
         },
         // test results reporter to use
         // possible values: 'dots', 'progress'
