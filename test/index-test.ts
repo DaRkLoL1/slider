@@ -1,18 +1,20 @@
 
 class MainModel { 
-  min : number = 0;
-  max : number = 100;
+
+  constructor(private min : number, private max: number) {
+
+  }
   getMinMax(): number[] {
     return [this.min, this.max];
   }
 }
 
+
 describe('Model', function () {
 
-  it('должен возвращать минимальное и максимальео значение поля', function () {
-    let model : MainModel = new MainModel();
+  it('создать конструктор для присвоения min max и вернуть их', function () {
+    let model : MainModel = new MainModel(0, 100);
     let minMax : number[] = model.getMinMax()
     expect(minMax).toEqual([0, 100]);
   })
-
 });
