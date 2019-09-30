@@ -12,6 +12,6 @@ export class ModelHandle {
   constructor(private value : number = 1) {}
 
   getValue() : number {
-    return 50;
+    return this.value;
   }
 }

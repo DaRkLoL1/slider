@@ -22,8 +22,9 @@ describe('Model', function () {
 describe('model handle', function () {
 
   it('создать ручку и получить значение', function (){
-    let handle = new ModelHandle();
-    let value = handle.getValue()
+    let handle = new ModelHandle(50);
+    let value = handle.getValue();
     expect(value).toEqual(50);
-  })
+  });
+
 });
