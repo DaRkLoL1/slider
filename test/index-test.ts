@@ -1,7 +1,9 @@
 
 class MainModel { 
+  min : number = 0;
+  max : number = 100;
   getMinMax(): number[] {
-    return [0,100];
+    return [this.min, this.max];
   }
 }
 
