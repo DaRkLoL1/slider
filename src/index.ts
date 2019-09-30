@@ -1,17 +1,28 @@
-export class MainModel { 
 
-  constructor(private min : number = 0, private max: number = 100) {};
+
+
+export class MainModel  {
+  
+
+  constructor(private min : number = 0, private max: number = 100) {
+
+  };
 
   getMinMax(): number[] {
     return [this.min, this.max];
   };
   
-}
+  }
+
 
 export class ModelHandle {
-  constructor(private value : number = 1) {}
+  constructor(private value : number = 0) {}
 
   getValue() : number {
     return this.value;
+  }
+
+  setValue(value : number) : void {
+    this.value = value;
   }
 }
