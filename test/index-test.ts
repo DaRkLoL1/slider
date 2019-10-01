@@ -87,7 +87,7 @@ describe('model handle', function () {
 
 });
 
-describe('model facade', function () {
+describe('model facade увеличить уменьшить 1 ручки', function () {
 
   it('увеличить значение', function () {
     let model : ModelFacade = new ModelFacade({min: 10, max: 50, step : 5});
@@ -139,7 +139,7 @@ describe('model facade', function () {
 
 });
 
-describe('model facade', function () {
+describe('model facade увеличение значений ручек ', function () {
 
   it('увеличить значение левой ручки', function () {
     let model : ModelFacade = new ModelFacade();
@@ -182,4 +182,28 @@ describe('model facade', function () {
     model.createHandler([10,10]);
     expect(model.increaseAndGetValue('right')).toEqual({hand: 'right', value: 20});
   });
+
+});
+
+
+describe('model facade уменьшение значений ручек', function () {
+
+  it('уменьшить значение левой ручки', function () {
+    let model : ModelFacade = new ModelFacade({step: 10});
+    model.createHandler([10,50]);
+    expect(model.reduceAndGetValue('left')).toEqual({hand: 'left', value: 0});
+  });
+
+  it('уменьшить значение левой ручки', function () {
+    let model : ModelFacade = new ModelFacade({step: 10});
+    model.createHandler([50,50]);
+    expect(model.reduceAndGetValue('left')).toEqual({hand: 'left', value: 40});
+  });
+
+  it('уменьшить значение левой ручки', function () {
+    let model : ModelFacade = new ModelFacade({step: 20});
+    model.createHandler([10,50]);
+    expect(model.reduceAndGetValue('left')).toEqual({hand: 'left', value: 0});
+  });
+  
 });
