@@ -39,7 +39,11 @@ export class ModelHandle {
     if(count > obj.max) {
       this.value = obj.max;
     }
-
-    this.value = count;
+    else {
+      this.value = count;
+    }
+    
   }
+
+
 }
