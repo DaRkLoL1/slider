@@ -15,7 +15,7 @@ export class MainModel  {
   getMinMax(): number[] {
     return [this.min, this.max];
   };
-  
+
   getStep() : number {
     return this.step;
   }

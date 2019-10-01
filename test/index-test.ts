@@ -12,15 +12,19 @@ describe('Model', function () {
   });
 
   it('создать конструктор для присвоения min max и вернуть их', function () {
-    let model : MainModel = new MainModel();
-    let minMax : number[] = model.getMinMax()
-    expect(minMax).toEqual([0, 100]);
+    
+    let min = model.getMin();
+    let max = model.getMax();
+    expect(min).toEqual(0);
+    expect(max).toEqual(100);
   });
 
   it('создать конструктор для присвоения min max и вернуть их', function () {
-    let model : MainModel = new MainModel({min: 0, max: 100});
-    let minMax : number[] = model.getMinMax()
-    expect(minMax).toEqual([0, 100]);
+    let model : MainModel = new MainModel({min: 20, max: 50});
+    let min = model.getMin();
+    let max = model.getMax();
+    expect(min).toEqual(20);
+    expect(max).toEqual(50);
   });
 
   it('получить значение шага', function (){
