@@ -1,6 +1,3 @@
-import { type } from "os";
-
-
 
 export class ModelFacade {
   private interval : MainModel;
@@ -27,7 +24,6 @@ export class ModelFacade {
   increaseAndGetValue(hand ? : string) : number | {hand : string, value: number } | undefined {
     
     let step = this.interval.getStep();
-    let value: number;
 
     if(typeof this.handle === 'object') {
       let max = this.interval.getMax();
@@ -51,7 +47,6 @@ export class ModelFacade {
 
   reduceAndGetValue(hand ? : string) : number | {hand : string, value: number } | undefined {
     let step = this.interval.getStep();
-    let value: number;
 
     if(typeof this.handle !== 'undefined') {
       let min = this.interval.getMin();
