@@ -134,7 +134,7 @@ describe('model facade', function () {
   it('уменьшить значение', function () {
     let model : ModelFacade = new ModelFacade({step: 10});
     model.createHandler(5);
-    expect(model.reduceeAndGetValue()).toEqual(0);
+    expect(model.reduceAndGetValue()).toEqual(0);
   });
 
 });

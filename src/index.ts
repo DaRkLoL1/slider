@@ -25,6 +25,18 @@ export class ModelFacade {
     }
 
   }
+
+  reduceAndGetValue() : number | undefined {
+    let min = this.interval.getMin();
+    let step = this.interval.getStep();
+    let value: number;
+
+    if(typeof this.handle !== 'undefined') {
+      this.handle.reduceValue({min, step})
+      return this.handle.getValue();
+    }
+
+  }
 }
 
 export class MainModel  {
