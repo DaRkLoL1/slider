@@ -65,6 +65,12 @@ export class ModelFacade {
       return {hand, value: this.leftHandle.getValue()};
     }
 
+    if(typeof this.leftHandle === 'object' && hand === 'right' && typeof this.rightHandle ===  'object') {
+      let min = this.leftHandle.getValue();
+      this.rightHandle.reduceValue({min, step});
+      return {hand, value: this.rightHandle.getValue()};
+    }
+
   }
 }
 

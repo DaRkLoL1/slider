@@ -207,7 +207,7 @@ describe('model facade уменьшение значений ручек', functi
   });
 
   it('уменьшить значение правой ручки', function () {
-    let model : ModelFacade = new ModelFacade({step: 10});
+    let model : ModelFacade = new ModelFacade();
     model.createHandler([10,50]);
     expect(model.reduceAndGetValue('right')).toEqual({hand: 'right', value: 49});
   });
