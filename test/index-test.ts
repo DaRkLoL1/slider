@@ -205,5 +205,22 @@ describe('model facade уменьшение значений ручек', functi
     model.createHandler([10,50]);
     expect(model.reduceAndGetValue('left')).toEqual({hand: 'left', value: 0});
   });
-  
+
+  it('уменьшить значение правой ручки', function () {
+    let model : ModelFacade = new ModelFacade({step: 10});
+    model.createHandler([10,50]);
+    expect(model.reduceAndGetValue('right')).toEqual({hand: 'right', value: 49});
+  });
+
+  it('уменьшить значение правой ручки', function () {
+    let model : ModelFacade = new ModelFacade({step: 10});
+    model.createHandler([50,50]);
+    expect(model.reduceAndGetValue('right')).toEqual({hand: 'right', value: 50});
+  });
+
+  it('уменьшить значение правой ручки', function () {
+    let model : ModelFacade = new ModelFacade({step: 20});
+    model.createHandler([10,50]);
+    expect(model.reduceAndGetValue('right')).toEqual({hand: 'right', value: 30});
+  });
 });
