@@ -94,5 +94,47 @@ describe('model facade', function () {
     model.createHandler(40);
     expect(model.increaseAndGetValue()).toEqual(45);
   });
- 
+
+  it('увеличить значение', function () {
+    let model : ModelFacade = new ModelFacade();
+    model.createHandler(100);
+    expect(model.increaseAndGetValue()).toEqual(100);
+  });
+
+  it('увеличить значение', function () {
+    let model : ModelFacade = new ModelFacade({step: 10});
+    model.createHandler(95);
+    expect(model.increaseAndGetValue()).toEqual(100);
+  });
+
+  it('увеличить значение', function () {
+    let model : ModelFacade = new ModelFacade({step: 10});
+    model.createHandler(90);
+    expect(model.increaseAndGetValue()).toEqual(100);
+  });
+
+  it('уменьшить значение', function () {
+    let model : ModelFacade = new ModelFacade({min: 10, max: 50, step : 5});
+    model.createHandler(10);
+    expect(model.reduceAndGetValue()).toEqual(10);
+  });
+
+  it('уменьшить значение', function () {
+    let model : ModelFacade = new ModelFacade();
+    model.createHandler(0);
+    expect(model.reduceAndGetValue()).toEqual(0);
+  });
+
+  it('уменьшить значение', function () {
+    let model : ModelFacade = new ModelFacade({step: 10});
+    model.createHandler(95);
+    expect(model.reduceAndGetValue()).toEqual(85);
+  });
+
+  it('уменьшить значение', function () {
+    let model : ModelFacade = new ModelFacade({step: 10});
+    model.createHandler(5);
+    expect(model.reduceeAndGetValue()).toEqual(0);
+  });
+
 });

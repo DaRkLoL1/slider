@@ -1,3 +1,4 @@
+import { type } from "os";
 
 
 
@@ -13,8 +14,16 @@ export class ModelFacade {
     this.handle = new ModelHandle(num);
   }
 
-  increaseAndGetValue() : number {
-    return 45;
+  increaseAndGetValue() : number | undefined {
+    let max = this.interval.getMax();
+    let step = this.interval.getStep();
+    let value: number;
+
+    if(typeof this.handle !== 'undefined') {
+      this.handle.increaseValue({max, step})
+      return this.handle.getValue();
+    }
+
   }
 }
 
