@@ -50,5 +50,10 @@ describe('model handle', function () {
     expect(value).toEqual(50);
   });
 
+  it('увеличить значение на step', function () {
+    handle.increaseValue({min: 0, max: 100, step: 1});
+    expect(handle.getValue()).toEqual(1);
+  });
+
 });
 

@@ -32,4 +32,8 @@ export class ModelHandle {
   setValue(value : number) : void {
     this.value = value;
   }
+
+  increaseValue(obj : {min : number, max: number, step: number}) : void {
+    this.value = this.value + 1;
+  }
 }
