@@ -37,12 +37,12 @@ describe('model handle', function () {
 
   beforeEach(function () {
      handle = new ModelHandle();
-  }) 
+  });
 
   it('изменить значение ручки', function () {
     handle.setValue(5)
     expect(handle.getValue()).toEqual(5)
-  })
+  });
   
   it('создать ручку и получить значение', function (){
     let handle : ModelHandle = new ModelHandle(50);
@@ -57,14 +57,28 @@ describe('model handle', function () {
 
   it('увеличить значение на 110', function () {
     handle.increaseValue({max: 100, step: 110});
-    console.log(handle.getValue())
     expect(handle.getValue()).toEqual(100);
-  })
+  });
 
   it('уменьшить значение на 10', function () {
     handle.setValue(40);
-    handle.reduceValue({min: 100, step: 10});
+    handle.reduceValue({min: 0, step: 10});
     expect(handle.getValue()).toEqual(30);
-  })
+  });
+
+  it('уменьшить значение на 10', function () {
+    handle.reduceValue({min: 0, step: 10});
+    expect(handle.getValue()).toEqual(0);
+  });
+
+  it('изменить значение ручки больше мах значения', function () {
+    handle.setValue({value: 200, min: 0, max: 100});
+    expect(handle.getValue()).toEqual(100)
+  });
+
+  it('изменить значение ручки меньше мin значения', function () {
+    handle.setValue({value: 200, min: 0, max: 100});
+    expect(handle.getValue()).toEqual(0)
+  });
 });
 

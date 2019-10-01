@@ -45,7 +45,13 @@ export class ModelHandle {
   }
 
   reduceValue(obj : {min: number, step: number}) : void {
-    this.value = 30;
+    let count = this.value - obj.step;
+
+    if(count < obj.min) {
+      this.value = obj.min;
+    } else {
+      this.value = count;
+    }
   }
 
 }
