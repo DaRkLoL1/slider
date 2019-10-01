@@ -41,9 +41,11 @@ export class ModelHandle {
     }
     else {
       this.value = count;
-    }
-    
+    } 
   }
 
+  reduceValue(obj : {min: number, step: number}) : void {
+    this.value = 30;
+  }
 
 }

@@ -60,5 +60,11 @@ describe('model handle', function () {
     console.log(handle.getValue())
     expect(handle.getValue()).toEqual(100);
   })
+
+  it('уменьшить значение на 10', function () {
+    handle.setValue(40);
+    handle.reduceValue({min: 100, step: 10});
+    expect(handle.getValue()).toEqual(30);
+  })
 });
 
