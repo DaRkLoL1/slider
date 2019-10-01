@@ -29,8 +29,15 @@ export class ModelHandle {
     return this.value;
   }
 
-  setValue(value : number) : void {
-    this.value = value;
+  setValue(obj : {value : number, min: number, max: number}) : void {
+    if(obj.value > obj.max) {
+      this.value = obj.max;
+    }
+    else if(obj.value < obj.min) {
+      this.value = obj.min;
+    } else {
+      this.value = obj.value;
+    }
   }
 
   increaseValue(obj : {max: number, step: number}) : void {
