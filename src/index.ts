@@ -49,14 +49,20 @@ export class ModelFacade {
 
   }
 
-  reduceAndGetValue() : number | undefined {
-    let min = this.interval.getMin();
+  reduceAndGetValue(hand ? : string) : number | {hand : string, value: number } | undefined {
     let step = this.interval.getStep();
     let value: number;
 
     if(typeof this.handle !== 'undefined') {
+      let min = this.interval.getMin();
       this.handle.reduceValue({min, step})
       return this.handle.getValue();
+    }
+
+    if(typeof this.leftHandle === 'object' && hand === 'left' && typeof this.rightHandle ===  'object') {
+      let min = this.interval.getMin();
+      this.leftHandle.reduceValue({min, step});
+      return {hand, value: this.leftHandle.getValue()};
     }
 
   }
