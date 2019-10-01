@@ -138,3 +138,13 @@ describe('model facade', function () {
   });
 
 });
+
+describe('model facade', function () {
+
+  it('увеличить значение левой ручки', function () {
+    let model : ModelFacade = new ModelFacade();
+    model.createHandler([10,50]);
+    expect(model.increaseAndGetValue('left')).toEqual({hand: 'left', value: 9});
+  });
+  
+});

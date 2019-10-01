@@ -5,25 +5,38 @@ import { type } from "os";
 export class ModelFacade {
   private interval : MainModel;
   private handle : ModelHandle | undefined;
+  private leftHandle : ModelHandle | undefined;
+  private rightHandle : ModelHandle | undefined;
 
   constructor(obj ? : {min ? : number, max ? : number, step ? : number}) {
     this.interval = new MainModel(obj)
   }
 
-  createHandler(num : number) {
-    this.handle = new ModelHandle(num);
+  createHandler(num : number | number[]) {
+
+    if(typeof num === 'object') {
+      this.leftHandle = new ModelHandle(num[0]);
+      this.rightHandle = new ModelHandle(num[1]);
+    }
+    else if(typeof num === 'number') {
+      this.handle = new ModelHandle(num);
+    }
+   
   }
 
-  increaseAndGetValue() : number | undefined {
-    let max = this.interval.getMax();
+  increaseAndGetValue(hand ? : string) : number | {hand : string, value: number } | undefined {
+    
     let step = this.interval.getStep();
     let value: number;
 
-    if(typeof this.handle !== 'undefined') {
+    if(typeof this.handle === 'object') {
+      let max = this.interval.getMax();
       this.handle.increaseValue({max, step})
       return this.handle.getValue();
     }
-
+    if(typeof this.leftHandle === 'object') {
+      return {hand:  "left", value: 9}
+    }
   }
 
   reduceAndGetValue() : number | undefined {
