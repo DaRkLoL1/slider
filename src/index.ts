@@ -33,7 +33,13 @@ export class ModelHandle {
     this.value = value;
   }
 
-  increaseValue(obj : {min : number, max: number, step: number}) : void {
-    this.value = this.value + 1;
+  increaseValue(obj : {max: number, step: number}) : void {
+    let count : number = this.value  + obj.step;
+
+    if(count > obj.max) {
+      this.value = obj.max;
+    }
+
+    this.value = count;
   }
 }
