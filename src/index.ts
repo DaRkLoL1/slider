@@ -2,10 +2,14 @@
 
 
 export class MainModel  {
-  
+  private min : number;
+  private max : number;
+  private step : number;
 
-  constructor(private min : number = 0, private max: number = 100) {
-
+  constructor({min = 0, max = 100, step = 1} = {}) {
+    this.min = min;
+    this.max = max;
+    this.step = step;
   };
 
   getMinMax(): number[] {
@@ -13,7 +17,7 @@ export class MainModel  {
   };
   
   getStep() : number {
-    return 1;
+    return this.step;
   }
   }
 

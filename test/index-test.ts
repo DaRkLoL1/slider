@@ -18,7 +18,7 @@ describe('Model', function () {
   });
 
   it('создать конструктор для присвоения min max и вернуть их', function () {
-    let model : MainModel = new MainModel(0, 100);
+    let model : MainModel = new MainModel({min: 0, max: 100});
     let minMax : number[] = model.getMinMax()
     expect(minMax).toEqual([0, 100]);
   });
