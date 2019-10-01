@@ -1,6 +1,23 @@
 
 
 
+export class ModelFacade {
+  private interval : MainModel;
+  private handle : ModelHandle | undefined;
+
+  constructor(obj ? : {min ? : number, max ? : number, step ? : number}) {
+    this.interval = new MainModel(obj)
+  }
+
+  createHandler(num : number) {
+    this.handle = new ModelHandle(num);
+  }
+
+  increaseAndGetValue() : number {
+    return 45;
+  }
+}
+
 export class MainModel  {
   private min : number;
   private max : number;

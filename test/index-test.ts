@@ -1,6 +1,6 @@
 import {MainModel} from '../src/index';
 import {ModelHandle} from '../src/index';
-
+import {ModelFacade} from '../src/index';
 
 
 describe('Model', function () {
@@ -87,3 +87,12 @@ describe('model handle', function () {
 
 });
 
+describe('model facade', function () {
+
+  it('увеличить значение', function () {
+    let model : ModelFacade = new ModelFacade({min: 10, max: 50, step : 5});
+    model.createHandler(40);
+    expect(model.increaseAndGetValue()).toEqual(45);
+  });
+ 
+});
