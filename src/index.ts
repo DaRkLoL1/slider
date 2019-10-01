@@ -12,14 +12,18 @@ export class MainModel  {
     this.step = step;
   };
 
-  getMinMax(): number[] {
-    return [this.min, this.max];
-  };
+  getMin() : number {
+    return this.min;
+  }
+  
+  getMax() : number {
+    return this.max;
+  }
 
   getStep() : number {
     return this.step;
   }
-  }
+}
 
 
 export class ModelHandle {
