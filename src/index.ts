@@ -12,6 +12,9 @@ export class MainModel  {
     return [this.min, this.max];
   };
   
+  getStep() : number {
+    return 1;
+  }
   }
 
 

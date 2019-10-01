@@ -4,12 +4,13 @@ import {ModelHandle} from '../src/index';
 
 
 describe('Model', function () {
+  
   let model : MainModel;
 
-  beforeEach(function ()  {
-    model = new MainModel();
+  beforeEach(function () {
+    model = new MainModel()
   });
-  
+
   it('создать конструктор для присвоения min max и вернуть их', function () {
     let model : MainModel = new MainModel();
     let minMax : number[] = model.getMinMax()
@@ -20,6 +21,12 @@ describe('Model', function () {
     let model : MainModel = new MainModel(0, 100);
     let minMax : number[] = model.getMinMax()
     expect(minMax).toEqual([0, 100]);
+  });
+
+  it('получить значение шага', function (){
+    let step : number = model.getStep();
+
+    expect(step).toEqual(1);
   });
 
 });
