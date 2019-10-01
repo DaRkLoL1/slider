@@ -144,7 +144,42 @@ describe('model facade', function () {
   it('увеличить значение левой ручки', function () {
     let model : ModelFacade = new ModelFacade();
     model.createHandler([10,50]);
-    expect(model.increaseAndGetValue('left')).toEqual({hand: 'left', value: 9});
+    expect(model.increaseAndGetValue('left')).toEqual({hand: 'left', value: 11});
   });
-  
+
+  it('увеличить значение левой ручки', function () {
+    let model : ModelFacade = new ModelFacade({step: 40});
+    model.createHandler([20,50]);
+    expect(model.increaseAndGetValue('left')).toEqual({hand: 'left', value: 50});
+  });
+
+  it('увеличить значение левой ручки', function () {
+    let model : ModelFacade = new ModelFacade({step: 10});
+    model.createHandler([10,50]);
+    expect(model.increaseAndGetValue('left')).toEqual({hand: 'left', value: 20});
+  });
+
+  it('увеличить значение левой ручки', function () {
+    let model : ModelFacade = new ModelFacade({step: 100});
+    model.createHandler([10,50]);
+    expect(model.increaseAndGetValue('left')).toEqual({hand: 'left', value: 50});
+  });
+
+  it('увеличить значение правой ручки', function () {
+    let model : ModelFacade = new ModelFacade();
+    model.createHandler([10,50]);
+    expect(model.increaseAndGetValue('right')).toEqual({hand: 'right', value: 51});
+  });
+
+  it('увеличить значение правой ручки', function () {
+    let model : ModelFacade = new ModelFacade();
+    model.createHandler([10,100]);
+    expect(model.increaseAndGetValue('right')).toEqual({hand: 'right', value: 100});
+  });
+
+  it('увеличить значение правой ручки', function () {
+    let model : ModelFacade = new ModelFacade({step: 10});
+    model.createHandler([10,10]);
+    expect(model.increaseAndGetValue('right')).toEqual({hand: 'right', value: 20});
+  });
 });

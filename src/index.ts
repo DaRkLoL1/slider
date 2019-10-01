@@ -34,9 +34,19 @@ export class ModelFacade {
       this.handle.increaseValue({max, step})
       return this.handle.getValue();
     }
-    if(typeof this.leftHandle === 'object') {
-      return {hand:  "left", value: 9}
+
+    if(typeof this.leftHandle === 'object' && hand === 'left' && typeof this.rightHandle ===  'object') {
+      let max = this.rightHandle.getValue();
+      this.leftHandle.increaseValue({max, step});
+      return {hand, value: this.leftHandle.getValue()};
     }
+
+    if(typeof this.leftHandle === 'object' && hand === 'right' && typeof this.rightHandle ===  'object') {
+      let max = this.interval.getMax();
+      this.rightHandle.increaseValue({max, step});
+      return {hand, value: this.rightHandle.getValue()};
+    }
+
   }
 
   reduceAndGetValue() : number | undefined {
