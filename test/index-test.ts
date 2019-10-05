@@ -97,4 +97,20 @@ describe('изменить, увеличивать и уменьшать зна�
     model.setValue(30);
     expect(model.getValue()).toEqual(30);
   });
+
+  it('увеличить значение из MainModel', function () {
+    let handle = new ModelHandle(50);
+    let model = new MainModel({step: 10, handle: handle});
+
+    model.increaseValue();
+    expect(model.getValue()).toEqual(30);
+  });
+
+  it('уменьшить значение из MainModel', function () {
+    let handle = new ModelHandle(50);
+    let model = new MainModel({step: 10, handle: handle});
+
+    model.reduceValue();
+    expect(model.getValue()).toEqual(40);
+  });
 });

@@ -3,10 +3,10 @@ export class MainModel  {
   private min : number;
   private max : number;
   private step : number;
-  private handle : ModelHandle | null;
+  private handle : ModelHandle;
 
 
-  constructor( {min = 0, max = 100, step = 1, handle = null} = {}) {
+  constructor( {min = 0, max = 100, step = 1, handle = new ModelHandle()} = {}) {
     this.min = min;
     this.max = max;
     this.step = step;
@@ -23,6 +23,14 @@ export class MainModel  {
 
   getStep() : number {
     return this.step;
+  }
+
+  getValue() : number {
+     return this.handle.getValue();
+  }
+
+  setValue(value : number) : void {
+    this.handle.setValue({value: value, min: this.min, max : this.max});
   }
 }
 
