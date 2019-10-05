@@ -103,7 +103,7 @@ describe('изменить, увеличивать и уменьшать зна�
     let model = new MainModel({step: 10, handle: handle});
 
     model.increaseValue();
-    expect(model.getValue()).toEqual(30);
+    expect(model.getValue()).toEqual(60);
   });
 
   it('уменьшить значение из MainModel', function () {

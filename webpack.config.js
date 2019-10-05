@@ -17,6 +17,13 @@ module.exports = {
         use: 'ts-loader'
       },
       {
+        test: /\.pug$/,
+        use: [
+          'html-loader',
+          'pug-html-loader'
+        ]
+      },
+      {
         test: /\.scss$/,
         use: [
           {
@@ -63,6 +70,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       hash: false,
+      template: './src/index.pug',
       filename: 'index.html',
       chunks: ['index']
     }),

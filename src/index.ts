@@ -1,3 +1,5 @@
+import './index.scss';
+
 
 export class MainModel  {
   private min : number;
@@ -31,6 +33,14 @@ export class MainModel  {
 
   setValue(value : number) : void {
     this.handle.setValue({value: value, min: this.min, max : this.max});
+  }
+
+  increaseValue() : void {
+    this.handle.increaseValue({max: this.max, step: this.step});
+  }
+
+  reduceValue() : void {
+    this.handle.reduceValue({min: this.min, step: this.step});
   }
 }
 
