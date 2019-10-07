@@ -114,7 +114,7 @@ export class View {
   }
 }
 
-class ViewThumb {
+export class ViewThumb {
   
 constructor(private thumb : HTMLElement | null, private line : HTMLElement | null) {}
 
@@ -125,6 +125,10 @@ constructor(private thumb : HTMLElement | null, private line : HTMLElement | nul
         let left = value - width / 2 + 'px';
         this.thumb.style.left = left;
         this.line.style.width = left;
+
+        $(this.thumb).on('mousedown', function (event) {
+          
+        });
       }
     }
   }

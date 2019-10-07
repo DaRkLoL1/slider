@@ -1,7 +1,7 @@
 import {MainModel} from '../src/index';
 import {ModelHandle} from '../src/index';
 import {View} from '../src/index';
-
+import {ViewThumb} from '../src/index';
 
 describe('Model', function () {
   
@@ -116,6 +116,7 @@ describe('изменить, увеличивать и уменьшать зна�
 });
 
 describe('view', function (){
+  let item : HTMLElement | null;
 
   beforeEach(function () {
     setFixtures('<div class="root"></div>');
@@ -217,7 +218,7 @@ describe('view', function (){
             width: auto;
             text-align: center;
             margin: 0; }`);
-    let item : HTMLElement | null = document.querySelector('.root');
+    item  = document.querySelector('.root');
     if(item !== null) {
       item.style.width = '500px';
     }
@@ -236,4 +237,12 @@ describe('view', function (){
     expect($('.slider__thumb').css('left')).toEqual('240px');
     expect($('.slider__line').css('width')).toEqual('240px');
   });
+
+  it('уменьшить, увеличить  значение', function () {
+    let spyon = spyOnEvent('.slider__thumb', 'click');
+    $('.slider__thumb').click();
+    expect('click').toHaveBeenTriggeredOn('.slider__thumb');
+    expect(spyon).toHaveBeenTriggered();
+  });
+
 });
