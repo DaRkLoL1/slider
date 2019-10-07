@@ -119,10 +119,14 @@ describe('view', function (){
 
   it('create slider', function () {
     setFixtures('<div class="root"></div>');
-    let dom = new View();
-    dom.createSlider({min: 0, max: 100, step: 1});
+    let item : HTMLElement | null = document.querySelector('.root');
+    if(item !== null) {
+      item.style.width = '500px';
+    }
+    let dom = new View(item);
+    dom.createSlider({min: -100, max: 100, step: 50});
 
-    expect($('.root')).toBeDefined();
+    expect($('.root')).toBeDefined()
     expect($('.root')).toHaveHtml('<div class="slider"><div class="slider__field"></div></div>');
   })
 });

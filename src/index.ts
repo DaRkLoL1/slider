@@ -87,8 +87,23 @@ export class ModelHandle {
 }
 
 export class View {
-  get() {
-    let elem = $('.root');
-    elem.html('<p>Hello</p>');
+  private item : HTMLElement | null;
+  private interval : number | undefined;
+
+  constructor(item : HTMLElement | null) {
+    this.item = item;
+  }
+  createSlider(obj : {min : number, max : number, step : number }) {
+    if( this.item !== null) {
+
+      $(this.item).html('<div class="slider"><div class="slider__field"></div></div>');
+      this.interval = $(this.item).width();
+      
+      if(typeof this.interval !== 'undefined') {
+        this.interval = this.interval / (obj.max - obj.min) * obj.step;
+      }
+
+    }
+
   }
 }
