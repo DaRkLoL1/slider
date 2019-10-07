@@ -117,19 +117,6 @@ describe('изменить, увеличивать и уменьшать зна�
 
 describe('view', function (){
 
-  it('create slider', function () {
-    setFixtures('<div class="root"></div>');
-    let item : HTMLElement | null = document.querySelector('.root');
-    if(item !== null) {
-      item.style.width = '500px';
-    }
-    let dom = new View(item);
-    dom.createSlider({min: -100, max: 100, step: 50});
-
-    expect($('.root')).toBeDefined()
-    expect($('.root')).toHaveHtml('<div class="slider"><div class="slider__field"></div></div>');
-  })
-
   it('добавить бегунок', function (){
     setFixtures('<div class="root"></div>');
     let item : HTMLElement | null = document.querySelector('.root');
@@ -140,4 +127,5 @@ describe('view', function (){
     dom.createSlider({min: -100, max: 100, step: 50, value: 50});
     expect($('.root .slider .slider__field')).toHaveHtml('<div class="slider__line"></div><div class="slider__thumb"></div>');
   });
+  
 });

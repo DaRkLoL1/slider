@@ -89,21 +89,33 @@ export class ModelHandle {
 export class View {
   private item : HTMLElement | null;
   private interval : number | undefined;
+  private thumb : ViewThumb | undefined;
+
 
   constructor(item : HTMLElement | null) {
     this.item = item;
   }
-  createSlider(obj : {min : number, max : number, step : number }) {
+  createSlider(obj : {min : number, max : number, step : number, value : number}) {
     if( this.item !== null) {
 
       $(this.item).html('<div class="slider"><div class="slider__field"></div></div>');
       this.interval = $(this.item).width();
-      
+
       if(typeof this.interval !== 'undefined') {
         this.interval = this.interval / (obj.max - obj.min) * obj.step;
+        
+        $(this.item).find('.slider__field').html('<div class="slider__line"></div><div class="slider__thumb"></div>');
+        this.thumb = new ViewThumb(this.item.querySelector('.slider__thumb'),this.item.querySelector('.slider__line') )
+        
       }
 
     }
 
   }
+}
+
+class ViewThumb {
+  
+constructor(private thumb : HTMLElement | null, private line : HTMLElement | null) {}
+
 }
