@@ -99,14 +99,14 @@ export class View {
     if( this.item !== null) {
 
       $(this.item).html('<div class="slider"><div class="slider__field"></div></div>');
-      this.interval = $(this.item).width();
+      let width = $(this.item).width();
 
-      if(typeof this.interval !== 'undefined') {
-        this.interval = this.interval / (obj.max - obj.min) * obj.step;
+      if(typeof width === 'number') {
+        this.interval = width / (obj.max - obj.min) * obj.step;
         
         $(this.item).find('.slider__field').html('<div class="slider__line"></div><div class="slider__thumb"></div>');
-        this.thumb = new ViewThumb(this.item.querySelector('.slider__thumb'),this.item.querySelector('.slider__line') )
-        
+        this.thumb = new ViewThumb(this.item.querySelector('.slider__thumb'), this.item.querySelector('.slider__line') )
+        this.thumb.installValue( width / (obj.max - obj.min) * (obj.value - obj.min) );
       }
 
     }
@@ -118,4 +118,12 @@ class ViewThumb {
   
 constructor(private thumb : HTMLElement | null, private line : HTMLElement | null) {}
 
+  installValue(value: number) {
+    if(this.thumb !== null) {
+      let width  = $(this.thumb).width();
+      if(typeof width === 'number') {
+        this.thumb.style.left = value - width / 2 + 'px';
+      }
+    }
+  }
 }

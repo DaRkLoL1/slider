@@ -117,15 +117,122 @@ describe('изменить, увеличивать и уменьшать зна�
 
 describe('view', function (){
 
-  it('добавить бегунок', function (){
+  beforeEach(function () {
     setFixtures('<div class="root"></div>');
+    setStyleFixtures(`.root {
+      width: 500px;
+      margin-top: 50px; }
+      .root__version2 {
+        width: 200px;
+        height: 500px; }
+    
+    .slider {
+      display: flex;
+      flex-direction: column;
+      width: 100%; }
+      .slider_vertical {
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        height: 100%; }
+      .slider__button {
+        position: relative;
+        width: 30px;
+        height: 30px;
+        margin-bottom: 20px;
+        margin-left: 235px;
+        background-color: red;
+        border-radius: 5px;
+        line-height: 30px;
+        font-size: 20px;
+        color: white;
+        text-align: center; }
+        .slider__button::before {
+          content: '';
+          position: absolute;
+          border: 5px solid red;
+          border-bottom: 0px;
+          border-left-color: transparent;
+          border-right-color: transparent;
+          left: 10px;
+          top: 30px; }
+        .slider__button_vertical {
+          margin-left: 20px;
+          margin-top: auto;
+          margin-bottom: 235px; }
+          .slider__button_vertical::before {
+            border-bottom: 5px solid transparent;
+            border-top-color: transparent;
+            border-left: 0;
+            border-right-color: red;
+            top: 10px;
+            left: -5px; }
+      .slider__field {
+        display: flex;
+        position: relative;
+        margin: auto;
+        border-radius: 5px;
+        background-color: silver;
+        width: 100%;
+        height: 5px; }
+        .slider__field_vertical {
+          align-self: center;
+          height: 100%;
+          width: 5px;
+          margin: 0; }
+      .slider__thumb {
+        position: absolute;
+        top: -7.5px;
+        left: 240px;
+        width: 20px;
+        height: 20px;
+        background-color: green;
+        border-radius: 10px;
+        cursor: pointer; }
+        .slider__thumb_vertical {
+          top: auto;
+          bottom: 240px;
+          left: -7.5px; }
+      .slider__line {
+        width: 240px;
+        height: 5px;
+        background-color: green;
+        border-radius: 5px; }
+        .slider__line_vertical {
+          align-self: flex-end;
+          height: 240px;
+          width: 5px; }
+      .slider__numbers {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px; }
+        .slider__numbers span {
+          font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+          font-size: 18px;
+          color: silver; }
+        .slider__numbers_vertical {
+          flex-direction: column-reverse;
+          margin-top: 0;
+          margin-right: 10px; }
+          .slider__numbers_vertical span {
+            width: auto;
+            text-align: center;
+            margin: 0; }`);
     let item : HTMLElement | null = document.querySelector('.root');
     if(item !== null) {
       item.style.width = '500px';
     }
     let dom = new View(item);
-    dom.createSlider({min: -100, max: 100, step: 50, value: 50});
-    expect($('.root .slider .slider__field')).toHaveHtml('<div class="slider__line"></div><div class="slider__thumb"></div>');
+
+    dom.createSlider({min: 0, max: 100, step: 10, value: 50});
+  });
+
+  it('добавить бегунок', function (){
+    expect($('.slider__thumb')).toExist();
+    expect($('.slider__line')).toExist();
   });
   
+
+  it('добавить значения', function () {
+    expect($('.slider__thumb').css('left')).toEqual('240px');
+  });
 });
