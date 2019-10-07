@@ -234,5 +234,6 @@ describe('view', function (){
 
   it('добавить значения', function () {
     expect($('.slider__thumb').css('left')).toEqual('240px');
+    expect($('.slider__line').css('width')).toEqual('240px');
   });
 });

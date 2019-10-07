@@ -119,10 +119,12 @@ class ViewThumb {
 constructor(private thumb : HTMLElement | null, private line : HTMLElement | null) {}
 
   installValue(value: number) {
-    if(this.thumb !== null) {
+    if(this.thumb !== null && this.line !== null) {
       let width  = $(this.thumb).width();
       if(typeof width === 'number') {
-        this.thumb.style.left = value - width / 2 + 'px';
+        let left = value - width / 2 + 'px';
+        this.thumb.style.left = left;
+        this.line.style.width = left;
       }
     }
   }
