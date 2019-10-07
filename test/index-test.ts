@@ -1,6 +1,6 @@
 import {MainModel} from '../src/index';
 import {ModelHandle} from '../src/index';
-
+import {View} from '../src/index';
 
 
 describe('Model', function () {
@@ -113,4 +113,16 @@ describe('изменить, увеличивать и уменьшать зна�
     model.reduceValue();
     expect(model.getValue()).toEqual(40);
   });
+});
+
+describe('view', function (){
+
+  it('create slider', function () {
+    setFixtures('<div class="root"></div>');
+    let dom = new View();
+    dom.createSlider({min: 0, max: 100, step: 1});
+
+    expect($('.root')).toBeDefined();
+    expect($('.root')).toHaveHtml('<div class="slider"><div class="slider__field"></div></div>');
+  })
 });

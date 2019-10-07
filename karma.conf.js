@@ -28,6 +28,7 @@ module.exports = function(config) {
             module: webpackConfig.module,
             resolve: webpackConfig.resolve,
             mode: webpackConfig.mode,
+            plugins: webpackConfig.plugins,
         },
         // test results reporter to use
         // possible values: 'dots', 'progress'

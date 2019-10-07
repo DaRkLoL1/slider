@@ -85,3 +85,10 @@ export class ModelHandle {
   }
 
 }
+
+export class View {
+  get() {
+    let elem = $('.root');
+    elem.html('<p>Hello</p>');
+  }
+}
