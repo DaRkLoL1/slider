@@ -99,14 +99,14 @@ export class View {
     if( this.item !== null) {
 
       $(this.item).html('<div class="slider"><div class="slider__field"></div></div>');
-      let width = $(this.item).width();
+      let width : number | undefined = $(this.item).width();
 
       if(typeof width === 'number') {
         this.interval = width / (obj.max - obj.min) * obj.step;
         
         $(this.item).find('.slider__field').html('<div class="slider__line"></div><div class="slider__thumb"></div>');
         this.thumb = new ViewThumb(this.item.querySelector('.slider__thumb'), this.item.querySelector('.slider__line') )
-        this.thumb.installValue( width / (obj.max - obj.min) * (obj.value - obj.min) );
+        this.thumb.installValue( width / (obj.max - obj.min) * (obj.value - obj.min), this.interval );
       }
 
     }
@@ -118,18 +118,48 @@ export class ViewThumb {
   
 constructor(private thumb : HTMLElement | null, private line : HTMLElement | null) {}
 
-  installValue(value: number) {
+  installValue(value: number, interval : number) {
     if(this.thumb !== null && this.line !== null) {
-      let width  = $(this.thumb).width();
+      let width : number | undefined  = $(this.thumb).width();
       if(typeof width === 'number') {
-        let left = value - width / 2 + 'px';
+        let left : string = value - width / 2 + 'px';
         this.thumb.style.left = left;
         this.line.style.width = left;
-
+        let that : ViewThumb = this;
         $(this.thumb).on('mousedown', function (event) {
+          let target : Element = event.currentTarget;
+
+          let onMouseMove = function (event : MouseEvent) {
+            let x : number =  event.clientX;
+            let thumbLeft : number;
+            if(typeof width === 'number') {
+              thumbLeft = target.getBoundingClientRect().left + width / 2
+              if( x >= (thumbLeft + interval / 2 ) ) {
+                that.increase();
+              } 
+              if(x <= (thumbLeft - interval / 2 )) {
+                that.reduce();
+              }
+            }
+          }
+          document.addEventListener('mousemove', onMouseMove);
           
+          let onMouseUp = function () {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+          }
+          document.addEventListener('mouseup', onMouseUp);
+            
         });
       }
     }
+  }
+
+  increase() {
+
+  }
+
+  reduce() {
+
   }
 }
