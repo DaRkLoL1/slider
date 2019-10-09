@@ -8,7 +8,7 @@ describe('Model', function () {
   let model : MainModel;
 
   beforeEach(function () {
-    model = new MainModel();
+    model = new MainModel({min: 0, max: 100, step: 1, handle : new ModelHandle(0)});
   });
 
   it('создать конструктор для присвоения min max и вернуть их', function () {
@@ -20,7 +20,7 @@ describe('Model', function () {
   });
 
   it('создать конструктор для присвоения min max и вернуть их', function () {
-    let model : MainModel = new MainModel({min: 20, max: 50});
+    let model : MainModel = new MainModel({min: 20, max: 50, step: 1, handle: new ModelHandle(0)});
     let min = model.getMin();
     let max = model.getMax();
     expect(min).toEqual(20);
@@ -40,7 +40,7 @@ describe('model handle', function () {
   let handle : ModelHandle; 
 
   beforeEach(function () {
-     handle = new ModelHandle();
+     handle = new ModelHandle(0);
   });
   
   it('создать ручку и получить значение', function (){
@@ -91,8 +91,8 @@ describe('изменить, увеличивать и уменьшать зна�
 
   
   it('изменить значение из MainModel', function () {
-    let handle = new ModelHandle();
-    let model = new MainModel({handle: handle});
+    let handle = new ModelHandle(0);
+    let model = new MainModel({min: 0, max: 100, step: 1, handle: handle});
 
     model.setValue(30);
     expect(model.getValue()).toEqual(30);
@@ -100,7 +100,7 @@ describe('изменить, увеличивать и уменьшать зна�
 
   it('увеличить значение из MainModel', function () {
     let handle = new ModelHandle(50);
-    let model = new MainModel({step: 10, handle: handle});
+    let model = new MainModel({min: 0, max: 100, step: 10, handle: handle});
 
     model.increaseValue();
     expect(model.getValue()).toEqual(60);
@@ -108,7 +108,7 @@ describe('изменить, увеличивать и уменьшать зна�
 
   it('уменьшить значение из MainModel', function () {
     let handle = new ModelHandle(50);
-    let model = new MainModel({step: 10, handle: handle});
+    let model = new MainModel({min: 0, max: 100, step: 10, handle: handle});
 
     model.reduceValue();
     expect(model.getValue()).toEqual(40);
@@ -116,7 +116,7 @@ describe('изменить, увеличивать и уменьшать зна�
 });
 
 describe('view', function (){
-  let item : HTMLElement | null;
+  let item : JQuery<HTMLElement>;
 
   beforeEach(function () {
     setFixtures('<div class="root"></div>');
@@ -218,10 +218,10 @@ describe('view', function (){
             width: auto;
             text-align: center;
             margin: 0; }`);
-    item  = document.querySelector('.root');
-    if(item !== null) {
-      item.style.width = '500px';
-    }
+    item  = $('.root');
+    
+    item.css('width', 500);
+    
     let dom = new View(item);
 
     dom.createSlider({min: 0, max: 100, step: 10, value: 50});
