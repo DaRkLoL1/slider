@@ -275,7 +275,6 @@ class Prezenter implements ObserverView, ObserverModel {
 
   updateModel(obj : {min : number, max: number, value : number, step : number}) {
     this.view.updateThumb(obj)
-    console.log(obj.value)
   }
 
   increase() : void {
