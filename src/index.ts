@@ -1,12 +1,29 @@
 import './index.scss';
 
+interface SubjectView {
+  addObserverView(o : ObserverView) : void;
+  notifyObserverView() : void;
+}
 
-export class MainModel  {
+interface ObserverView {
+  updateView(symbol : string) : void
+}
+
+interface SubjectModel {
+  addObserverModel(o : ObserverModel) : void;
+  notifyObserverModel() : void;
+}
+
+interface ObserverModel {
+  updateModel(obj : {min : number, max: number, value: number, step: number}) : void
+}
+
+export class MainModel implements SubjectModel {
   private min : number;
   private max : number;
   private step : number;
   private handle : ModelHandle;
-
+  private observer : ObserverModel | undefined;
 
   constructor(obj : {min: number, max : number, step : number, handle : ModelHandle}) {
     this.min = obj.min;
@@ -33,14 +50,26 @@ export class MainModel  {
 
   setValue(value : number) : void {
     this.handle.setValue({value: value, min: this.min, max : this.max});
+    this.notifyObserverModel();
   }
 
   increaseValue() : void {
     this.handle.increaseValue({max: this.max, step: this.step});
+    this.notifyObserverModel();
   }
 
   reduceValue() : void {
     this.handle.reduceValue({min: this.min, step: this.step});
+    this.notifyObserverModel();
+  }
+
+  addObserverModel(o : ObserverModel) {
+    this.observer = o;
+  }
+
+  notifyObserverModel() {
+    if(typeof this.observer !== 'undefined')
+    this.observer.updateModel({min : this.getMin(), max: this.getMax(), value: this.getValue(), step: this.getStep()});
   }
 }
 
@@ -86,15 +115,17 @@ export class ModelHandle {
 
 }
 
-export class View {
+export class View implements ObserverView, SubjectView {
   private item : JQuery<HTMLElement>;
   private interval : number | undefined;
   private thumb : ViewThumb | undefined;
-
+  private observer : ObserverView | undefined;
+  private symbol : string | undefined;
 
   constructor(item : JQuery<HTMLElement>) {
     this.item = item;
   }
+
   createSlider(obj : {min : number, max : number, step : number, value : number}) {
     
 
@@ -107,19 +138,46 @@ export class View {
         $(this.item).find('.slider__field').html('<div class="slider__line"></div><div class="slider__thumb"></div>');
         this.thumb = new ViewThumb(this.item.find('.slider__thumb'), this.item.find('.slider__line') )
         this.thumb.installValue( width / (obj.max - obj.min) * (obj.value - obj.min), this.interval );
+        this.thumb.addObserverView(this);
       }
+  }
 
-    
+  updateThumb(obj : {min : number, max: number, value: number, step : number}) {
+    let width : number | undefined = $(this.item).width();
 
+    if(typeof width === 'number' && typeof this.thumb === 'object' && typeof this.interval === 'number') {
+      this.interval = width / (obj.max - obj.min) * obj.step;
+
+      this.thumb.update( width / (obj.max - obj.min) * (obj.value - obj.min), this.interval );
+    }
+  }
+
+  updateView(symbol : string) {
+    this.symbol = symbol;
+    this.notifyObserverView();
+  }
+
+  addObserverView(o : ObserverView) {
+    this.observer = o;
+  }
+
+  notifyObserverView() {
+    if(typeof this.observer !== 'undefined' && typeof this.symbol === 'string') {
+      this.observer.updateView(this.symbol)
+    }
   }
 }
 
-export class ViewThumb {
-  
-constructor(private thumb : JQuery<HTMLElement>, private line : JQuery<HTMLElement>) {}
+export class ViewThumb implements SubjectView {
+  private observer : ObserverView | undefined;
+  private symbol : string | undefined;
+  private interval : number | undefined;
+
+  constructor(private thumb : JQuery<HTMLElement>, private line : JQuery<HTMLElement>) {}
 
   installValue(value: number, interval : number) {
-    
+      this.interval = interval;
+
       let width : number | undefined  = $(this.thumb).width();
       if(typeof width === 'number') {
         let left : string = value - width / 2 + 'px';
@@ -139,13 +197,15 @@ constructor(private thumb : JQuery<HTMLElement>, private line : JQuery<HTMLEleme
             let x : number =  event.clientX;
             
             let thumbLeft : number;
-            if(typeof width === 'number') {
+            if(typeof width === 'number' && typeof that.interval === 'number') {
               thumbLeft = target.getBoundingClientRect().left + width / 2
-              if( x >= (thumbLeft + interval / 2 ) ) {
-                that.increase();
+              if( x >= (thumbLeft + that.interval / 2 ) ) {
+                that.symbol = '+';
+                that.changed()
               } 
-              if(x <= (thumbLeft - interval / 2 )) {
-                that.reduce();
+              if(x <= (thumbLeft - that.interval / 2 )) {
+                that.symbol = '-';
+                that.changed()
               }
             }
           }
@@ -162,25 +222,67 @@ constructor(private thumb : JQuery<HTMLElement>, private line : JQuery<HTMLEleme
     
   }
 
-  increase() {
+  update(value : number, interval : number) {
+    this.interval = interval;
 
+    let width : number | undefined  = $(this.thumb).width();
+      if(typeof width === 'number') {
+        let left : string = value - width / 2 + 'px';
+        this.thumb.css('left', left);
+        this.line.css('width', left);
+      }
   }
 
-  reduce() {
+  changed() {
+    this.notifyObserverView()
+  }
 
+  addObserverView(o : ObserverView) {
+    this.observer = o;
+  }
+
+  notifyObserverView() {
+    if(typeof this.observer !== 'undefined' && typeof this.symbol === 'string') {
+      this.observer.updateView(this.symbol)
+    }
   }
 }
 
 
-class Prezenter {
+class Prezenter implements ObserverView, ObserverModel {
   private view : View;
   private model : MainModel;
+ 
+
   constructor(view : View, model : MainModel) {
     this.view = view;
     this.model = model;
+    this.view.addObserverView(this);
+    this.model.addObserverModel(this);
   }
+
   init(obj :{min : number, max: number, step : number, value : number}) {
     this.view.createSlider(obj)
+  }
+
+  updateView(symbol : string) {
+    if(symbol === '+') {
+      this.increase();
+    } else {
+      this.reduce();
+    }
+  }
+
+  updateModel(obj : {min : number, max: number, value : number, step : number}) {
+    this.view.updateThumb(obj)
+    console.log(obj.value)
+  }
+
+  increase() : void {
+    this.model.increaseValue();
+  }
+  reduce() : void {
+    this.model.reduceValue();
   }
 }
 
@@ -193,8 +295,9 @@ class Prezenter {
       max: 100,
       step: 10,
       value: 50
-    }
-    let model = new MainModel({min: def.min, max: def.max, step: def.max, handle: new ModelHandle(def.value) });
+    };
+
+    let model = new MainModel({min: def.min, max: def.max, step: def.step, handle: new ModelHandle(def.value) });
     let view = new View(this);
     let prezenter = new Prezenter(view, model);
     prezenter.init(def);
