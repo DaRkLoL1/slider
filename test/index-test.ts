@@ -224,7 +224,7 @@ describe('view', function (){
     
     let dom = new View(item);
 
-    dom.createSlider({min: 0, max: 100, step: 10, value: 50, tooltip: true});
+    dom.createSlider({min: 0, max: 100, step: 10, value: 50, tooltip: true, interval : true});
   });
 
   it('добавить бегунок', function (){
@@ -254,10 +254,18 @@ describe('view', function (){
     expect(tooltip.text()).toEqual('50');
   });
 
-  it('добавить интервал'), function () {
+  it('добавить интервал', function () {
     let interval = $('.slider__numbers');
 
     expect(interval).toExist();
-    expect(interval.find('span').length).toEqual(10);
-  }
+    expect(interval.find('span').length).toEqual(11);
+  });
+
+  it('изменить значение', function () {
+    let spyon = spyOnEvent('.slider__numbers', 'click');
+    $('.slider__numbers').click();
+    expect('click').toHaveBeenTriggeredOn('.slider__numbers');
+    expect(spyon).toHaveBeenTriggered();
+  });
+  
 });

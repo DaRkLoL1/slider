@@ -122,11 +122,13 @@ export class View implements ObserverView, SubjectView {
   private observer : ObserverView | undefined;
   private symbol : string | undefined;
   private tooltip : ViewTooltip | undefined;
+  private scale : ViewScale | undefined;
+
   constructor(item : JQuery<HTMLElement>) {
     this.item = item;
   }
 
-  createSlider(obj : {min : number, max : number, step : number, value : number, tooltip: boolean}) {
+  createSlider(obj : {min : number, max : number, step : number, value : number, tooltip: boolean, interval : boolean}) {
     
 
       $(this.item).html('<div class="slider"><div class="slider__field"></div></div>');
@@ -144,6 +146,12 @@ export class View implements ObserverView, SubjectView {
           $(this.item).find('.slider').prepend($('<div class="slider__tooltip"></div>'));
           this.tooltip = new ViewTooltip(this.item.find('.slider__tooltip'));
           this.tooltip.setTooltip( width / (obj.max - obj.min) * (obj.value - obj.min), obj.value )
+        }
+
+        if(obj.interval) {
+          $(this.item).find('.slider').append($('<div class="slider__numbers"></div>'));
+          this.scale = new ViewScale(this.item.find('.slider__numbers'));
+          this.scale.setNumbers({min: obj.min, max: obj.max, step: obj.step})
         }
       }
   }
@@ -273,6 +281,18 @@ class ViewTooltip {
   }
 }
 
+class ViewScale {
+  constructor(private scale : JQuery<HTMLElement>) {};
+
+  setNumbers(obj : {min : number, max : number, step : number}) {
+    
+
+    for(let i = obj.min; i <= obj.max; i += obj.step) {
+      this.scale.append($('<span>' + i + '</span>'));
+    }
+  }
+}
+
 class Prezenter implements ObserverView, ObserverModel {
   private view : View;
   private model : MainModel;
@@ -285,7 +305,7 @@ class Prezenter implements ObserverView, ObserverModel {
     this.model.addObserverModel(this);
   }
 
-  init(obj :{min : number, max: number, step : number, value : number, tooltip: boolean}) {
+  init(obj :{min : number, max: number, step : number, value : number, tooltip: boolean, interval : boolean}) {
     this.view.createSlider(obj)
   }
 
@@ -319,9 +339,11 @@ class Prezenter implements ObserverView, ObserverModel {
       step: 10,
       value: 50, 
       tooltip: false,
+      interval: false,
     };
 
     def.tooltip = true;
+    def.interval = true;
 
     let model = new MainModel({min: def.min, max: def.max, step: def.step, handle: new ModelHandle(def.value) });
     let view = new View(this);
