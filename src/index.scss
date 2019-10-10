@@ -116,6 +116,7 @@
       font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
       font-size: 18px;
       color: silver;
+      cursor: pointer;
     }
 
     &_vertical {
@@ -127,6 +128,7 @@
         width: auto;
         text-align: center;
         margin: 0;
+        cursor: pointer;
       }
     }
   }
