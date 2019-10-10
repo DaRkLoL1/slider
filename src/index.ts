@@ -1,4 +1,5 @@
 import './index.scss';
+import { deflateRaw } from 'zlib';
 
 interface SubjectView {
   addObserverView(o : ObserverView) : void;
@@ -124,42 +125,77 @@ export class View implements ObserverView, SubjectView {
   private symbol : string | undefined;
   private tooltip : ViewTooltip | undefined;
   private scale : ViewScale | undefined;
+  private position : string | undefined;
 
   constructor(item : JQuery<HTMLElement>) {
     this.item = item;
   }
 
-  createSlider(obj : {min : number, max : number, step : number, value : number, tooltip: boolean, interval : boolean}) {
+  createSlider(obj : {min : number, max : number, step : number, value : number, tooltip: boolean, interval : boolean, position : string}) {
     
+    this.position = obj.position;
 
+    let width : number | undefined;
+
+    if(this.position === 'vertical') {
+      $(this.item).html('<div class="slider slider_vertical"><div class="slider__field slider__field_vertical"></div></div>');
+      width  = $(this.item).height();
+    } else {
       $(this.item).html('<div class="slider"><div class="slider__field"></div></div>');
-      let width : number | undefined = $(this.item).width();
+      width  = $(this.item).width();
+    }
 
-      if(typeof width === 'number') {
-        this.interval = width / (obj.max - obj.min) * obj.step;
-        
+    if(typeof width === 'number') {
+      this.interval = width / (obj.max - obj.min) * obj.step;
+      
+      if(this.position === 'vertical') {
+        $(this.item).find('.slider__field_vertical').html('<div class="slider__line slider__line_vertical"></div><div class="slider__thumb slider__thumb_vertical"></div>');
+        this.thumb = new ViewThumb(this.item.find('.slider__thumb_vertical'), this.item.find('.slider__line_vertical') )
+      } else {
         $(this.item).find('.slider__field').html('<div class="slider__line"></div><div class="slider__thumb"></div>');
         this.thumb = new ViewThumb(this.item.find('.slider__thumb'), this.item.find('.slider__line') )
-        this.thumb.installValue( width / (obj.max - obj.min) * (obj.value - obj.min), this.interval );
-        this.thumb.addObserverView(this);
+      }
+      
+      this.thumb.installValue( width / (obj.max - obj.min) * (obj.value - obj.min), this.interval );
+      this.thumb.addObserverView(this);
 
-        if(obj.tooltip) {
+      if(obj.tooltip) {
+        if(this.position === 'vertical') {
+          $(this.item).find('.slider_vertical').prepend($('<div class="slider__tooltip slider__tooltip_vertical"></div>'));
+          this.tooltip = new ViewTooltip(this.item.find('.slider__tooltip_vertical'));
+        } else {
           $(this.item).find('.slider').prepend($('<div class="slider__tooltip"></div>'));
           this.tooltip = new ViewTooltip(this.item.find('.slider__tooltip'));
-          this.tooltip.setTooltip( width / (obj.max - obj.min) * (obj.value - obj.min), obj.value )
         }
+        
+        this.tooltip.setTooltip( width / (obj.max - obj.min) * (obj.value - obj.min), obj.value )
+      }
 
-        if(obj.interval) {
+      if(obj.interval) {
+        if(this.position === 'vertical') {
+          $(this.item).find('.slider_vertical').append($('<div class="slider__numbers slider__numbers_vertical"></div>'));
+          this.scale = new ViewScale(this.item.find('.slider__numbers_vertical'));
+        } else {
           $(this.item).find('.slider').append($('<div class="slider__numbers"></div>'));
           this.scale = new ViewScale(this.item.find('.slider__numbers'));
-          this.scale.setNumbers({min: obj.min, max: obj.max, step: obj.step});
-          this.scale.addObserverView(this);
         }
+        this.scale.setNumbers({min: obj.min, max: obj.max, step: obj.step});
+        this.scale.addObserverView(this);
+
       }
+    }  
   }
 
   update(obj : {min : number, max: number, value: number, step : number}) {
-    let width : number | undefined = $(this.item).width();
+    let width : number | undefined;
+
+    if(this.position === 'vertical') {
+      width = $(this.item).height();
+    } else {
+      width = $(this.item).width();
+    }
+
+    
 
     if(typeof width === 'number' && typeof this.thumb === 'object' && typeof this.interval === 'number') {
       this.interval = width / (obj.max - obj.min) * obj.step;
@@ -196,61 +232,111 @@ export class ViewThumb implements SubjectView {
   constructor(private thumb : JQuery<HTMLElement>, private line : JQuery<HTMLElement>) {}
 
   installValue(value: number, interval : number) {
-      this.interval = interval;
+    this.interval = interval;
 
-      let width : number | undefined  = $(this.thumb).width();
-      if(typeof width === 'number') {
-        let left : string = value - width / 2 + 'px';
+    let width : number | undefined;
+
+    if(this.thumb.hasClass('slider__thumb_vertical')) {
+      width  = $(this.thumb).height();
+      
+    } else {
+      width  = $(this.thumb).width();
+    }
+    
+    if(typeof width === 'number') {
+      let left : string = value - width / 2 + 'px';
+      
+      if(this.thumb.hasClass('slider__thumb_vertical')) {
+        this.thumb.css('bottom', left);
+        this.line.css('height', left);
+      } else {
         this.thumb.css('left', left);
         this.line.css('width', left);
-        let that : ViewThumb = this;
+      }
+      
+      let that : ViewThumb = this;
 
-        $(this.thumb).on('dragstart', function () {
-          return false;
-        });
+      $(this.thumb).on('dragstart', function () {
+        return false;
+      });
 
-        $(this.thumb).on('mousedown', function (event) {
-          let target : Element = event.currentTarget;
+      $(this.thumb).on('mousedown', function (event) {
+        let target : Element = event.currentTarget;
 
-          let onMouseMove = function (event : MouseEvent) {
+        let onMouseMove = function (event : MouseEvent) {
             
-            let x : number =  event.clientX;
+          let x : number;
+          if(that.thumb.hasClass('slider__thumb_vertical')) {
+            x =  event.clientY;
+          } else {
+            x =  event.clientX;
+          }
+          
             
-            let thumbLeft : number;
-            if(typeof width === 'number' && typeof that.interval === 'number') {
+          let thumbLeft : number;
+          if(typeof width === 'number' && typeof that.interval === 'number') {
+            if(that.thumb.hasClass('slider__thumb_vertical')) {
+              thumbLeft = target.getBoundingClientRect().top + width / 2
+            } else {
               thumbLeft = target.getBoundingClientRect().left + width / 2
-              if( x >= (thumbLeft + that.interval / 2 ) ) {
-                that.symbol = '+';
-                that.changed()
-              } 
-              if(x <= (thumbLeft - that.interval / 2 )) {
+            }
+            
+            if( x >= (thumbLeft + that.interval / 2 ) ) {
+
+              if(that.thumb.hasClass('slider__thumb_vertical')) {
                 that.symbol = '-';
-                that.changed()
+              } else {
+                that.symbol = '+';
               }
+              
+              that.changed()
+
+            } 
+            if(x <= (thumbLeft - that.interval / 2 )) {
+              if(that.thumb.hasClass('slider__thumb_vertical')) {
+                that.symbol = '+';
+              } else {
+                that.symbol = '-';
+              }
+              that.changed()
             }
           }
-          document.addEventListener('mousemove', onMouseMove);
+        }
+        document.addEventListener('mousemove', onMouseMove);
 
-          let onMouseUp = function () {
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
-          }
-          document.addEventListener('mouseup', onMouseUp);
+        let onMouseUp = function () {
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+        }
+        document.addEventListener('mouseup', onMouseUp);
             
-        });
-      }
+      });
+    }
     
   }
 
   update(value : number, interval : number) {
     this.interval = interval;
 
-    let width : number | undefined  = $(this.thumb).width();
-      if(typeof width === 'number') {
-        let left : string = value - width / 2 + 'px';
+    let width : number | undefined;
+
+    if(this.thumb.hasClass('slider__thumb_vertical')) {
+      width  = $(this.thumb).height();
+    } else {
+      width  = $(this.thumb).width();
+    }
+
+    if(typeof width === 'number') {
+      let left : string = value - width / 2 + 'px';
+
+      if(this.thumb.hasClass('slider__thumb_vertical')) {
+         this.thumb.css('bottom', left);
+        this.line.css('height', left);
+      } else {
         this.thumb.css('left', left);
         this.line.css('width', left);
       }
+    }
   }
 
   changed() {
@@ -272,11 +358,24 @@ class ViewTooltip {
   constructor(private tooltip : JQuery<HTMLElement>) {};
 
   setTooltip(position : number, value : number) {
-    let width : number | undefined = this.tooltip.width();
+    let width : number | undefined;
 
+    if(this.tooltip.hasClass('slider__tooltip_vertical')) {
+      width = this.tooltip.height();
+    } else {
+      width = this.tooltip.width();
+    }
+    
     if(typeof width === 'number') {
-      let left = position - width / 2 + 'px';
-      this.tooltip.css('margin-left', left);
+      let left : string = position  - width / 2 + 'px';
+
+      if(this.tooltip.hasClass('slider__tooltip_vertical')) {
+        this.tooltip.css('bottom', left);
+      } else {
+        
+        this.tooltip.css('left', left);
+      }
+      
     }
     
     this.tooltip.text(value);
@@ -303,6 +402,7 @@ class ViewScale implements SubjectView {
       
       that.num = target.text();
       that.notifyObserverView();
+      return false;
     });
   }
 
@@ -332,7 +432,7 @@ class Prezenter implements ObserverView, ObserverModel {
     this.model.addObserverModel(this);
   }
 
-  init(obj :{min : number, max: number, step : number, value : number, tooltip: boolean, interval : boolean}) {
+  init(obj :{min : number, max: number, step : number, value : number, tooltip: boolean, interval : boolean, position: string}) {
     this.view.createSlider(obj)
   }
 
@@ -376,10 +476,12 @@ class Prezenter implements ObserverView, ObserverModel {
       value: 50, 
       tooltip: false,
       interval: false,
+      position: 'horisontal'
     };
 
     def.tooltip = true;
     def.interval = true;
+    def.position = 'vertical';
 
     let model = new MainModel({min: def.min, max: def.max, step: def.step, handle: new ModelHandle(def.value) });
     let view = new View(this);

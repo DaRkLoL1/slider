@@ -11,6 +11,7 @@
 .slider {
   display: flex;
   flex-direction: column;
+  position: relative;
   width: 100%;
 
   &_vertical {
@@ -21,11 +22,12 @@
 
 
   &__tooltip {
-    position: relative;
+    position: absolute;
+    top: -50px;
+    left: 235px;
     width: 30px;
     height: 30px;
     margin-bottom: 20px;
-    margin-left: 235px;
     background-color: red;
     border-radius: 5px;
     line-height: 30px;
@@ -45,9 +47,12 @@
     }
 
     &_vertical {
+      top : auto;
+      bottom: 235px;
+      left: 50px;
       margin-left: 20px;
-      margin-top: auto;
-      margin-bottom: 235px;
+      margin-bottom: 0;
+      
 
       &::before {
         border-bottom: 5px solid transparent;
@@ -132,4 +137,9 @@
       }
     }
   }
+}
+
+.rooot {
+  margin-left: 100px;
+  height: 500px;
 }

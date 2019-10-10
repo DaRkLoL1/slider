@@ -224,7 +224,7 @@ describe('view', function (){
     
     let dom = new View(item);
 
-    dom.createSlider({min: 0, max: 100, step: 10, value: 50, tooltip: true, interval : true});
+    dom.createSlider({min: 0, max: 100, step: 10, value: 50, tooltip: true, interval : true, position: 'horisontal'});
   });
 
   it('добавить бегунок', function (){
@@ -250,7 +250,7 @@ describe('view', function (){
     let tooltip = $('.slider__tooltip');
 
     expect(tooltip).toExist();
-    expect(tooltip.css('margin-left')).toEqual('235px');
+    expect(tooltip.css('left')).toEqual('235px');
     expect(tooltip.text()).toEqual('50');
   });
 
@@ -380,7 +380,7 @@ describe('viewVertical', function (){
     
     let dom = new View(item);
 
-    dom.createSlider({min: 0, max: 100, step: 10, value: 50, tooltip: true, interval : true, position: vertical});
+    dom.createSlider({min: 0, max: 100, step: 10, value: 50, tooltip: true, interval : true, position: 'vertical'});
   });
 
   it('добавить бегунок', function (){
@@ -406,7 +406,7 @@ describe('viewVertical', function (){
     let tooltip = $('.slider__tooltip_vertical');
 
     expect(tooltip).toExist();
-    expect(tooltip.css('margin-bottom')).toEqual('235px');
+    expect(tooltip.css('bottom')).toEqual('235px');
     expect(tooltip.text()).toEqual('50');
   });
 
