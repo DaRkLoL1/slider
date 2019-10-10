@@ -269,3 +269,159 @@ describe('view', function (){
   });
   
 });
+
+
+describe('viewVertical', function (){
+  let item : JQuery<HTMLElement>;
+
+  beforeEach(function () {
+    setFixtures('<div class="root"></div>');
+    setStyleFixtures(`.root {
+      width: 500px;
+      margin-top: 50px; }
+      .root__version2 {
+        width: 200px;
+        height: 500px; }
+    
+    .slider {
+      display: flex;
+      flex-direction: column;
+      width: 100%; }
+      .slider_vertical {
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        height: 100%; }
+      .slider__tooltip {
+        position: relative;
+        width: 30px;
+        height: 30px;
+        margin-bottom: 20px;
+        margin-left: 235px;
+        background-color: red;
+        border-radius: 5px;
+        line-height: 30px;
+        font-size: 20px;
+        color: white;
+        text-align: center; }
+        .slider__tooltip::before {
+          content: '';
+          position: absolute;
+          border: 5px solid red;
+          border-bottom: 0px;
+          border-left-color: transparent;
+          border-right-color: transparent;
+          left: 10px;
+          top: 30px; }
+        .slider__tooltip_vertical {
+          margin-left: 20px;
+          margin-top: auto;
+          margin-bottom: 235px; }
+          .slider__tooltip_vertical::before {
+            border-bottom: 5px solid transparent;
+            border-top-color: transparent;
+            border-left: 0;
+            border-right-color: red;
+            top: 10px;
+            left: -5px; }
+      .slider__field {
+        display: flex;
+        position: relative;
+        margin: auto;
+        border-radius: 5px;
+        background-color: silver;
+        width: 100%;
+        height: 5px; }
+        .slider__field_vertical {
+          align-self: center;
+          height: 100%;
+          width: 5px;
+          margin: 0; }
+      .slider__thumb {
+        position: absolute;
+        top: -7.5px;
+        left: 240px;
+        width: 20px;
+        height: 20px;
+        background-color: green;
+        border-radius: 10px;
+        cursor: pointer; }
+        .slider__thumb_vertical {
+          top: auto;
+          bottom: 240px;
+          left: -7.5px; }
+      .slider__line {
+        width: 240px;
+        height: 5px;
+        background-color: green;
+        border-radius: 5px; }
+        .slider__line_vertical {
+          align-self: flex-end;
+          height: 240px;
+          width: 5px; }
+      .slider__numbers {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px; }
+        .slider__numbers span {
+          font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+          font-size: 18px;
+          color: silver; }
+        .slider__numbers_vertical {
+          flex-direction: column-reverse;
+          margin-top: 0;
+          margin-right: 10px; }
+          .slider__numbers_vertical span {
+            width: auto;
+            text-align: center;
+            margin: 0; }`);
+    item  = $('.root');
+    
+    item.css('height', 500);
+    
+    let dom = new View(item);
+
+    dom.createSlider({min: 0, max: 100, step: 10, value: 50, tooltip: true, interval : true, position: vertical});
+  });
+
+  it('добавить бегунок', function (){
+    expect($('.slider__thumb_vertical')).toExist();
+    expect($('.slider__line_vertical')).toExist();
+  });
+  
+
+  it('добавить значения', function () {
+    expect($('.slider__thumb_vertical').css('bottom')).toEqual('240px');
+    expect($('.slider__line_vertical').css('height')).toEqual('240px');
+  });
+
+  it('уменьшить, увеличить  значение', function () {
+    let spyon = spyOnEvent('.slider__thumb_vertical', 'click');
+    $('.slider__thumb_vertical').click();
+    expect('click').toHaveBeenTriggeredOn('.slider__thumb_vertical');
+    expect(spyon).toHaveBeenTriggered();
+  });
+
+
+  it('добавить подсказку', function () {
+    let tooltip = $('.slider__tooltip_vertical');
+
+    expect(tooltip).toExist();
+    expect(tooltip.css('margin-bottom')).toEqual('235px');
+    expect(tooltip.text()).toEqual('50');
+  });
+
+  it('добавить интервал', function () {
+    let interval = $('.slider__numbers_vertical');
+
+    expect(interval).toExist();
+    expect(interval.find('span').length).toEqual(11);
+  });
+
+  it('изменить значение', function () {
+    let spyon = spyOnEvent('.slider__numbers_vertical', 'click');
+    $('.slider__numbers_vertical').click();
+    expect('click').toHaveBeenTriggeredOn('.slider__numbers_vertical');
+    expect(spyon).toHaveBeenTriggered();
+  });
+  
+});
