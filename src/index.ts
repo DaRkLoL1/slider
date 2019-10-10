@@ -121,12 +121,12 @@ export class View implements ObserverView, SubjectView {
   private thumb : ViewThumb | undefined;
   private observer : ObserverView | undefined;
   private symbol : string | undefined;
-
+  private tooltip : ViewTooltip | undefined;
   constructor(item : JQuery<HTMLElement>) {
     this.item = item;
   }
 
-  createSlider(obj : {min : number, max : number, step : number, value : number}) {
+  createSlider(obj : {min : number, max : number, step : number, value : number, tooltip: boolean}) {
     
 
       $(this.item).html('<div class="slider"><div class="slider__field"></div></div>');
@@ -139,6 +139,12 @@ export class View implements ObserverView, SubjectView {
         this.thumb = new ViewThumb(this.item.find('.slider__thumb'), this.item.find('.slider__line') )
         this.thumb.installValue( width / (obj.max - obj.min) * (obj.value - obj.min), this.interval );
         this.thumb.addObserverView(this);
+
+        if(obj.tooltip) {
+          $(this.item).find('.slider').prepend($('<div class="slider__tooltip"></div>'));
+          this.tooltip = new ViewTooltip(this.item.find('.slider__tooltip'));
+          this.tooltip.setTooltip( width / (obj.max - obj.min) * (obj.value - obj.min), obj.value )
+        }
       }
   }
 
@@ -149,6 +155,10 @@ export class View implements ObserverView, SubjectView {
       this.interval = width / (obj.max - obj.min) * obj.step;
 
       this.thumb.update( width / (obj.max - obj.min) * (obj.value - obj.min), this.interval );
+
+      if(typeof this.tooltip === 'object') {
+        this.tooltip.setTooltip(width / (obj.max - obj.min) * (obj.value - obj.min), obj.value)
+      }
     }
   }
 
@@ -248,6 +258,20 @@ export class ViewThumb implements SubjectView {
   }
 }
 
+class ViewTooltip {
+  constructor(private tooltip : JQuery<HTMLElement>) {};
+
+  setTooltip(position : number, value : number) {
+    let width : number | undefined = this.tooltip.width();
+
+    if(typeof width === 'number') {
+      let left = position - width / 2 + 'px';
+      this.tooltip.css('margin-left', left);
+    }
+    
+    this.tooltip.text(value);
+  }
+}
 
 class Prezenter implements ObserverView, ObserverModel {
   private view : View;
@@ -261,7 +285,7 @@ class Prezenter implements ObserverView, ObserverModel {
     this.model.addObserverModel(this);
   }
 
-  init(obj :{min : number, max: number, step : number, value : number}) {
+  init(obj :{min : number, max: number, step : number, value : number, tooltip: boolean}) {
     this.view.createSlider(obj)
   }
 
@@ -293,8 +317,11 @@ class Prezenter implements ObserverView, ObserverModel {
       min: 0,
       max: 100,
       step: 10,
-      value: 50
+      value: 50, 
+      tooltip: false,
     };
+
+    def.tooltip = true;
 
     let model = new MainModel({min: def.min, max: def.max, step: def.step, handle: new ModelHandle(def.value) });
     let view = new View(this);

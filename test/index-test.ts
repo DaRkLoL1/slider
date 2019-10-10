@@ -135,7 +135,7 @@ describe('view', function (){
         flex-direction: row-reverse;
         justify-content: flex-end;
         height: 100%; }
-      .slider__button {
+      .slider__tooltip {
         position: relative;
         width: 30px;
         height: 30px;
@@ -147,7 +147,7 @@ describe('view', function (){
         font-size: 20px;
         color: white;
         text-align: center; }
-        .slider__button::before {
+        .slider__tooltip::before {
           content: '';
           position: absolute;
           border: 5px solid red;
@@ -156,11 +156,11 @@ describe('view', function (){
           border-right-color: transparent;
           left: 10px;
           top: 30px; }
-        .slider__button_vertical {
+        .slider__tooltip_vertical {
           margin-left: 20px;
           margin-top: auto;
           margin-bottom: 235px; }
-          .slider__button_vertical::before {
+          .slider__tooltip_vertical::before {
             border-bottom: 5px solid transparent;
             border-top-color: transparent;
             border-left: 0;
@@ -224,7 +224,7 @@ describe('view', function (){
     
     let dom = new View(item);
 
-    dom.createSlider({min: 0, max: 100, step: 10, value: 50});
+    dom.createSlider({min: 0, max: 100, step: 10, value: 50, tooltip: true});
   });
 
   it('добавить бегунок', function (){
