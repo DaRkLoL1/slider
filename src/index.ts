@@ -18,6 +18,7 @@ interface ObserverModel {
   updateModel(obj : {min : number, max: number, value: number, step: number}) : void
 }
 
+
 export class MainModel implements SubjectModel {
   private min : number;
   private max : number;
@@ -151,12 +152,13 @@ export class View implements ObserverView, SubjectView {
         if(obj.interval) {
           $(this.item).find('.slider').append($('<div class="slider__numbers"></div>'));
           this.scale = new ViewScale(this.item.find('.slider__numbers'));
-          this.scale.setNumbers({min: obj.min, max: obj.max, step: obj.step})
+          this.scale.setNumbers({min: obj.min, max: obj.max, step: obj.step});
+          this.scale.addObserverView(this);
         }
       }
   }
 
-  updateThumb(obj : {min : number, max: number, value: number, step : number}) {
+  update(obj : {min : number, max: number, value: number, step : number}) {
     let width : number | undefined = $(this.item).width();
 
     if(typeof width === 'number' && typeof this.thumb === 'object' && typeof this.interval === 'number') {
@@ -281,16 +283,41 @@ class ViewTooltip {
   }
 }
 
-class ViewScale {
+class ViewScale implements SubjectView {
+  private observer : ObserverView | undefined;
+  private num : string | undefined;
+
   constructor(private scale : JQuery<HTMLElement>) {};
 
   setNumbers(obj : {min : number, max : number, step : number}) {
     
-
     for(let i = obj.min; i <= obj.max; i += obj.step) {
       this.scale.append($('<span>' + i + '</span>'));
     }
+
+    let that = this;
+    this.scale.on('click', function (event) {
+      let target = $(event.target);
+      
+      if(target.prop('tagName') !== 'SPAN') return;
+      
+      that.num = target.text();
+      that.notifyObserverView();
+    });
   }
+
+  addObserverView (o : ObserverView) {
+    this.observer = o;
+  }
+
+  notifyObserverView () {
+
+    if(typeof this.observer === 'object' && typeof this.num === 'string') {
+      this.observer.updateView(this.num);
+    }
+
+  }
+
 }
 
 class Prezenter implements ObserverView, ObserverModel {
@@ -310,22 +337,31 @@ class Prezenter implements ObserverView, ObserverModel {
   }
 
   updateView(symbol : string) {
+
     if(symbol === '+') {
       this.increase();
-    } else {
+    } 
+    else if(symbol === '-') {
       this.reduce();
+    } else {
+      this.set( Number.parseInt(symbol) );
     }
   }
 
   updateModel(obj : {min : number, max: number, value : number, step : number}) {
-    this.view.updateThumb(obj)
+    this.view.update(obj)
   }
 
   increase() : void {
     this.model.increaseValue();
   }
+  
   reduce() : void {
     this.model.reduceValue();
+  }
+
+  set(num : number) : void {
+    this.model.setValue(num)
   }
 }
 
