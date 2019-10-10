@@ -248,8 +248,16 @@ describe('view', function (){
 
   it('добавить подсказку', function () {
     let tooltip = $('.slider__tooltip');
+
     expect(tooltip).toExist();
     expect(tooltip.css('margin-left')).toEqual('235px');
     expect(tooltip.text()).toEqual('50');
-  })
+  });
+
+  it('добавить интервал'), function () {
+    let interval = $('.slider__numbers');
+
+    expect(interval).toExist();
+    expect(interval.find('span').length).toEqual(10);
+  }
 });
