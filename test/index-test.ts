@@ -245,4 +245,11 @@ describe('view', function (){
     expect(spyon).toHaveBeenTriggered();
   });
 
+
+  it('добавить подсказку', function () {
+    let tooltip = $('.slider__tooltip');
+    expect(tooltip).toExist();
+    expect(tooltip.css('margin-left')).toEqual('235px');
+    expect(tooltip.text()).toEqual('50');
+  })
 });
