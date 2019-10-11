@@ -13,7 +13,7 @@ export class ViewScale implements SubjectView {
 
   constructor(private scale : JQuery<HTMLElement>) {};
 
-  setNumbers(obj : {min : number, max : number, step : number}) {
+  setNumbers(obj : {min : number, max : number, step : number}) : void {
     
     for(let i = obj.min; i <= obj.max; i += obj.step) {
       this.scale.append($('<span>' + i + '</span>'));
@@ -31,11 +31,11 @@ export class ViewScale implements SubjectView {
     });
   }
 
-  addObserverView (o : ObserverView) {
+  addObserverView(o : ObserverView) : void {
     this.observer = o;
   }
 
-  notifyObserverView () {
+  notifyObserverView() : void {
 
     if(typeof this.observer === 'object' && typeof this.num === 'string') {
       this.observer.updateView(this.num);

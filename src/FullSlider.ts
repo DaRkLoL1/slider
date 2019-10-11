@@ -130,7 +130,7 @@ export class View implements ObserverView, SubjectView {
     this.item = item;
   }
 
-  createSlider(obj : {min : number, max : number, step : number, value : number, tooltip: boolean, interval : boolean, position : string}) {
+  createSlider(obj : {min : number, max : number, step : number, value : number, tooltip: boolean, interval : boolean, position : string}) : void {
     
     this.position = obj.position;
 
@@ -185,7 +185,7 @@ export class View implements ObserverView, SubjectView {
     }  
   }
 
-  update(obj : {min : number, max: number, value: number, step : number}) {
+  update(obj : {min : number, max: number, value: number, step : number}) : void {
     let width : number | undefined;
 
     if(this.position === 'vertical') {
@@ -207,16 +207,16 @@ export class View implements ObserverView, SubjectView {
     }
   }
 
-  updateView(symbol : string) {
+  updateView(symbol : string) : void {
     this.symbol = symbol;
     this.notifyObserverView();
   }
 
-  addObserverView(o : ObserverView) {
+  addObserverView(o : ObserverView) : void {
     this.observer = o;
   }
 
-  notifyObserverView() {
+  notifyObserverView() : void {
     if(typeof this.observer !== 'undefined' && typeof this.symbol === 'string') {
       this.observer.updateView(this.symbol)
     }
@@ -230,7 +230,7 @@ export class ViewThumb implements SubjectView {
 
   constructor(private thumb : JQuery<HTMLElement>, private line : JQuery<HTMLElement>) {}
 
-  installValue(value: number, interval : number) {
+  installValue(value: number, interval : number) : void {
     this.interval = interval;
 
     let width : number | undefined;
@@ -314,7 +314,7 @@ export class ViewThumb implements SubjectView {
     
   }
 
-  update(value : number, interval : number) {
+  update(value : number, interval : number) : void {
     this.interval = interval;
 
     let width : number | undefined;
@@ -338,15 +338,15 @@ export class ViewThumb implements SubjectView {
     }
   }
 
-  changed() {
+  changed() : void {
     this.notifyObserverView()
   }
 
-  addObserverView(o : ObserverView) {
+  addObserverView(o : ObserverView) : void {
     this.observer = o;
   }
 
-  notifyObserverView() {
+  notifyObserverView() : void {
     if(typeof this.observer !== 'undefined' && typeof this.symbol === 'string') {
       this.observer.updateView(this.symbol)
     }
@@ -356,7 +356,7 @@ export class ViewThumb implements SubjectView {
 class ViewTooltip {
   constructor(private tooltip : JQuery<HTMLElement>) {};
 
-  setTooltip(position : number, value : number) {
+  setTooltip(position : number, value : number) : void {
     let width : number | undefined;
 
     if(this.tooltip.hasClass('slider__tooltip_vertical')) {
@@ -387,7 +387,7 @@ class ViewScale implements SubjectView {
 
   constructor(private scale : JQuery<HTMLElement>) {};
 
-  setNumbers(obj : {min : number, max : number, step : number}) {
+  setNumbers(obj : {min : number, max : number, step : number}) : void {
     
     for(let i = obj.min; i <= obj.max; i += obj.step) {
       this.scale.append($('<span>' + i + '</span>'));
@@ -405,11 +405,11 @@ class ViewScale implements SubjectView {
     });
   }
 
-  addObserverView (o : ObserverView) {
+  addObserverView(o : ObserverView) : void {
     this.observer = o;
   }
 
-  notifyObserverView () {
+  notifyObserverView() : void {
 
     if(typeof this.observer === 'object' && typeof this.num === 'string') {
       this.observer.updateView(this.num);
@@ -431,11 +431,11 @@ class Prezenter implements ObserverView, ObserverModel {
     this.model.addObserverModel(this);
   }
 
-  init(obj :{min : number, max: number, step : number, value : number, tooltip: boolean, interval : boolean, position: string}) {
+  init(obj :{min : number, max: number, step : number, value : number, tooltip: boolean, interval : boolean, position: string}) : void {
     this.view.createSlider(obj)
   }
 
-  updateView(symbol : string) {
+  updateView(symbol : string) : void {
 
     if(symbol === '+') {
       this.increase();
@@ -447,7 +447,7 @@ class Prezenter implements ObserverView, ObserverModel {
     }
   }
 
-  updateModel(obj : {min : number, max: number, value : number, step : number}) {
+  updateModel(obj : {min : number, max: number, value : number, step : number}) : void {
     this.slide(obj.value)
     this.view.update(obj);
   }
@@ -464,7 +464,7 @@ class Prezenter implements ObserverView, ObserverModel {
     this.model.setValue(num)
   }
 
-  slide(num : number) {}
+  slide(num : number) : void {}
 }
 
 (function( $ ) {
@@ -477,7 +477,7 @@ class Prezenter implements ObserverView, ObserverModel {
     tooltip: false,
     interval: false,
     position: 'horisontal',
-    slide : function(num : number) {
+    slide : function(num : number) : void {
     }
   };
 

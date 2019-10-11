@@ -25,7 +25,7 @@ export class View implements ObserverView, SubjectView {
     this.item = item;
   }
 
-  createSlider(obj : {min : number, max : number, step : number, value : number, tooltip: boolean, interval : boolean, position : string}) {
+  createSlider(obj : {min : number, max : number, step : number, value : number, tooltip: boolean, interval : boolean, position : string}) : void {
     
     this.position = obj.position;
 
@@ -80,7 +80,7 @@ export class View implements ObserverView, SubjectView {
     }  
   }
 
-  update(obj : {min : number, max: number, value: number, step : number}) {
+  update(obj : {min : number, max: number, value: number, step : number}) : void {
     let width : number | undefined;
 
     if(this.position === 'vertical') {
@@ -102,16 +102,16 @@ export class View implements ObserverView, SubjectView {
     }
   }
 
-  updateView(symbol : string) {
+  updateView(symbol : string) : void {
     this.symbol = symbol;
     this.notifyObserverView();
   }
 
-  addObserverView(o : ObserverView) {
+  addObserverView(o : ObserverView) : void {
     this.observer = o;
   }
 
-  notifyObserverView() {
+  notifyObserverView() : void {
     if(typeof this.observer !== 'undefined' && typeof this.symbol === 'string') {
       this.observer.updateView(this.symbol)
     }

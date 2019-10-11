@@ -1,7 +1,7 @@
 export class ViewTooltip {
   constructor(private tooltip : JQuery<HTMLElement>) {};
 
-  setTooltip(position : number, value : number) {
+  setTooltip(position : number, value : number) : void {
     let width : number | undefined;
 
     if(this.tooltip.hasClass('slider__tooltip_vertical')) {

@@ -14,7 +14,7 @@ export class ViewThumb implements SubjectView {
 
   constructor(private thumb : JQuery<HTMLElement>, private line : JQuery<HTMLElement>) {}
 
-  installValue(value: number, interval : number) {
+  installValue(value: number, interval : number) : void {
     this.interval = interval;
 
     let width : number | undefined;
@@ -98,7 +98,7 @@ export class ViewThumb implements SubjectView {
     
   }
 
-  update(value : number, interval : number) {
+  update(value : number, interval : number) : void {
     this.interval = interval;
 
     let width : number | undefined;
@@ -122,15 +122,15 @@ export class ViewThumb implements SubjectView {
     }
   }
 
-  changed() {
+  changed() : void {
     this.notifyObserverView()
   }
 
-  addObserverView(o : ObserverView) {
+  addObserverView(o : ObserverView) : void {
     this.observer = o;
   }
 
-  notifyObserverView() {
+  notifyObserverView() : void {
     if(typeof this.observer !== 'undefined' && typeof this.symbol === 'string') {
       this.observer.updateView(this.symbol)
     }

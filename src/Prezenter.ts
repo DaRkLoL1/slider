@@ -21,11 +21,11 @@ export class Prezenter implements ObserverView, ObserverModel {
     this.model.addObserverModel(this);
   }
 
-  init(obj :{min : number, max: number, step : number, value : number, tooltip: boolean, interval : boolean, position: string}) {
+  init(obj :{min : number, max: number, step : number, value : number, tooltip: boolean, interval : boolean, position: string}) : void {
     this.view.createSlider(obj)
   }
 
-  updateView(symbol : string) {
+  updateView(symbol : string) : void {
 
     if(symbol === '+') {
       this.increase();
@@ -37,7 +37,7 @@ export class Prezenter implements ObserverView, ObserverModel {
     }
   }
 
-  updateModel(obj : {min : number, max: number, value : number, step : number}) {
+  updateModel(obj : {min : number, max: number, value : number, step : number}) : void {
     this.slide(obj.value)
     this.view.update(obj);
   }
@@ -54,5 +54,5 @@ export class Prezenter implements ObserverView, ObserverModel {
     this.model.setValue(num)
   }
 
-  slide(num : number) {}
+  slide(num : number) : void {}
 }

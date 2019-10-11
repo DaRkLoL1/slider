@@ -13,7 +13,7 @@ import {ModelHandle} from './ModelHandle';
     tooltip: false,
     interval: false,
     position: 'horisontal',
-    slide : function(num : number) {
+    slide : function(num : number) : void {
     }
   };
 

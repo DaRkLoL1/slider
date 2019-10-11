@@ -55,11 +55,11 @@ export class MainModel implements SubjectModel {
     this.notifyObserverModel();
   }
 
-  addObserverModel(o : ObserverModel) {
+  addObserverModel(o : ObserverModel) : void {
     this.observer = o;
   }
 
-  notifyObserverModel() {
+  notifyObserverModel() : void {
     if(typeof this.observer !== 'undefined')
     this.observer.updateModel({min : this.getMin(), max: this.getMax(), value: this.getValue(), step: this.getStep()});
   }
