@@ -1,7 +1,7 @@
-import {MainModel} from '../src/index';
-import {ModelHandle} from '../src/index';
-import {View} from '../src/index';
-import {ViewThumb} from '../src/index';
+import {MainModel} from '../src/MainModel';
+import {ModelHandle} from '../src/ModelHandle';
+import {View} from '../src/View';
+
 
 describe('Model', function () {
   
