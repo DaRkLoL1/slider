@@ -1,5 +1,6 @@
 import './index.scss';
 import { deflateRaw } from 'zlib';
+import { numberTypeAnnotation } from 'babel-types';
 
 interface SubjectView {
   addObserverView(o : ObserverView) : void;
@@ -449,7 +450,8 @@ class Prezenter implements ObserverView, ObserverModel {
   }
 
   updateModel(obj : {min : number, max: number, value : number, step : number}) {
-    this.view.update(obj)
+    this.slide(obj.value)
+    this.view.update(obj);
   }
 
   increase() : void {
@@ -463,6 +465,8 @@ class Prezenter implements ObserverView, ObserverModel {
   set(num : number) : void {
     this.model.setValue(num)
   }
+
+  slide(num : number) {}
 }
 
 (function( $ ) {
@@ -474,7 +478,9 @@ class Prezenter implements ObserverView, ObserverModel {
     value: 50, 
     tooltip: false,
     interval: false,
-    position: 'horisontal'
+    position: 'horisontal',
+    slide : function(num : number) {
+    }
   };
 
   let model : MainModel;
@@ -488,10 +494,12 @@ class Prezenter implements ObserverView, ObserverModel {
 
       model = new MainModel({min: options.min, max: options.max, step: options.step, handle: new ModelHandle(options.value) });
       view = new View(that);
+
       prezenter = new Prezenter(view, model);
       prezenter.init(options);
-      return this;
+      prezenter.slide = options.slide;
 
+      return this;
     },
 
     value (num : string) {
@@ -501,8 +509,8 @@ class Prezenter implements ObserverView, ObserverModel {
         prezenter.updateView(num);
         return this;
       }
-      
     }
+
   };
 
   (<any>$.fn).myPlugin = function(method : {} | string) {
@@ -520,5 +528,11 @@ class Prezenter implements ObserverView, ObserverModel {
 })( jQuery );
 
 
-(<any>$('.rooot1')).myPlugin();
-console.log((<any>$('.rooot1')).myPlugin('value'));
+(<any>$('.rooot1')).myPlugin({interval : true, slide : function (num : number) {
+  $('.root__input').val(num);
+}});
+
+$('.root__input').on('input', function (event) {
+  let target = $(event.currentTarget);
+  (<any>$('.rooot1')).myPlugin('value', target.val());
+})
