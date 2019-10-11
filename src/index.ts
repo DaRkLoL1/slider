@@ -481,46 +481,42 @@ class Prezenter implements ObserverView, ObserverModel {
     }
   };
 
-  let model : MainModel;
-  let view : View;
-  let prezenter : Prezenter;
+  (<any>$.fn).myPlugin = function(method : {} | string) {
+     
 
   let methods = {
     init : function( that : JQuery<HTMLElement>,params : {} ) { 
       
       let options = $.extend({}, def, params);
 
-      model = new MainModel({min: options.min, max: options.max, step: options.step, handle: new ModelHandle(options.value) });
-      view = new View(that);
+      that.data('model', new MainModel({min: options.min, max: options.max, step: options.step, handle: new ModelHandle(options.value) }) );
+      that.data('view', new View(that) );
 
-      prezenter = new Prezenter(view, model);
-      prezenter.init(options);
-      prezenter.slide = options.slide;
+      that.data('prazenter', new Prezenter(that.data('view'), that.data('model') ) );
+      that.data('prazenter').init(options);
+      that.data('prazenter').slide = options.slide;
 
       return this;
     },
 
-    value (num : string) {
+    value (that : JQuery<HTMLElement>, num : string) {
       if(typeof num === 'undefined') {
-        return model.getValue();
+        return that.data('model').getValue();
       } else {
-        prezenter.updateView(num);
+        that.data('prazenter').updateView(num);
         return this;
       }
     }
 
   };
 
-  (<any>$.fn).myPlugin = function(method : {} | string) {
-    
-    if(typeof method === 'string' && (method === 'value') ) {
+  if(typeof method === 'string' && (method === 'value') ) {
       
-     return methods[method].call(this, arguments[1]);
-      
-    } else if ( typeof method === 'object' || !method ) {
-      return methods.init(this, method);
-    }  
-
+    return methods[method].call(this, this, arguments[1]);
+     
+   } else if ( typeof method === 'object' || !method ) {
+     return methods.init(this, method);
+   }
   
   }
 })( jQuery );
