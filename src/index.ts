@@ -465,30 +465,60 @@ class Prezenter implements ObserverView, ObserverModel {
   }
 }
 
-(function( $ ){
+(function( $ ) {
   
-  (<any>$.fn).myPlugin = function() {
-    
-    let def = {
-      min: 0,
-      max: 100,
-      step: 10,
-      value: 50, 
-      tooltip: false,
-      interval: false,
-      position: 'horisontal'
-    };
-
-    def.tooltip = true;
-    def.interval = true;
-    def.position = 'vertical';
-
-    let model = new MainModel({min: def.min, max: def.max, step: def.step, handle: new ModelHandle(def.value) });
-    let view = new View(this);
-    let prezenter = new Prezenter(view, model);
-    prezenter.init(def);
-    return this;
+  let def = {
+    min: 0,
+    max: 100,
+    step: 10,
+    value: 50, 
+    tooltip: false,
+    interval: false,
+    position: 'horisontal'
   };
+
+  let model : MainModel;
+  let view : View;
+  let prezenter : Prezenter;
+
+  let methods = {
+    init : function( that : JQuery<HTMLElement>,params : {} ) { 
+      
+      let options = $.extend({}, def, params);
+
+      model = new MainModel({min: options.min, max: options.max, step: options.step, handle: new ModelHandle(options.value) });
+      view = new View(that);
+      prezenter = new Prezenter(view, model);
+      prezenter.init(options);
+      return this;
+
+    },
+
+    value (num : string) {
+      if(typeof num === 'undefined') {
+        return model.getValue();
+      } else {
+        prezenter.updateView(num);
+        return this;
+      }
+      
+    }
+  };
+
+  (<any>$.fn).myPlugin = function(method : {} | string) {
+    
+    if(typeof method === 'string' && (method === 'value') ) {
+      
+     return methods[method].call(this, arguments[1]);
+      
+    } else if ( typeof method === 'object' || !method ) {
+      return methods.init(this, method);
+    }  
+
+  
+  }
 })( jQuery );
 
-(<any>$('.rooot')).myPlugin();
+
+(<any>$('.rooot1')).myPlugin();
+console.log((<any>$('.rooot1')).myPlugin('value'));
