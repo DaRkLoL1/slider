@@ -1,19 +1,9 @@
-.root {
-  width: 500px;
-  margin-top: 50px;
-
-  &__version2 {
-    width: 200px;
-    height: 500px;
-  }
-}
 
 .slider {
   display: flex;
   flex-direction: column;
-  position: relative;
   width: 100%;
-
+  
   &_vertical {
     flex-direction: row-reverse;
     justify-content: flex-end;
@@ -23,11 +13,9 @@
 
   &__tooltip {
     position: absolute;
-    top: -50px;
-    left: 235px;
     width: 30px;
     height: 30px;
-    margin-bottom: 20px;
+    top: -50px;
     background-color: red;
     border-radius: 5px;
     line-height: 30px;
@@ -48,11 +36,7 @@
 
     &_vertical {
       top : auto;
-      bottom: 235px;
-      left: 50px;
-      margin-left: 20px;
-      margin-bottom: 0;
-
+      left: 20px;
 
       &::before {
         border-bottom: 5px solid transparent;
@@ -139,20 +123,19 @@
   }
 }
 
-.rooot {
-  margin-top: 20px;
-  margin-left: 10px;
-  height: 100px;
-  width: 200px;
-  &1 {
-    height: 40px;
-    width: 500px;
-    margin-left: 10px;
-    margin-top: 50px;
-  }
+.slider-configure {
+  display: flex;
+}
 
-  &2 {
-    height: 400px;
-    width: 200px;
-  }
+.root {
+  height: 300px;
+  width: 300px;
+  padding: 50px;
+}
+
+.configure {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 40px;
 }
