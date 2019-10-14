@@ -1,120 +1,112 @@
-interface SubjectView {
-  addObserverView(o : ObserverView) : void;
-  notifyObserverView() : void;
+interface ISubjectView {
+  addObserverView(o: IObserverView): void;
+  notifyObserverView(): void;
 }
 
-interface ObserverView {
-  updateView(symbol : string) : void
+interface IObserverView {
+  updateView(symbol: string): void;
 }
 
-export class ViewThumb implements SubjectView {
-  private observer : ObserverView | undefined;
-  private symbol : string | undefined;
-  private interval : number | undefined;
+export class ViewThumb implements ISubjectView {
+  private observer: IObserverView | undefined;
+  private symbol: string | undefined;
+  private interval: number | undefined;
 
-  constructor(private thumb : JQuery<HTMLElement>, private line : JQuery<HTMLElement>) {}
+  constructor(private thumb: JQuery<HTMLElement>, private line: JQuery<HTMLElement>) {}
 
-  installValue(value: number, interval : number) : void {
+  public installValue(value: number, interval: number): void {
     this.interval = interval;
 
-    let width : number | undefined;
+    let width: number | undefined;
 
-    if(this.thumb.hasClass('slider__thumb_vertical')) {
+    if (this.thumb.hasClass('slider__thumb_vertical')) {
       width  = $(this.thumb).height();
-      
     } else {
       width  = $(this.thumb).width();
     }
-    
-    if(typeof width === 'number') {
-      let left : string = value - width / 2 + 'px';
-      
-      if(this.thumb.hasClass('slider__thumb_vertical')) {
+
+    if (typeof width === 'number') {
+      const left: string = value - width / 2 + 'px';
+
+      if (this.thumb.hasClass('slider__thumb_vertical')) {
         this.thumb.css('bottom', left);
         this.line.css('height', left);
       } else {
         this.thumb.css('left', left);
         this.line.css('width', left);
       }
-      
-      let that : ViewThumb = this;
 
-      $(this.thumb).on('dragstart', function () {
+      $(this.thumb).on('dragstart',  () => {
         return false;
       });
 
-      $(this.thumb).on('mousedown', function (event) {
-        let target : Element = event.currentTarget;
+      $(this.thumb).on('mousedown', (event) => {
+        const target: Element = event.currentTarget;
 
-        let onMouseMove = function (event : MouseEvent) {
-            
-          let x : number;
-          if(that.thumb.hasClass('slider__thumb_vertical')) {
+        const onMouseMove =  (event: MouseEvent) => {
+          let x: number;
+          if (this.thumb.hasClass('slider__thumb_vertical')) {
             x =  event.clientY;
           } else {
             x =  event.clientX;
           }
-          
-            
-          let thumbLeft : number;
-          if(typeof width === 'number' && typeof that.interval === 'number') {
-            if(that.thumb.hasClass('slider__thumb_vertical')) {
-              thumbLeft = target.getBoundingClientRect().top + width / 2
+
+          let thumbLeft: number;
+          if (typeof width === 'number' && typeof this.interval === 'number') {
+            if (this.thumb.hasClass('slider__thumb_vertical')) {
+              thumbLeft = target.getBoundingClientRect().top + width / 2;
             } else {
-              thumbLeft = target.getBoundingClientRect().left + width / 2
+              thumbLeft = target.getBoundingClientRect().left + width / 2;
             }
-            
-            if( x >= (thumbLeft + that.interval / 2 ) ) {
 
-              if(that.thumb.hasClass('slider__thumb_vertical')) {
-                that.symbol = '-';
-              } else {
-                that.symbol = '+';
-              }
-              
-              that.changed()
+            if ( x >= (thumbLeft + this.interval / 2 ) ) {
 
-            } 
-            if(x <= (thumbLeft - that.interval / 2 )) {
-              if(that.thumb.hasClass('slider__thumb_vertical')) {
-                that.symbol = '+';
+              if (this.thumb.hasClass('slider__thumb_vertical')) {
+                this.symbol = '-';
               } else {
-                that.symbol = '-';
+                this.symbol = '+';
               }
-              that.changed()
+              this.changed();
+            }
+
+            if (x <= (thumbLeft - this.interval / 2 )) {
+              if (this.thumb.hasClass('slider__thumb_vertical')) {
+                this.symbol = '+';
+              } else {
+                this.symbol = '-';
+              }
+              this.changed();
             }
           }
-        }
+        };
         document.addEventListener('mousemove', onMouseMove);
 
-        let onMouseUp = function () {
+        const onMouseUp = () => {
           document.removeEventListener('mousemove', onMouseMove);
           document.removeEventListener('mouseup', onMouseUp);
-        }
+        };
         document.addEventListener('mouseup', onMouseUp);
-            
       });
     }
-    
   }
 
-  update(value : number, interval : number) : void {
+  public update(value: number, interval: number): void {
     this.interval = interval;
 
-    let width : number | undefined;
+    let width: number | undefined;
 
-    if(this.thumb.hasClass('slider__thumb_vertical')) {
+    if (this.thumb.hasClass('slider__thumb_vertical')) {
       width  = $(this.thumb).height();
     } else {
       width  = $(this.thumb).width();
     }
 
-    if(typeof width === 'number') {
-      let left : string = value - width / 2 + 'px';
+    if (typeof width === 'number') {
+      const left: string = value - width / 2 + 'px';
 
-      if(this.thumb.hasClass('slider__thumb_vertical')) {
+      if (this.thumb.hasClass('slider__thumb_vertical')) {
          this.thumb.css('bottom', left);
-        this.line.css('height', left);
+         this.line.css('height', left);
       } else {
         this.thumb.css('left', left);
         this.line.css('width', left);
@@ -122,17 +114,17 @@ export class ViewThumb implements SubjectView {
     }
   }
 
-  changed() : void {
-    this.notifyObserverView()
+  public changed(): void {
+    this.notifyObserverView();
   }
 
-  addObserverView(o : ObserverView) : void {
+  public addObserverView(o: IObserverView): void {
     this.observer = o;
   }
 
-  notifyObserverView() : void {
-    if(typeof this.observer !== 'undefined' && typeof this.symbol === 'string') {
-      this.observer.updateView(this.symbol)
+  public notifyObserverView(): void {
+    if (typeof this.observer !== 'undefined' && typeof this.symbol === 'string') {
+      this.observer.updateView(this.symbol);
     }
   }
 }

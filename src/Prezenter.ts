@@ -1,58 +1,66 @@
 import {MainModel} from './MainModel';
 import {View} from './View';
 
-interface ObserverModel {
-  updateModel(obj : {min : number, max: number, value: number, step: number}) : void
+interface IObserverModel {
+  updateModel(obj: {min: number, max: number, value: number, step: number}): void;
 }
 
-interface ObserverView {
-  updateView(symbol : string) : void
+interface IObserverView {
+  updateView(symbol: string): void;
 }
 
-export class Prezenter implements ObserverView, ObserverModel {
-  private view : View;
-  private model : MainModel;
- 
+export class Prezenter implements IObserverView, IObserverModel {
+  private view: View;
+  private model: MainModel;
 
-  constructor(view : View, model : MainModel) {
+  constructor(view: View, model: MainModel) {
     this.view = view;
     this.model = model;
     this.view.addObserverView(this);
     this.model.addObserverModel(this);
   }
 
-  init(obj :{min : number, max: number, step : number, value : number, tooltip: boolean, interval : boolean, position: string}) : void {
-    this.view.createSlider(obj)
+  public init(obj: {
+    min: number,
+    max: number,
+    step: number,
+    value: number,
+    tooltip: boolean,
+    interval: boolean,
+    position: string}): void {
+    this.view.createSlider(obj);
   }
 
-  updateView(symbol : string) : void {
+  public updateView(symbol: string): void {
 
-    if(symbol === '+') {
+    if (symbol === '+') {
       this.increase();
-    } 
-    else if(symbol === '-') {
+      return;
+    }
+    if (symbol === '-') {
       this.reduce();
+      return;
     } else {
-      this.set( Number.parseInt(symbol) );
+      this.set(Number.parseInt(symbol, 10));
     }
   }
 
-  updateModel(obj : {min : number, max: number, value : number, step : number}) : void {
-    this.slide(obj.value)
+  public updateModel(obj: {min: number, max: number, value: number, step: number}): void {
+    this.slide(obj.value);
     this.view.update(obj);
   }
 
-  increase() : void {
+  public increase(): void {
     this.model.increaseValue();
   }
-  
-  reduce() : void {
+
+  public reduce(): void {
     this.model.reduceValue();
   }
 
-  set(num : number) : void {
-    this.model.setValue(num)
+  public set(num: number): void {
+    this.model.setValue(num);
   }
 
-  slide(num : number) : void {}
+  public slide(num: number): void {}
 }
