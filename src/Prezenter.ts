@@ -1,66 +1,65 @@
-import {MainModel} from './MainModel';
+import {Model} from './Model';
 import {View} from './View';
 
-interface IObserverModel {
-  updateModel(obj: {min: number, max: number, value: number, step: number}): void;
+interface IObserverModelControler {
+  updateModelControler(obj: {min: number, max: number, value: number[], step: number}): void;
 }
 
-interface IObserverView {
-  updateView(symbol: string): void;
+interface IObserverViewControler {
+  updateViewControler(symbol: string[]): void;
 }
 
-export class Prezenter implements IObserverView, IObserverModel {
+export class Prezenter implements IObserverViewControler, IObserverModelControler {
   private view: View;
-  private model: MainModel;
+  private model: Model;
 
-  constructor(view: View, model: MainModel) {
+  constructor(view: View, model: Model) {
     this.view = view;
     this.model = model;
-    this.view.addObserverView(this);
-    this.model.addObserverModel(this);
+    this.view.addObserverViewControler(this);
+    this.model.addObserverModelControler(this);
   }
 
   public init(obj: {
     min: number,
     max: number,
     step: number,
-    value: number,
+    value: number[],
+    range: number;
     tooltip: boolean,
-    interval: boolean,
     position: string}): void {
     this.view.createSlider(obj);
   }
 
-  public updateView(symbol: string): void {
-
-    if (symbol === '+') {
-      this.increase();
-      return;
-    }
-    if (symbol === '-') {
-      this.reduce();
-      return;
-    } else {
-      this.set(Number.parseInt(symbol, 10));
-    }
+  public updateViewControler(symbol: string[]): void {
+    symbol.forEach((val, i) => {
+      if (val === '+') {
+        this.increase(i);
+        return;
+      }
+      if (val === '-') {
+        this.reduce(i);
+        return;
+      }
+    });
   }
 
-  public updateModel(obj: {min: number, max: number, value: number, step: number}): void {
+  public updateModelControler(obj: {min: number, max: number, value: number[], step: number}): void {
     this.slide(obj.value);
     this.view.update(obj);
   }
 
-  public increase(): void {
-    this.model.increaseValue();
+  public increase(i: number): void {
+    this.model.increaseValue(i);
   }
 
-  public reduce(): void {
-    this.model.reduceValue();
+  public reduce(i: number): void {
+    this.model.reduceValue(i);
   }
 
-  public set(num: number): void {
+  public set(num: number[]): void {
     this.model.setValue(num);
   }
 
-  public slide(num: number): void {}
+  public slide(num: number[]): void {}
 }

@@ -4,15 +4,15 @@ interface ISubjectView {
 }
 
 interface IObserverView {
-  updateView(symbol: string): void;
+  updateView(): void;
 }
 
 export class ViewThumb implements ISubjectView {
   private observer: IObserverView | undefined;
-  private symbol: string | undefined;
+  private symbol: string = '';
   private interval: number | undefined;
 
-  constructor(private thumb: JQuery<HTMLElement>, private line: JQuery<HTMLElement>) {}
+  constructor(private thumb: JQuery<HTMLElement>) {}
 
   public installValue(value: number, interval: number): void {
     this.interval = interval;
@@ -30,10 +30,8 @@ export class ViewThumb implements ISubjectView {
 
       if (this.thumb.hasClass('slider__thumb_vertical')) {
         this.thumb.css('bottom', left);
-        this.line.css('height', left);
       } else {
         this.thumb.css('left', left);
-        this.line.css('width', left);
       }
 
       $(this.thumb).on('dragstart',  () => {
@@ -90,6 +88,10 @@ export class ViewThumb implements ISubjectView {
     }
   }
 
+  public getSymbol(): string {
+     return this.symbol;
+  }
+
   public update(value: number, interval: number): void {
     this.interval = interval;
 
@@ -106,16 +108,15 @@ export class ViewThumb implements ISubjectView {
 
       if (this.thumb.hasClass('slider__thumb_vertical')) {
          this.thumb.css('bottom', left);
-         this.line.css('height', left);
       } else {
         this.thumb.css('left', left);
-        this.line.css('width', left);
       }
     }
   }
 
   public changed(): void {
     this.notifyObserverView();
+    this.symbol = '';
   }
 
   public addObserverView(o: IObserverView): void {
@@ -124,7 +125,7 @@ export class ViewThumb implements ISubjectView {
 
   public notifyObserverView(): void {
     if (typeof this.observer !== 'undefined' && typeof this.symbol === 'string') {
-      this.observer.updateView(this.symbol);
+      this.observer.updateView();
     }
   }
 }

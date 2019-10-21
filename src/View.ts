@@ -1,24 +1,26 @@
-import {ViewScale} from './ViewScale';
 import {ViewThumb} from './ViewThumb';
 import {ViewTooltip} from './ViewTooltip';
 
-interface ISubjectView {
-  addObserverView(o: IObserverView): void;
-  notifyObserverView(): void;
+interface ISubjectViewControler {
+  addObserverViewControler(o: IObserverViewControler): void;
+  notifyObserverViewControler(): void;
+}
+
+interface IObserverViewControler {
+  updateViewControler(symbol: string[]): void;
 }
 
 interface IObserverView {
-  updateView(symbol: string): void;
+  updateView(): void;
 }
 
-export class View implements IObserverView, ISubjectView {
+export class View implements IObserverView, ISubjectViewControler {
   private item: JQuery<HTMLElement>;
   private interval: number | undefined;
-  private thumb: ViewThumb | undefined;
-  private observer: IObserverView | undefined;
-  private symbol: string | undefined;
-  private tooltip: ViewTooltip | undefined;
-  private scale: ViewScale | undefined;
+  private thumb: ViewThumb[] = [];
+  private observer: IObserverViewControler | undefined;
+  private symbol: string[] = [];
+  private tooltip: ViewTooltip[] = [];
   private position: string | undefined;
 
   constructor(item: JQuery<HTMLElement>) {
@@ -29,11 +31,10 @@ export class View implements IObserverView, ISubjectView {
     min: number,
     max: number,
     step: number,
-    value: number,
+    value: number[],
     tooltip: boolean,
-    interval: boolean,
+    range: number,
     position: string}): void {
-
     this.position = obj.position;
 
     let width: number | undefined;
@@ -48,48 +49,39 @@ export class View implements IObserverView, ISubjectView {
     if (typeof width === 'number') {
       this.interval = width / (obj.max - obj.min) * obj.step;
 
-      if (this.position === 'vertical') {
-        $(this.item).find('.slider__field_vertical')
-          .html('<div class="slider__line slider__line_vertical"></div><div class="slider__thumb slider__thumb_vertical"></div>');
-        this.thumb = new ViewThumb(this.item.find('.slider__thumb_vertical'), this.item.find('.slider__line_vertical'));
-      } else {
-        $(this.item).find('.slider__field').html('<div class="slider__line"></div><div class="slider__thumb"></div>');
-        this.thumb = new ViewThumb(this.item.find('.slider__thumb'), this.item.find('.slider__line'));
-      }
-
-      this.thumb.installValue( width / (obj.max - obj.min) * (obj.value - obj.min), this.interval );
-      this.thumb.addObserverView(this);
-
-      if (obj.tooltip) {
+      for (let i = 0; i < obj.range; i += 1) {
         if (this.position === 'vertical') {
           $(this.item).find('.slider__field_vertical')
-            .prepend($('<div class="slider__tooltip slider__tooltip_vertical"></div>'));
-          this.tooltip = new ViewTooltip(this.item.find('.slider__tooltip_vertical'));
+            .append('<div class="slider__thumb slider__thumb_vertical"></div>');
+          this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb_vertical')[i]));
         } else {
-          $(this.item).find('.slider__field').prepend($('<div class="slider__tooltip"></div>'));
-          this.tooltip = new ViewTooltip(this.item.find('.slider__tooltip'));
+          $(this.item).find('.slider__field')
+            .append('<div class="slider__thumb"></div>');
+          this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb')[i]));
         }
-
-        this.tooltip.setTooltip(width / (obj.max - obj.min) * (obj.value - obj.min), obj.value);
+        this.thumb[i].installValue( width / (obj.max - obj.min) * (obj.value[i] - obj.min), this.interval );
+        this.thumb[i].addObserverView(this);
       }
 
-      if (obj.interval) {
-        if (this.position === 'vertical') {
-          $(this.item).find('.slider_vertical')
-            .append($('<div class="slider__numbers slider__numbers_vertical"></div>'));
-          this.scale = new ViewScale(this.item.find('.slider__numbers_vertical'));
-        } else {
-          $(this.item).find('.slider').append($('<div class="slider__numbers"></div>'));
-          this.scale = new ViewScale(this.item.find('.slider__numbers'));
-        }
-        this.scale.setNumbers({min: obj.min, max: obj.max, step: obj.step});
-        this.scale.addObserverView(this);
+      if (obj.tooltip) {
 
+        for (let i = 0; i < obj.range; i += 1) {
+          if (this.position === 'vertical') {
+            $(this.item).find('.slider__field_vertical')
+              .append($('<div class="slider__tooltip slider__tooltip_vertical"></div>'));
+            this.tooltip[i] = new ViewTooltip($(this.item.find('.slider__tooltip_vertical')[i]));
+          } else {
+            $(this.item).find('.slider__field').append($('<div class="slider__tooltip"></div>'));
+            this.tooltip[i] = new ViewTooltip($(this.item.find('.slider__tooltip')[i]));
+        }
+
+          this.tooltip[i].setTooltip(width / (obj.max - obj.min) * (obj.value[i] - obj.min), obj.value[i]);
+        }
       }
     }
   }
 
-  public update(obj: {min: number, max: number, value: number, step: number}): void {
+  public update(obj: {min: number, max: number, value: number[], step: number}): void {
     let width: number | undefined;
 
     if (this.position === 'vertical') {
@@ -98,29 +90,35 @@ export class View implements IObserverView, ISubjectView {
       width = $(this.item).width();
     }
 
-    if (typeof width === 'number' && typeof this.thumb === 'object' && typeof this.interval === 'number') {
-      this.interval = width / (obj.max - obj.min) * obj.step;
+    this.thumb.forEach((val, i) => {
+      if (typeof width === 'number' && typeof this.thumb === 'object' && typeof this.interval === 'number') {
+        this.interval = width / (obj.max - obj.min) * obj.step;
 
-      this.thumb.update( width / (obj.max - obj.min) * (obj.value - obj.min), this.interval );
+        this.thumb[i].update( width / (obj.max - obj.min) * (obj.value[i] - obj.min), this.interval );
 
-      if (typeof this.tooltip === 'object') {
-        this.tooltip.setTooltip(width / (obj.max - obj.min) * (obj.value - obj.min), obj.value);
+        if (this.tooltip.length > 0) {
+          this.tooltip[i].setTooltip(width / (obj.max - obj.min) * (obj.value[i] - obj.min), obj.value[i]);
+        }
       }
-    }
+    });
   }
 
-  public updateView(symbol: string): void {
-    this.symbol = symbol;
-    this.notifyObserverView();
+  public updateView(): void {
+    this.thumb.forEach((val) => {
+     this.symbol.push(val.getSymbol());
+    });
+
+    this.notifyObserverViewControler();
   }
 
-  public addObserverView(o: IObserverView): void {
+  public addObserverViewControler(o: IObserverViewControler): void {
     this.observer = o;
   }
 
-  public notifyObserverView(): void {
-    if (typeof this.observer !== 'undefined' && typeof this.symbol === 'string') {
-      this.observer.updateView(this.symbol);
+  public notifyObserverViewControler(): void {
+    if (typeof this.observer !== 'undefined') {
+      this.observer.updateViewControler(this.symbol);
+      this.symbol = [];
     }
   }
 }

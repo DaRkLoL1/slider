@@ -8,10 +8,10 @@ $('.configure__button').on('click', (event) => {
     min ?: number;
     max ?: number;
     step ?: number;
-    interval ?: boolean;
+    range ?: number;
     tooltip ?: boolean;
     position ?: string;
-    value ?: number;
+    value ?: number[];
     slide(num: number): void;
   }
 
@@ -24,7 +24,13 @@ $('.configure__button').on('click', (event) => {
   const value = $parent.find('.configure__input').val();
 
   if (value && typeof value === 'string') {
-    obj.value = Number.parseInt(value, 10);
+    const arrValues: string[] = value.split(',');
+    obj.value = [];
+    arrValues.forEach((val) => {
+      if (typeof obj.value === 'object') {
+        obj.value.push(Number.parseInt(val, 10));
+      }
+    });
   }
 
   const min = $parent.find('.configure__min').val();
@@ -45,12 +51,14 @@ $('.configure__button').on('click', (event) => {
     obj.step = Number.parseInt(step, 10);
   }
 
-  if ($parent.find('.configure__tooltip').prop('checked')) {
-    obj.tooltip = true;
+  const range = $parent.find('.configure__range').val();
+
+  if (range && typeof range === 'string') {
+    obj.range = Number.parseInt(range, 10);
   }
 
-  if ($parent.find('.configure__interval').prop('checked')) {
-    obj.interval = true;
+  if ($parent.find('.configure__tooltip').prop('checked')) {
+    obj.tooltip = true;
   }
 
   if ($parent.find('.configure__position').prop('checked')) {
@@ -63,6 +71,12 @@ $('.configure__button').on('click', (event) => {
   slide(num: number) {
     $('.root-input').val(num);
   },
+  max: 200,
+  min: 10,
+  range: 2,
+  step: 10,
+  tooltip: true,
+  value: [10, 50],
 });
 
 $('.root-input').val(($('.root-slider') as any).myPlugin('value'));
@@ -76,6 +90,12 @@ $('.root-input').on('change', (event) => {
   slide(num: number) {
     $('.root-input1').val(num);
   },
+  max: 100,
+  min: 0,
+  range: 3,
+  step: 10,
+  tooltip: true,
+  value: [10, 50, 90],
 });
 
 $('.root-input1').val(($('.root-slider1') as any).myPlugin('value'));
@@ -89,6 +109,12 @@ $('.root-input1').on('change',  (event) => {
   slide(num: number) {
     $('.root-input2').val(num);
   },
+  max: 100,
+  min: 0,
+  range: 1,
+  step: 1,
+  tooltip: true,
+  value: [1],
 });
 
 $('.root-input2').val(($('.root-slider2') as any).myPlugin('value'));

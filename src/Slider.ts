@@ -1,4 +1,4 @@
-import {MainModel} from './MainModel';
+import {Model} from './Model';
 import {ModelHandle} from './ModelHandle';
 import {Prezenter} from './Prezenter';
 import {View} from './View';
@@ -8,10 +8,11 @@ import {View} from './View';
     interval: false,
     max: 100,
     min: 0,
-    position: 'horisontal',
+    position: 'horizontal',
+    range: 1,
     step: 25,
     tooltip: false,
-    value: 0,
+    value: [0],
     slide(num: number): void {}
   };
 
@@ -21,8 +22,13 @@ import {View} from './View';
       init(that: JQuery<HTMLElement>, params: {}) {
         const options = $.extend({}, def, params);
 
-        that.data('model', new MainModel({
-          handle: new ModelHandle(options.value),
+        const handle: ModelHandle[] = [];
+        for (let i = 0; i < options.range; i += 1) {
+          handle.push(new ModelHandle(options.value[i]));
+        }
+
+        that.data('model', new Model({
+          handle,
           max: options.max,
           min: options.min,
           step: options.step,
@@ -39,7 +45,14 @@ import {View} from './View';
         if (typeof num === 'undefined') {
           return that.data('model').getValue();
         } else {
-          that.data('prazenter').updateView(num);
+          const arrNum: number[] = [];
+          const arrStr: string[] = num.split(' ');
+
+          arrStr.forEach((val) => {
+            arrNum.push(Number.parseInt(val, 10));
+          });
+
+          that.data('prazenter').set(arrNum);
           return this;
         }
       },

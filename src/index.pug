@@ -12,24 +12,22 @@ html
       let value = [' root-input', ' root-input1', ' root-input2', ' root-input3']
     each val, i in classList
       div(class='slider-configure')
-        div(class='root' + classList[i])
+        div(class=`root${classList[i]}`)
         div(class='configure')
           label value: 
-            input(type="text" class='configure__input' + value[i])
+            input(type="text" class=`configure__input${value[i]}`)
           label min: 
             input(type="text" class='configure__min')
           label max: 
             input(type="text" class='configure__max')
           label step: 
             input(type="text" class='configure__step')
+          label range: 
+            input(type='text' class='configure__range')
           label
             input(type='checkbox' class='configure__tooltip')
             |
             | show tooltip
-          label
-            input(type='checkbox' class='configure__interval')
-            |
-            | show interval
           label
             input(type='checkbox' class='configure__position')
             |
