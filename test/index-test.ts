@@ -1,124 +1,120 @@
-import {MainModel} from '../src/MainModel';
+import {Model} from '../src/Model';
 import {ModelHandle} from '../src/ModelHandle';
 import {View} from '../src/View';
 
+describe('Model', () => {
+  let model: Model;
 
-describe('Model', function () {
-  
-  let model : MainModel;
-
-  beforeEach(function () {
-    model = new MainModel({min: 0, max: 100, step: 1, handle : new ModelHandle(0)});
+  beforeEach(() => {
+    model = new Model({min: 0, max: 100, step: 1, handle: [new ModelHandle(0)]});
   });
 
-  it('создать конструктор для присвоения min max и вернуть их', function () {
-    
-    let min = model.getMin();
-    let max = model.getMax();
+  it('создать конструктор для присвоения min max и вернуть их', () => {
+    const min = model.getMin();
+    const max = model.getMax();
     expect(min).toEqual(0);
     expect(max).toEqual(100);
   });
 
-  it('создать конструктор для присвоения min max и вернуть их', function () {
-    let model : MainModel = new MainModel({min: 20, max: 50, step: 1, handle: new ModelHandle(0)});
-    let min = model.getMin();
-    let max = model.getMax();
+  it('создать конструктор для присвоения min max и вернуть их', () => {
+    const model: Model = new Model({min: 20, max: 50, step: 1, handle: [new ModelHandle(0)]});
+    const min = model.getMin();
+    const max = model.getMax();
     expect(min).toEqual(20);
     expect(max).toEqual(50);
   });
 
-  it('получить значение шага', function (){
-    let step : number = model.getStep();
+  it('получить значение шага', () => {
+    const step: number = model.getStep();
 
     expect(step).toEqual(1);
   });
 
 });
 
-describe('model handle', function () {
+describe('model handle', () => {
 
-  let handle : ModelHandle; 
+  let handle: ModelHandle;
 
-  beforeEach(function () {
+  beforeEach(() => {
      handle = new ModelHandle(0);
   });
-  
-  it('создать ручку и получить значение', function (){
-    let handle : ModelHandle = new ModelHandle(50);
-    let value : number = handle.getValue();
+
+  it('создать ручку и получить значение', () => {
+    const handle: ModelHandle = new ModelHandle(50);
+    const value: number = handle.getValue();
     expect(value).toEqual(50);
   });
 
-  it('увеличить значение на step', function () {
+  it('увеличить значение на step', () => {
     handle.increaseValue({max: 100, step: 1});
     expect(handle.getValue()).toEqual(1);
   });
 
-  it('увеличить значение на 110', function () {
+  it('увеличить значение на 110', () => {
     handle.increaseValue({max: 100, step: 110});
     expect(handle.getValue()).toEqual(100);
   });
 
-  it('уменьшить значение на 10', function () {
+  it('уменьшить значение на 10', () => {
     handle.setValue({value: 40, min: 0, max: 100});
     handle.reduceValue({min: 0, step: 10});
     expect(handle.getValue()).toEqual(30);
   });
 
-  it('уменьшить значение на 10', function () {
+  it('уменьшить значение на 10', () => {
     handle.reduceValue({min: 0, step: 10});
     expect(handle.getValue()).toEqual(0);
   });
 
-  it('изменить значение ручки больше мах значения', function () {
+  it('изменить значение ручки больше мах значения', () => {
     handle.setValue({value: 200, min: 0, max: 100});
-    expect(handle.getValue()).toEqual(100)
+    expect(handle.getValue()).toEqual(100);
   });
 
-  it('изменить значение ручки меньше мin значения', function () {
+  it('изменить значение ручки меньше мin значения', () => {
     handle.setValue({value: -200, min: 0, max: 100});
-    expect(handle.getValue()).toEqual(0)
+    expect(handle.getValue()).toEqual(0);
   });
 
-  it('изменить значение ручки', function () {
-    handle.setValue({value: 50, min: 0, max: 100})
-    expect(handle.getValue()).toEqual(50)
+  it('изменить значение ручки', () => {
+    handle.setValue({value: 50, min: 0, max: 100});
+    expect(handle.getValue()).toEqual(50);
   });
 
 });
 
-describe('изменить, увеличивать и уменьшать значения из MainModel', function () {
+describe('изменить, увеличивать и уменьшать значения из Model',  () => {
 
-  
-  it('изменить значение из MainModel', function () {
-    let handle = new ModelHandle(0);
-    let model = new MainModel({min: 0, max: 100, step: 1, handle: handle});
+  it('изменить значение из Model',  () => {
+    const handle = new ModelHandle(0);
+    const model = new Model({min: 0, max: 100, step: 1, handle: [handle]});
 
-    model.setValue(30);
-    expect(model.getValue()).toEqual(30);
+    model.setValue([30]);
+    expect(model.getValue()).toEqual([30]);
   });
 
-  it('увеличить значение из MainModel', function () {
-    let handle = new ModelHandle(50);
-    let model = new MainModel({min: 0, max: 100, step: 10, handle: handle});
+  it('увеличить значение из Model',  () => {
+    const handle = new ModelHandle(50);
+    const model = new Model({min: 0, max: 100, step: 10, handle: [handle]});
 
-    model.increaseValue();
-    expect(model.getValue()).toEqual(60);
+    model.increaseValue(0);
+    expect(model.getValue()).toEqual([60]);
   });
 
-  it('уменьшить значение из MainModel', function () {
-    let handle = new ModelHandle(50);
-    let model = new MainModel({min: 0, max: 100, step: 10, handle: handle});
+  it('уменьшить значение из Model',  () => {
+    const handle = new ModelHandle(50);
+    const model = new Model({min: 0, max: 100, step: 10, handle: [handle]});
 
-    model.reduceValue();
-    expect(model.getValue()).toEqual(40);
+    model.reduceValue(0);
+    expect(model.getValue()).toEqual([40]);
   });
 });
 
-describe('view', function (){
-  let item : JQuery<HTMLElement>;
+describe('view',  () => {
+  let item: JQuery<HTMLElement>;
 
-  beforeEach(function () {
+  beforeEach(() => {
     setFixtures('<div class="root"></div>');
     setStyleFixtures(`.root {
       width: 500px;
@@ -126,7 +122,6 @@ describe('view', function (){
       .root__version2 {
         width: 200px;
         height: 500px; }
-    
     .slider {
       display: flex;
       flex-direction: column;
@@ -219,62 +214,42 @@ describe('view', function (){
             text-align: center;
             margin: 0; }`);
     item  = $('.root');
-    
+
     item.css('width', 500);
-    
-    let dom = new View(item);
 
-    dom.createSlider({min: 0, max: 100, step: 10, value: 50, tooltip: true, interval : true, position: 'horisontal'});
+    const dom = new View(item);
+
+    dom.createSlider({min: 0, max: 100, step: 10, value: [50], tooltip: true, range: 1, position: 'horizontal'});
   });
 
-  it('добавить бегунок', function (){
+  it('добавить бегунок', () => {
     expect($('.slider__thumb')).toExist();
-    expect($('.slider__line')).toExist();
   });
-  
 
-  it('добавить значения', function () {
+  it('добавить значения', ()  => {
     expect($('.slider__thumb').css('left')).toEqual('240px');
-    expect($('.slider__line').css('width')).toEqual('240px');
   });
 
-  it('уменьшить, увеличить  значение', function () {
-    let spyon = spyOnEvent('.slider__thumb', 'click');
+  it('уменьшить, увеличить  значение', () => {
+    const spyon = spyOnEvent('.slider__thumb', 'click');
     $('.slider__thumb').click();
     expect('click').toHaveBeenTriggeredOn('.slider__thumb');
     expect(spyon).toHaveBeenTriggered();
   });
 
-
-  it('добавить подсказку', function () {
-    let tooltip = $('.slider__tooltip');
+  it('добавить подсказку', () => {
+    const tooltip = $('.slider__tooltip');
 
     expect(tooltip).toExist();
     expect(tooltip.css('left')).toEqual('235px');
     expect(tooltip.text()).toEqual('50');
   });
-
-  it('добавить интервал', function () {
-    let interval = $('.slider__numbers');
-
-    expect(interval).toExist();
-    expect(interval.find('span').length).toEqual(11);
-  });
-
-  it('изменить значение', function () {
-    let spyon = spyOnEvent('.slider__numbers', 'click');
-    $('.slider__numbers').click();
-    expect('click').toHaveBeenTriggeredOn('.slider__numbers');
-    expect(spyon).toHaveBeenTriggered();
-  });
-  
 });
 
+describe('viewVertical', () => {
+  let item: JQuery<HTMLElement>;
 
-describe('viewVertical', function (){
-  let item : JQuery<HTMLElement>;
-
-  beforeEach(function () {
+  beforeEach(() => {
     setFixtures('<div class="root"></div>');
     setStyleFixtures(`.root {
       width: 500px;
@@ -282,7 +257,6 @@ describe('viewVertical', function (){
       .root__version2 {
         width: 200px;
         height: 500px; }
-    
     .slider {
       display: flex;
       flex-direction: column;
@@ -375,53 +349,32 @@ describe('viewVertical', function (){
             text-align: center;
             margin: 0; }`);
     item  = $('.root');
-    
     item.css('height', 500);
-    
-    let dom = new View(item);
+    const dom = new View(item);
 
-    dom.createSlider({min: 0, max: 100, step: 10, value: 50, tooltip: true, interval : true, position: 'vertical'});
+    dom.createSlider({min: 0, max: 100, step: 10, value: [50], tooltip: true, range: 1, position: 'vertical'});
   });
 
-  it('добавить бегунок', function (){
+  it('добавить бегунок', () => {
     expect($('.slider__thumb_vertical')).toExist();
-    expect($('.slider__line_vertical')).toExist();
   });
-  
 
-  it('добавить значения', function () {
+  it('добавить значения', () =>  {
     expect($('.slider__thumb_vertical').css('bottom')).toEqual('240px');
-    expect($('.slider__line_vertical').css('height')).toEqual('240px');
   });
 
-  it('уменьшить, увеличить  значение', function () {
-    let spyon = spyOnEvent('.slider__thumb_vertical', 'click');
+  it('уменьшить, увеличить  значение', () => {
+    const spyon = spyOnEvent('.slider__thumb_vertical', 'click');
     $('.slider__thumb_vertical').click();
     expect('click').toHaveBeenTriggeredOn('.slider__thumb_vertical');
     expect(spyon).toHaveBeenTriggered();
   });
 
-
-  it('добавить подсказку', function () {
-    let tooltip = $('.slider__tooltip_vertical');
+  it('добавить подсказку', () => {
+    const tooltip = $('.slider__tooltip_vertical');
 
     expect(tooltip).toExist();
     expect(tooltip.css('bottom')).toEqual('235px');
     expect(tooltip.text()).toEqual('50');
   });
-
-  it('добавить интервал', function () {
-    let interval = $('.slider__numbers_vertical');
-
-    expect(interval).toExist();
-    expect(interval.find('span').length).toEqual(11);
-  });
-
-  it('изменить значение', function () {
-    let spyon = spyOnEvent('.slider__numbers_vertical', 'click');
-    $('.slider__numbers_vertical').click();
-    expect('click').toHaveBeenTriggeredOn('.slider__numbers_vertical');
-    expect(spyon).toHaveBeenTriggered();
-  });
-  
 });
