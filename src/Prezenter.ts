@@ -35,11 +35,8 @@ export class Prezenter implements IObserverViewControler, IObserverModelControle
     symbol.forEach((val, i) => {
       if (val === '+') {
         this.increase(i);
-        return;
-      }
-      if (val === '-') {
+      } else if (val === '-') {
         this.reduce(i);
-        return;
       }
     });
   }
