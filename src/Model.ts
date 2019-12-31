@@ -53,12 +53,33 @@ export class Model implements ISubjectModelControler {
   }
 
   public increaseValue(i: number): void {
-    this.handle[i].increaseValue({max: this.max, step: this.step});
+    if (this.handle.length > 1) {
+      const rightHandle: ModelHandle | undefined = this.handle[i + 1];
+
+      if (!rightHandle) {
+        this.handle[i].increaseValue({max: this.max, step: this.step});
+      } else {
+        this.handle[i].increaseValue({max: rightHandle.getValue() - this.step, step: this.step});
+      }
+    } else {
+      this.handle[i].increaseValue({max: this.max, step: this.step});
+    }
+
     this.notifyObserverModelControler();
   }
 
   public reduceValue(i: number): void {
+    if (this.handle.length > 1) {
+      if (i === 0) {
+        this.handle[i].reduceValue({min: this.min, step: this.step});
+      } else {
+       const leftHandle: ModelHandle = this.handle[i - 1];
+       this.handle[i].reduceValue({min: leftHandle.getValue() + this.step, step: this.step});
+      }
+    } else {
     this.handle[i].reduceValue({min: this.min, step: this.step});
+    }
+
     this.notifyObserverModelControler();
   }
 

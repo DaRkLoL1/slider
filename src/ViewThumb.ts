@@ -38,6 +38,10 @@ export class ViewThumb implements ISubjectView {
         return false;
       });
 
+      $(document).on('selectstart', () => {
+        return false;
+      });
+
       $(this.thumb).on('mousedown', (event) => {
         const target: Element = event.currentTarget;
 
@@ -64,7 +68,19 @@ export class ViewThumb implements ISubjectView {
               } else {
                 this.symbol = '+';
               }
-              this.changed();
+              let i = x - thumbLeft;
+              while (i > 0) {
+                if (i - this.interval >= 0) {
+                  i -= this.interval;
+                  this.changed();
+                } else if (i - this.interval / 2 >= 0) {
+                  i -= this.interval / 2;
+                  this.changed();
+                } else {
+                  i = 0;
+                }
+              }
+              this.symbol = '';
             }
 
             if (x <= (thumbLeft - this.interval / 2 )) {
@@ -73,7 +89,19 @@ export class ViewThumb implements ISubjectView {
               } else {
                 this.symbol = '-';
               }
-              this.changed();
+              let i = thumbLeft - x;
+              while (i > 0) {
+                if (i - this.interval >= 0) {
+                  i -= this.interval;
+                  this.changed();
+                } else if (i - this.interval / 2 >= 0) {
+                  i -= this.interval / 2;
+                  this.changed();
+                } else {
+                  i = 0;
+                }
+              }
+              this.symbol = '';
             }
           }
         };
@@ -116,7 +144,6 @@ export class ViewThumb implements ISubjectView {
 
   public changed(): void {
     this.notifyObserverView();
-    this.symbol = '';
   }
 
   public addObserverView(o: IObserverView): void {
