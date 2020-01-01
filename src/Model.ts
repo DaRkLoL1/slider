@@ -45,10 +45,28 @@ export class Model implements ISubjectModelControler {
   }
 
   public setValue(value: number[]): void {
-
-    this.handle.forEach((val, i) => {
-      val.setValue({value: value[i], min: this.min, max : this.max});
+    value.forEach((val, i) => {
+      if (Number.isNaN(val)) {
+        value[i] = 0;
+      }
     });
+    if (this.handle.length > 1) {
+      if (value[0] <= this.min) {
+        value[0] = this.min;
+      } else if (value[0] >= this.max) {
+        value[0] = this.max - this.step;
+      }
+      if (value[1] <= value[0] + this.step) {
+        value[1] = value[0] + this.step;
+      } else if (value[1] >= this.max) {
+        value[1] = this.max;
+      }
+      this.handle[0].setValue({value: value[0], min: this.min, max : this.max});
+      this.handle[1].setValue({value: value[1], min: this.min, max : this.max});
+    } else {
+      this.handle[0].setValue({value: value[0], min: this.min, max : this.max});
+    }
+
     this.notifyObserverModelControler();
   }
 

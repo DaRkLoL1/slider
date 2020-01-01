@@ -77,16 +77,20 @@ $('.configure__button').on('click', (event) => {
 
 let options = ($('.root-slider') as any).myPlugin({
   slide(num: number[]) {
-    $('.root-input1').val(num[0]);
-    $('.root-input2').val(num[1]);
+    if (num.length > 1 ) {
+      $('.root-input1').val(num[0]);
+      $('.root-input2').val(num[1]);
+    } else {
+      $('.root-input1').val(num[0]);
+    }
   },
-  max: 20,
-  min: 10,
-  position: 'vertical',
-  range: false,
+  max: 100,
+  min: 0,
+  position: 'horizontal',
+  range: true,
   step: 5,
   tooltip: true,
-  value: [15, 50],
+  value: [15, 20],
 });
 
 $('.root-input1').val(($('.root-slider') as any).myPlugin('value')[0]);
