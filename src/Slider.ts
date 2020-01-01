@@ -23,6 +23,9 @@ import {View} from './View';
         const options = $.extend({}, def, params);
 
         const handle: ModelHandle[] = [];
+        if (options.range > 2) {
+          options.range = 2;
+        }
         for (let i = 0; i < options.range; i += 1) {
           handle.push(new ModelHandle(options.value[i]));
         }
@@ -37,22 +40,15 @@ import {View} from './View';
         that.data('prazenter', new Prezenter(that.data('view'), that.data('model')));
         that.data('prazenter').init(options);
         that.data('prazenter').slide = options.slide;
-
-        return this;
+        that.data('options', options);
+        return that;
       },
 
-      value(that: JQuery<HTMLElement>, num: string) {
+      value(that: JQuery<HTMLElement>, num: number[]) {
         if (typeof num === 'undefined') {
           return that.data('model').getValue();
         } else {
-          const arrNum: number[] = [];
-          const arrStr: string[] = num.split(' ');
-
-          arrStr.forEach((val) => {
-            arrNum.push(Number.parseInt(val, 10));
-          });
-
-          that.data('prazenter').set(arrNum);
+          that.data('prazenter').set(num);
           return this;
         }
       },

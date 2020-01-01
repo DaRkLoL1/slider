@@ -7,15 +7,13 @@ html
     meta(name="discription" content="")
     meta(name="viewport" content="initial-scale=1.0, width=device-width")
   body
-    - 
-      let classList = [' root-slider', ' root-slider1', ' root-slider2', ' root-slider3'];
-      let value = [' root-input', ' root-input1', ' root-input2', ' root-input3']
-    each val, i in classList
       div(class='slider-configure')
-        div(class=`root${classList[i]}`)
+        div(class=`root root-slider`)
         div(class='configure')
           label value: 
-            input(type="text" class=`configure__input${value[i]}`)
+            input(type="text" class=`configure__input root-input1`)
+          label value: 
+            input(type="text" class=`configure__input root-input2`)
           label min: 
             input(type="text" class='configure__min')
           label max: 

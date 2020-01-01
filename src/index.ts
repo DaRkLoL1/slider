@@ -12,26 +12,21 @@ $('.configure__button').on('click', (event) => {
     tooltip ?: boolean;
     position ?: string;
     value ?: number[];
-    slide(num: number): void;
+    slide(num: number[]): void;
   }
 
   const obj: IObj = {
-    slide(num) {
-      $parent.find('.configure__input').val(num);
+    slide(num: number[]) {
+      if (num.length > 1 ) {
+        $parent.find('.root-input1').val(num[0]);
+        $parent.find('.root-input2').val(num[1]);
+      } else {
+        $parent.find('.root-input1').val(num[0]);
+      }
     },
   };
 
   const value = $parent.find('.configure__input').val();
-
-  if (value && typeof value === 'string') {
-    const arrValues: string[] = value.split(',');
-    obj.value = [];
-    arrValues.forEach((val) => {
-      if (typeof obj.value === 'object') {
-        obj.value.push(Number.parseInt(val, 10));
-      }
-    });
-  }
 
   const min = $parent.find('.configure__min').val();
 
@@ -56,7 +51,22 @@ $('.configure__button').on('click', (event) => {
   if (range && typeof range === 'string') {
     obj.range = Number.parseInt(range, 10);
   }
-
+  if (value) {
+    if (obj.range === 2) {
+      
+        const value1 = $parent.find('.root-input1').val();
+        const value2 = $parent.find('.root-input2').val();
+        if (typeof value1 === 'string' && typeof value2 === 'string') {
+          obj.value = [Number.parseInt(value1, 10), Number.parseInt(value2, 10)];
+          console.log(obj.value)
+        }
+      } else  {
+        const value1 = $parent.find('.root-input1').val();
+        if (typeof value1 === 'string') {
+          obj.value = [Number.parseInt(value1, 10)];
+        }
+      }
+  }
   if ($parent.find('.configure__tooltip').prop('checked')) {
     obj.tooltip = true;
   }
@@ -67,9 +77,10 @@ $('.configure__button').on('click', (event) => {
   ($($parent.parent().children()[0]) as any).myPlugin(obj);
 });
 
-($('.root-slider') as any).myPlugin({
-  slide(num: number) {
-    $('.root-input').val(num);
+let options = ($('.root-slider') as any).myPlugin({
+  slide(num: number[]) {
+    $('.root-input1').val(num[0]);
+    $('.root-input2').val(num[1]);
   },
   max: 200,
   min: 10,
@@ -79,60 +90,31 @@ $('.configure__button').on('click', (event) => {
   value: [10, 50],
 });
 
-$('.root-input').val(($('.root-slider') as any).myPlugin('value'));
+$('.root-input1').val(($('.root-slider') as any).myPlugin('value')[0]);
+$('.root-input2').val(($('.root-slider') as any).myPlugin('value')[1]);
 
-$('.root-input').on('change', (event) => {
+$('.root-input1').on('change', (event) => {
   const $target = $(event.currentTarget);
-  ($('.root-slider') as any).myPlugin('value', $target.val());
+  let value1 = $target.val();
+  if (typeof value1 === 'string') {
+    value1 = Number.parseInt( value1, 10);
+  }
+  let value2 = $('.root-input2').val();
+  if (typeof value2 === 'string') {
+    value2 = Number.parseInt( value2, 10);
+  }
+  ($('.root-slider') as any).myPlugin('value', [value1, value2]);
 });
-
-($('.root-slider1') as any).myPlugin({
-  slide(num: number) {
-    $('.root-input1').val(num);
-  },
-  max: 100,
-  min: 0,
-  range: 3,
-  step: 10,
-  tooltip: true,
-  value: [10, 50, 90],
-});
-
-$('.root-input1').val(($('.root-slider1') as any).myPlugin('value'));
-
-$('.root-input1').on('change',  (event) => {
-  const $target = $(event.currentTarget);
-  ($('.root-slider1') as any).myPlugin('value', $target.val());
-});
-
-($('.root-slider2') as any).myPlugin({
-  slide(num: number) {
-    $('.root-input2').val(num);
-  },
-  max: 100,
-  min: 0,
-  range: 1,
-  step: 1,
-  tooltip: true,
-  value: [1],
-});
-
-$('.root-input2').val(($('.root-slider2') as any).myPlugin('value'));
 
 $('.root-input2').on('change', (event) => {
   const $target = $(event.currentTarget);
-  ($('.root-slider2') as any).myPlugin('value', $target.val());
-});
-
-($('.root-slider3') as any).myPlugin({
-  slide(num: number) {
-    $('.root-input3').val(num);
-  },
-});
-
-$('.root-input3').val(($('.root-slider3') as any).myPlugin('value'));
-
-$('.root-input3').on('change', (event) => {
-  const $target = $(event.currentTarget);
-  ($('.root-slider3') as any).myPlugin('value', $target.val());
+  let value2 = $target.val();
+  if (typeof value2 === 'string') {
+    value2 = Number.parseInt( value2, 10);
+  }
+  let value1 = $('.root-input1').val();
+  if (typeof value1 === 'string') {
+    value1 = Number.parseInt( value1, 10);
+  }
+  ($('.root-slider') as any).myPlugin('value', [value1, value2]);
 });
