@@ -31,6 +31,21 @@ import {View} from './View';
           handle.push(new ModelHandle(options.value[0]));
         }
 
+        if (Number.isNaN(options.min)) {
+          options.min = 0;
+        }
+
+        if (Number.isNaN(options.max)) {
+          options.max = 0;
+        }
+        if (Number.isNaN(options.step) || options.step <= 0) {
+          options.step = 1;
+        }
+
+        if (options.max <= options.min + options.step) {
+          options.max = options.min + options.step;
+        }
+
         that.data('model', new Model({
           handle,
           max: options.max,
@@ -41,6 +56,13 @@ import {View} from './View';
         that.data('prazenter', new Prezenter(that.data('view'), that.data('model')));
         that.data('prazenter').init(options);
         that.data('prazenter').slide = options.slide;
+
+        if (options.range) {
+          that.data('model').setValue([options.value[0], options.value[1]]);
+        } else {
+          that.data('model').setValue([options.value[0]]);
+        }
+
         that.data('options', options);
         return that;
       },

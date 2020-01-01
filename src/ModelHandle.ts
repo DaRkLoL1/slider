@@ -8,11 +8,8 @@ export class ModelHandle {
   public setValue(obj: {value: number, min: number, max: number}): void {
     if (obj.value > obj.max) {
       this.value = obj.max;
-      return;
-    }
-    if (obj.value < obj.min) {
+    } else if (obj.value < obj.min) {
       this.value = obj.min;
-      return;
     } else {
       this.value = obj.value;
     }
