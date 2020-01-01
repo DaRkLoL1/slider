@@ -9,7 +9,7 @@ import {View} from './View';
     max: 100,
     min: 0,
     position: 'horizontal',
-    range: 1,
+    range: false,
     step: 25,
     tooltip: false,
     value: [0],
@@ -23,11 +23,12 @@ import {View} from './View';
         const options = $.extend({}, def, params);
 
         const handle: ModelHandle[] = [];
-        if (options.range > 2) {
-          options.range = 2;
-        }
-        for (let i = 0; i < options.range; i += 1) {
-          handle.push(new ModelHandle(options.value[i]));
+        if (options.range) {
+          for (let i = 0; i < 2; i += 1) {
+            handle.push(new ModelHandle(options.value[i]));
+          }
+        } else {
+          handle.push(new ModelHandle(options.value[0]));
         }
 
         that.data('model', new Model({

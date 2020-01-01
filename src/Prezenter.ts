@@ -25,7 +25,7 @@ export class Prezenter implements IObserverViewControler, IObserverModelControle
     max: number,
     step: number,
     value: number[],
-    range: number;
+    range: boolean;
     tooltip: boolean,
     position: string}): void {
     this.view.createSlider(obj);

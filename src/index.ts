@@ -8,7 +8,7 @@ $('.configure__button').on('click', (event) => {
     min ?: number;
     max ?: number;
     step ?: number;
-    range ?: number;
+    range ?: boolean;
     tooltip ?: boolean;
     position ?: string;
     value ?: number[];
@@ -46,19 +46,17 @@ $('.configure__button').on('click', (event) => {
     obj.step = Number.parseInt(step, 10);
   }
 
-  const range = $parent.find('.configure__range').val();
+  const range: boolean = $parent.find('.configure__range').is(':checked');
 
-  if (range && typeof range === 'string') {
-    obj.range = Number.parseInt(range, 10);
+  if (range) {
+    obj.range = range;
   }
   if (value) {
-    if (obj.range === 2) {
-      
+    if (range) {
         const value1 = $parent.find('.root-input1').val();
         const value2 = $parent.find('.root-input2').val();
         if (typeof value1 === 'string' && typeof value2 === 'string') {
           obj.value = [Number.parseInt(value1, 10), Number.parseInt(value2, 10)];
-          console.log(obj.value)
         }
       } else  {
         const value1 = $parent.find('.root-input1').val();
@@ -82,12 +80,13 @@ let options = ($('.root-slider') as any).myPlugin({
     $('.root-input1').val(num[0]);
     $('.root-input2').val(num[1]);
   },
-  max: 200,
+  max: 20,
   min: 10,
-  range: 2,
-  step: 10,
+  position: 'vertical',
+  range: false,
+  step: 5,
   tooltip: true,
-  value: [10, 50],
+  value: [15, 50],
 });
 
 $('.root-input1').val(($('.root-slider') as any).myPlugin('value')[0]);

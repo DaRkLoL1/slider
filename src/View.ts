@@ -33,7 +33,7 @@ export class View implements IObserverView, ISubjectViewControler {
     step: number,
     value: number[],
     tooltip: boolean,
-    range: number,
+    range: boolean,
     position: string}): void {
     this.position = obj.position;
 
@@ -48,8 +48,11 @@ export class View implements IObserverView, ISubjectViewControler {
 
     if (typeof width === 'number') {
       this.interval = width / (obj.max - obj.min) * obj.step;
-
-      for (let i = 0; i < obj.range; i += 1) {
+      let index: number = 1;
+      if (obj.range) {
+        index = 2;
+      }
+      for (let i = 0; i < index; i += 1) {
         if (this.position === 'vertical') {
           $(this.item).find('.slider__field_vertical')
             .append('<div class="slider__thumb slider__thumb_vertical"></div>');
@@ -64,8 +67,11 @@ export class View implements IObserverView, ISubjectViewControler {
       }
 
       if (obj.tooltip) {
-
-        for (let i = 0; i < obj.range; i += 1) {
+        let index: number = 1;
+        if (obj.range) {
+          index = 2;
+        }
+        for (let i = 0; i < index; i += 1) {
           if (this.position === 'vertical') {
             $(this.item).find('.slider__field_vertical')
               .append($('<div class="slider__tooltip slider__tooltip_vertical"></div>'));
