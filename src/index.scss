@@ -1,19 +1,2 @@
 @import './Slider.scss';
 @import './range-slider/range-slider.scss';
-
-.slider-configure {
-  display: flex;
-}
-
-.root {
-  height: 400px;
-  width: 400px;
-  padding: 50px;
-}
-
-.configure {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-left: 40px;
-}

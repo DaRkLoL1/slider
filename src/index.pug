@@ -1,3 +1,5 @@
+include ./range-slider/range-slider.pug
+
 doctype html
 html
   head
@@ -7,29 +9,20 @@ html
     meta(name="discription" content="")
     meta(name="viewport" content="initial-scale=1.0, width=device-width")
   body
-      div(class='slider-configure')
-        div(class=`root root-slider`)
-        div(class='configure')
-          label value: 
-            input(type="text" class=`configure__input root-input1`)
-          label value: 
-            input(type="text" class=`configure__input root-input2`)
-          label min: 
-            input(type="text" class='configure__min')
-          label max: 
-            input(type="text" class='configure__max')
-          label step: 
-            input(type="text" class='configure__step')
-          label range: 
-            input(type='checkbox' class='configure__range')
-          label
-            input(type='checkbox' class='configure__tooltip')
-            |
-            | show tooltip
-          label
-            input(type='checkbox' class='configure__position')
-            |
-            | position
-          button(type='button' class='configure__button') click
-      include ./range-slider/range-slider.pug 
-      +range-slider
+    +range-slider
+    +range-slider({
+      min: 10,
+      max: 200,
+      step: 10,
+      tooltip: true,
+      value: [20, 50],
+      range: true,
+    })
+    +range-slider({
+      min: -20,
+      max: 50,
+      step: 5,
+      tooltip: true,
+      position: 'vertical',
+      value: [-10],
+    })

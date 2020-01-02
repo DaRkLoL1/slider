@@ -11,7 +11,6 @@ class RangeSlider {
   private $range: JQuery<HTMLElement> | undefined;
   private $tooltip: JQuery<HTMLElement> | undefined;
   private $position: JQuery<HTMLElement> | undefined;
-  private $button: JQuery<HTMLElement> | undefined;
 
   private options: {
     min: number,
@@ -40,7 +39,6 @@ class RangeSlider {
     this.$range = this.$rangeSlider.find('.js-range-slider__range');
     this.$tooltip = this.$rangeSlider.find('.js-range-slider__tooltip');
     this.$position = this.$rangeSlider.find('.js-range-slider__position');
-    this.$button = this.$rangeSlider.find('.js-range-slider__button');
 
     this.options.slide = (num: number[]): void => {
       if (num.length > 1) {
@@ -104,6 +102,30 @@ class RangeSlider {
       this.$startValue.on('change', this.handleValueChange.bind(this));
       this.$endValue.on('change', this.handleValueChange.bind(this));
     }
+
+    if (this.$min) {
+      this.$min.on('change', this.handleMinChange.bind(this));
+    }
+
+    if (this.$max) {
+      this.$max.on('change', this.handleMaxChange.bind(this));
+    }
+
+    if (this.$step) {
+      this.$step.on('change', this.handleStepChange.bind(this));
+    }
+
+    if (this.$range) {
+      this.$range.on('change', this.handleRangeChange.bind(this));
+    }
+
+    if (this.$tooltip) {
+      this.$tooltip.on('change', this.handleTooltipChange.bind(this));
+    }
+
+    if (this.$position) {
+      this.$position.on('change', this.handlePositionChange.bind(this));
+    }
   }
 
   private handleValueChange() {
@@ -112,13 +134,93 @@ class RangeSlider {
       const endValue2 = this.$endValue.val();
 
       if (typeof startValue === 'string' && typeof endValue2 === 'string') {
-      (this.$slider as any).myPlugin('value', [Number.parseInt(startValue, 10), Number.parseInt(endValue2, 10)]);
+        (this.$slider as any).myPlugin('value', [Number.parseInt(startValue, 10), Number.parseInt(endValue2, 10)]);
       }
     }
   }
+
+  private updateValueInOptions() {
+    if (this.$startValue && this.$endValue) {
+      const startValue = this.$startValue.val();
+      const endValue2 = this.$endValue.val();
+
+      if (typeof startValue === 'string' && typeof endValue2 === 'string') {
+        this.options.value = [Number.parseInt(startValue, 10), Number.parseInt(endValue2, 10)];
+      }
+    }
+  }
+
+  private handleMinChange() {
+    if (this.$min) {
+      const min = this.$min.val();
+
+      if (typeof min === 'string') {
+        this.options.min = Number.parseInt(min, 10);
+      }
+    }
+
+    this.updateValueInOptions();
+    this.createSlider();
+  }
+
+  private handleMaxChange() {
+    if (this.$max) {
+      const max = this.$max.val();
+
+      if (typeof max === 'string') {
+        this.options.max = Number.parseInt(max, 10);
+      }
+    }
+
+    this.updateValueInOptions();
+    this.createSlider();
+  }
+
+  private handleStepChange() {
+    if (this.$step) {
+      const step = this.$step.val();
+
+      if (typeof step === 'string') {
+        this.options.step = Number.parseInt(step, 10);
+      }
+    }
+
+    this.updateValueInOptions();
+    this.createSlider();
+  }
+
+  private handleRangeChange() {
+    if (this.$range) {
+      this.options.range = this.$range.prop('checked');
+    }
+
+    this.updateValueInOptions();
+    this.createSlider();
+  }
+
+  private handleTooltipChange() {
+    if (this.$tooltip) {
+      this.options.tooltip = this.$tooltip.prop('checked');
+    }
+
+    this.updateValueInOptions();
+    this.createSlider();
+  }
+
+  private handlePositionChange() {
+    if (this.$position) {
+      const position = this.$position.prop('checked');
+
+      if (position) {
+        this.options.position = 'vertical';
+      } else {
+        this.options.position = 'horizontal';
+      }
+    }
+
+    this.updateValueInOptions();
+    this.createSlider();
+  }
 }
 
-const slider = $('.js-range-slider');
-if (slider) {
-  new RangeSlider(slider);
-}
+export { RangeSlider };

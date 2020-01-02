@@ -219,7 +219,7 @@ describe('view',  () => {
 
     const dom = new View(item);
 
-    dom.createSlider({min: 0, max: 100, step: 10, value: [50], tooltip: true, range: 1, position: 'horizontal'});
+    dom.createSlider({min: 0, max: 100, step: 10, value: [50], tooltip: true, range: false, position: 'horizontal'});
   });
 
   it('добавить бегунок', () => {
@@ -352,7 +352,7 @@ describe('viewVertical', () => {
     item.css('height', 500);
     const dom = new View(item);
 
-    dom.createSlider({min: 0, max: 100, step: 10, value: [50], tooltip: true, range: 1, position: 'vertical'});
+    dom.createSlider({min: 0, max: 100, step: 10, value: [50], tooltip: true, range: false, position: 'vertical'});
   });
 
   it('добавить бегунок', () => {
