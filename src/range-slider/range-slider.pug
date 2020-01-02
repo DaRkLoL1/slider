@@ -1,5 +1,15 @@
 mixin range-slider({min = 0, max = 100, step = 1, value = [0], range = false, tooltip = false, position = 'horizontal'} = {})
-  .range-slider.js-range-slider
+  - 
+    obj = {
+      min,
+      max,
+      value,
+      step,
+      range,
+      tooltip,
+      position,
+    }
+  .range-slider.js-range-slider(data-options=obj)
     .range-slider__slider.js-range-slider__slider
     .range-slider__configure-panel.js-range-slider__configure-panel
       label.range-slider__label value1

@@ -5,7 +5,6 @@ import {View} from './View';
 
 (function( $ ) {
   const def = {
-    interval: false,
     max: 100,
     min: 0,
     position: 'horizontal',

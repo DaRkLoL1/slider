@@ -92,7 +92,7 @@ let options = ($('.root-slider') as any).myPlugin({
   tooltip: true,
   value: [15, 20],
 });
-console.log(options.data('options'));
+
 $('.root-input1').val(($('.root-slider') as any).myPlugin('value')[0]);
 $('.root-input2').val(($('.root-slider') as any).myPlugin('value')[1]);
 
