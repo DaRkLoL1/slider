@@ -1,0 +1,16 @@
+.range-slider {
+  display: flex;
+
+  &__slider {
+    height: 400px;
+    width: 400px;
+    padding: 50px;
+  }
+
+  &__configure-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 40px;
+  }
+}

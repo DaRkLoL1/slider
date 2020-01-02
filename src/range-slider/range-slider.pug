@@ -1,0 +1,28 @@
+mixin range-slider({min = 0, max = 100, step = 1, value = [0], range = false, tooltip = false, position = 'horizontal'} = {})
+  .range-slider.js-range-slider
+    .range-slider__slider.js-range-slider__slider
+    .range-slider__configure-panel.js-range-slider__configure-panel
+      label.range-slider__label value1
+        input.range-slider__start-value.js-range-slider__start-value
+      label.range-slider__label value2
+        input.range-slider__end-value.js-range-slider__end-value
+      label.range-slider__label min
+        input.range-slider__min.js-range-slider__min
+      label.range-slider__label max
+        input.range-slider__max.js-range-slider__max
+      label.range-slider__label step
+        input.range-slider__step.js-range-slider__step
+      label.range-slider__label 
+        input(type="checkbox" class="range-slider__range js-range-slider__range")
+        |
+        | range
+      label.range-slider__label 
+        input(type="checkbox" class="range-slider__tooltip js-range-slider__tooltip")
+        |
+        | tooltip
+      label.range-slider__label 
+        input(type="checkbox" class="range-slider__position js-ange-slider__position")
+        |
+        | position
+      button(type="button" class="range-slider__button js-range-slider__button") click
+      
