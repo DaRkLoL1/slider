@@ -50,6 +50,7 @@ export class Model implements ISubjectModelControler {
         value[i] = 0;
       }
     });
+
     if (this.handle.length > 1) {
       if (value[0] <= this.min) {
         value[0] = this.min;

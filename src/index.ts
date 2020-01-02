@@ -1,7 +1,8 @@
 import './index.scss';
-import './Slider.ts';
+//import './Slider.ts';
+import './range-slider/range-slider.ts';
 
-$('.configure__button').on('click', (event) => {
+/*$('.configure__button').on('click', (event) => {
   const $parent = $(event.currentTarget).parent();
 
   interface IObj {
@@ -98,26 +99,15 @@ $('.root-input2').val(($('.root-slider') as any).myPlugin('value')[1]);
 
 $('.root-input1').on('change', (event) => {
   const $target = $(event.currentTarget);
-  let value1 = $target.val();
-  if (typeof value1 === 'string') {
-    value1 = Number.parseInt( value1, 10);
-  }
-  let value2 = $('.root-input2').val();
-  if (typeof value2 === 'string') {
-    value2 = Number.parseInt( value2, 10);
-  }
+  const value1 = $target.val();
+  const value2 = $('.root-input2').val();
   ($('.root-slider') as any).myPlugin('value', [value1, value2]);
 });
 
 $('.root-input2').on('change', (event) => {
   const $target = $(event.currentTarget);
-  let value2 = $target.val();
-  if (typeof value2 === 'string') {
-    value2 = Number.parseInt( value2, 10);
-  }
-  let value1 = $('.root-input1').val();
-  if (typeof value1 === 'string') {
-    value1 = Number.parseInt( value1, 10);
-  }
+  const value2 = $target.val();
+  const value1 = $('.root-input1').val();
   ($('.root-slider') as any).myPlugin('value', [value1, value2]);
 });
+*/

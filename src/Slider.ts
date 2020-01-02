@@ -37,6 +37,7 @@ import {View} from './View';
         if (Number.isNaN(options.max)) {
           options.max = 0;
         }
+
         if (Number.isNaN(options.step) || options.step <= 0) {
           options.step = 1;
         }
