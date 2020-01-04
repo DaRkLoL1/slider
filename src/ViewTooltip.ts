@@ -5,9 +5,9 @@ export class ViewTooltip {
     let width: number | undefined;
 
     if (this.tooltip.hasClass('slider__tooltip_vertical')) {
-      width = this.tooltip.height();
+      width = this.tooltip.innerHeight();
     } else {
-      width = this.tooltip.width();
+      width = this.tooltip.innerWidth();
     }
 
     if (typeof width === 'number') {
