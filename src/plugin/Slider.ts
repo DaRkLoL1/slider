@@ -1,7 +1,7 @@
-import {Model} from './Model';
-import {ModelHandle} from './ModelHandle';
-import {Prezenter} from './Prezenter';
-import {View} from './View';
+import {Model} from './model/Model';
+import {ModelHandle} from './model/ModelHandle';
+import {Prezenter} from './prezenter/Prezenter';
+import {View} from './view/View';
 
 (function( $ ) {
   const def = {

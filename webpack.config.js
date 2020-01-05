@@ -70,7 +70,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       hash: false,
-      template: './src/index.pug',
+      template: './src/demo-page/index.pug',
       filename: 'index.html',
       chunks: ['index']
     }),

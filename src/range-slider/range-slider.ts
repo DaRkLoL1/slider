@@ -1,4 +1,4 @@
-import '../Slider.ts';
+import '../plugin/Slider.ts';
 
 class RangeSlider {
   private $rangeSlider: JQuery<HTMLElement>;

@@ -1,6 +1,6 @@
-import {Model} from '../src/Model';
-import {ModelHandle} from '../src/ModelHandle';
-import {View} from '../src/View';
+import {Model} from '../src/plugin/model/Model';
+import {ModelHandle} from '../src/plugin/model/ModelHandle';
+import {View} from '../src/plugin/view/View';
 
 describe('Model', () => {
   let model: Model;

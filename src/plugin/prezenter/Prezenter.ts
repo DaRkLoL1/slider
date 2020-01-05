@@ -1,5 +1,5 @@
-import {Model} from './Model';
-import {View} from './View';
+import {Model} from '../model/Model';
+import {View} from '../view/View';
 
 interface IObserverModelControler {
   updateModelControler(obj: {min: number, max: number, value: number[], step: number}): void;
