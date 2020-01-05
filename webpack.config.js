@@ -17,6 +17,15 @@ module.exports = {
         use: 'ts-loader'
       },
       {
+        test: /\.ts$/,
+        exclude: [ path.resolve(__dirname, "test") ],
+        enforce: 'post',
+        use: {
+          loader: 'istanbul-instrumenter-loader',
+          options: { esModules: true }
+        }
+      },
+      {
         test: /\.pug$/,
         use: [
           'html-loader',

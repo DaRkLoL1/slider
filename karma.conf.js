@@ -1,4 +1,5 @@
 const webpackConfig = require('./webpack.config');
+const path = require('path');
 
 module.exports = function(config) {
     config.set({
@@ -33,8 +34,16 @@ module.exports = function(config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['spec'],
+        reporters: ['spec', 'coverage-istanbul'],
 
+        coverageIstanbulReporter: {
+            reports: [ 'html', 'text-summary', 'lcovonly' ],
+            dir: path.join(__dirname, 'coverage'),
+            fixWebpackSourcePaths: true,
+            'report-config': {
+              html: { outdir: 'html' }
+            }
+          },
         // web server port
         port: 9876,
 
