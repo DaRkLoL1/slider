@@ -1,23 +1,15 @@
-import {ModelHandle} from './ModelHandle';
+import { Observer } from '../observer/Observer';
+import { ModelHandle } from './ModelHandle';
 
-interface ISubjectModelControler {
-  addObserverModelControler(o: IObserverModelControler): void;
-  notifyObserverModelControler(): void;
-}
-
-interface IObserverModelControler {
-  updateModelControler(obj: {min: number, max: number, value: number[], step: number}): void;
-}
-
-export class Model implements ISubjectModelControler {
+export class Model extends Observer {
   private min: number;
   private max: number;
   private possibleValues: number[] = [];
   private step: number;
   private handle: ModelHandle[] = [];
-  private observer: IObserverModelControler | undefined;
 
   constructor(options: {min: number, max: number, range: boolean, step: number, value: number[]}) {
+    super();
     if (Number.isNaN(options.min)) {
       options.min = 0;
     }
@@ -46,7 +38,7 @@ export class Model implements ISubjectModelControler {
     } else {
       this.handle.push(new ModelHandle());
     }
-    this.setValue(options.value);
+    this.checkValue(options.value);
   }
 
   public getMin(): number {
@@ -68,6 +60,54 @@ export class Model implements ISubjectModelControler {
     });
 
     return values;
+  }
+
+  public checkValue(value: number[]): void {
+    value.forEach((val, i) => {
+      if (Number.isNaN(val)) {
+        value[i] = this.min;
+      }
+    });
+
+    value.forEach((val: number, index: number) => {
+      for (let i: number = val; i >= this.min; i -= 1) {
+          if (this.possibleValues.some((val) => {
+            return val === i;
+          })) {
+          value[index] = i;
+          break;
+        }
+      }
+    });
+
+    if (this.handle.length > 1) {
+      if (value[0] <= this.min) {
+        value[0] = this.min;
+      } else if (value[0] >= this.possibleValues[this.possibleValues.length - 1]) {
+        value[0] = this.possibleValues[this.possibleValues.length - 1] - this.step;
+      }
+      if (value[1] <= value[0] + this.step) {
+        value[1] = value[0] + this.step;
+      } else if (value[1] >= this.possibleValues[this.possibleValues.length - 1]) {
+        value[1] = this.possibleValues[this.possibleValues.length - 1];
+      }
+      this.handle[0].setValue({
+        max : this.possibleValues[this.possibleValues.length - 1],
+        min: this.min,
+        value: value[0],
+      });
+      this.handle[1].setValue({
+        max : this.possibleValues[this.possibleValues.length - 1],
+        min: this.min,
+        value: value[1],
+      });
+    } else {
+      this.handle[0].setValue({
+        max : this.possibleValues[this.possibleValues.length - 1],
+        min: this.min,
+        value: value[0],
+      });
+    }
   }
 
   public setValue(value: number[]): void {
@@ -117,7 +157,12 @@ export class Model implements ISubjectModelControler {
       });
     }
 
-    this.notifyObserverModelControler();
+    this.notifySubscribers('changeModel', {
+      max: this.getMax(),
+      min : this.getMin(),
+      step: this.getStep(),
+      value: this.getValue(),
+    });
   }
 
   public increaseValue(i: number): void {
@@ -134,7 +179,12 @@ export class Model implements ISubjectModelControler {
       this.handle[i].increaseValue({max: this.possibleValues[this.possibleValues.length - 1], step: this.step});
     }
 
-    this.notifyObserverModelControler();
+    this.notifySubscribers('changeModel', {
+      max: this.getMax(),
+      min : this.getMin(),
+      step: this.getStep(),
+      value: this.getValue(),
+    });
   }
 
   public reduceValue(i: number): void {
@@ -149,21 +199,21 @@ export class Model implements ISubjectModelControler {
     this.handle[i].reduceValue({min: this.min, step: this.step});
     }
 
-    this.notifyObserverModelControler();
+    this.notifySubscribers('changeModel', {
+      max: this.getMax(),
+      min : this.getMin(),
+      step: this.getStep(),
+      value: this.getValue(),
+    });
   }
 
-  public addObserverModelControler(o: IObserverModelControler): void {
-    this.observer = o;
-  }
-
-  public notifyObserverModelControler(): void {
-    if (typeof this.observer !== 'undefined') {
-      this.observer.updateModelControler({
-        max: this.getMax(),
-        min : this.getMin(),
-        step: this.getStep(),
-        value: this.getValue(),
-      });
-    }
+  public updateValue(symbol: string[]): void {
+    symbol.forEach((val, i) => {
+      if (val === '+') {
+        this.increaseValue(i);
+      } else if (val === '-') {
+        this.reduceValue(i);
+      }
+    });
   }
 }

@@ -1,29 +1,21 @@
+import { Observer } from '../observer/Observer';
 import {ViewThumb} from './ViewThumb';
 import {ViewTooltip} from './ViewTooltip';
-
-interface ISubjectViewControler {
-  addObserverViewControler(o: IObserverViewControler): void;
-  notifyObserverViewControler(): void;
-}
-
-interface IObserverViewControler {
-  updateViewControler(symbol: string[]): void;
-}
 
 interface IObserverView {
   updateView(): void;
 }
 
-export class View implements IObserverView, ISubjectViewControler {
+export class View extends Observer implements IObserverView {
   private item: JQuery<HTMLElement>;
   private interval: number | undefined;
   private thumb: ViewThumb[] = [];
-  private observer: IObserverViewControler | undefined;
   private symbol: string[] = [];
   private tooltip: ViewTooltip[] = [];
   private position: string | undefined;
 
   constructor(item: JQuery<HTMLElement>) {
+    super();
     this.item = item;
   }
 
@@ -114,17 +106,7 @@ export class View implements IObserverView, ISubjectViewControler {
      this.symbol.push(val.getSymbol());
     });
 
-    this.notifyObserverViewControler();
-  }
-
-  public addObserverViewControler(o: IObserverViewControler): void {
-    this.observer = o;
-  }
-
-  public notifyObserverViewControler(): void {
-    if (typeof this.observer !== 'undefined') {
-      this.observer.updateViewControler(this.symbol);
-      this.symbol = [];
-    }
+    this.notifySubscribers('changeView', this.symbol);
+    this.symbol = [];
   }
 }

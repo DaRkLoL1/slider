@@ -1,15 +1,7 @@
 import {Model} from '../model/Model';
 import {View} from '../view/View';
 
-interface IObserverModelControler {
-  updateModelControler(obj: {min: number, max: number, value: number[], step: number}): void;
-}
-
-interface IObserverViewControler {
-  updateViewControler(symbol: string[]): void;
-}
-
-export class Prezenter implements IObserverViewControler, IObserverModelControler {
+export class Prezenter {
   private view: View;
   private model: Model;
   private slide?: (num: number[]) => void;
@@ -33,36 +25,18 @@ export class Prezenter implements IObserverViewControler, IObserverModelControle
     if (options.slide) {
       this.slide = options.slide;
     }
-    this.view.addObserverViewControler(this);
-    this.model.addObserverModelControler(this);
+    this.view.addSubscribers('changeView', this.model.updateValue.bind(this.model));
+    this.model.addSubscribers('changeModel', this.view.update.bind(this.view));
+    this.model.addSubscribers('changeModel', this.updateSlider.bind(this));
   }
 
-  public updateViewControler(symbol: string[]): void {
-    symbol.forEach((val, i) => {
-      if (val === '+') {
-        this.increase(i);
-      } else if (val === '-') {
-        this.reduce(i);
-      }
-    });
-  }
-
-  public updateModelControler(obj: {min: number, max: number, value: number[], step: number}): void {
+  public updateSlider(obj: {min: number, max: number, value: number[], step: number}): void {
     if (this.slide) {
       this.slide(obj.value);
     }
-    this.view.update(obj);
   }
 
-  public increase(i: number): void {
-    this.model.increaseValue(i);
-  }
-
-  public reduce(i: number): void {
-    this.model.reduceValue(i);
-  }
-
-  public set(num: number[]): void {
+  public set(num: number[]) {
     this.model.setValue(num);
   }
 }
