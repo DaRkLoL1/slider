@@ -1,4 +1,4 @@
-export class ViewTooltip {
+class ViewTooltip {
   constructor(private tooltip: JQuery<HTMLElement>) {}
 
   public setTooltip(position: number, value: number): void {
@@ -21,3 +21,5 @@ export class ViewTooltip {
     }
   }
 }
+
+export { ViewTooltip };

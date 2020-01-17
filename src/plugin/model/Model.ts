@@ -1,7 +1,7 @@
 import { Observer } from '../observer/Observer';
 import { ModelHandle } from './ModelHandle';
 
-export class Model extends Observer {
+class Model extends Observer {
   private min: number;
   private max: number;
   private possibleValues: number[] = [];
@@ -217,3 +217,5 @@ export class Model extends Observer {
     });
   }
 }
+
+export { Model };

@@ -2,11 +2,7 @@ import { Observer } from '../observer/Observer';
 import {ViewThumb} from './ViewThumb';
 import {ViewTooltip} from './ViewTooltip';
 
-interface IObserverView {
-  updateView(): void;
-}
-
-export class View extends Observer implements IObserverView {
+class View extends Observer {
   private item: JQuery<HTMLElement>;
   private interval: number | undefined;
   private thumb: ViewThumb[] = [];
@@ -55,7 +51,7 @@ export class View extends Observer implements IObserverView {
           this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb')[i]));
         }
         this.thumb[i].installValue( width / (obj.max - obj.min) * (obj.value[i] - obj.min), this.interval );
-        this.thumb[i].addObserverView(this);
+        this.thumb[i].addSubscribers('moveThumb', this.updateView.bind(this));
       }
 
       if (obj.tooltip) {
@@ -110,3 +106,5 @@ export class View extends Observer implements IObserverView {
     this.symbol = [];
   }
 }
+
+export { View };

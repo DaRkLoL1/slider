@@ -1,7 +1,7 @@
 import {Model} from '../model/Model';
 import {View} from '../view/View';
 
-export class Prezenter {
+class Prezenter {
   private view: View;
   private model: Model;
   private slide?: (num: number[]) => void;
@@ -40,3 +40,5 @@ export class Prezenter {
     this.model.setValue(num);
   }
 }
+
+export { Prezenter };

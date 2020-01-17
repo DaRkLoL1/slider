@@ -1,18 +1,12 @@
-interface ISubjectView {
-  addObserverView(o: IObserverView): void;
-  notifyObserverView(): void;
-}
+import { Observer } from '../observer/Observer';
 
-interface IObserverView {
-  updateView(): void;
-}
-
-export class ViewThumb implements ISubjectView {
-  private observer: IObserverView | undefined;
+class ViewThumb extends Observer {
   private symbol: string = '';
   private interval: number | undefined;
 
-  constructor(private thumb: JQuery<HTMLElement>) {}
+  constructor(private thumb: JQuery<HTMLElement>) {
+    super();
+  }
 
   public installValue(value: number, interval: number): void {
     this.interval = interval;
@@ -72,10 +66,10 @@ export class ViewThumb implements ISubjectView {
               while (i > 0) {
                 if (i - this.interval >= 0) {
                   i -= this.interval;
-                  this.changed();
+                  this.notifySubscribers('moveThumb', undefined);
                 } else if (i - this.interval / 2 >= 0) {
                   i -= this.interval / 2;
-                  this.changed();
+                  this.notifySubscribers('moveThumb', undefined);
                 } else {
                   i = 0;
                 }
@@ -93,10 +87,10 @@ export class ViewThumb implements ISubjectView {
               while (i > 0) {
                 if (i - this.interval >= 0) {
                   i -= this.interval;
-                  this.changed();
+                  this.notifySubscribers('moveThumb', undefined);
                 } else if (i - this.interval / 2 >= 0) {
                   i -= this.interval / 2;
-                  this.changed();
+                  this.notifySubscribers('moveThumb', undefined);
                 } else {
                   i = 0;
                 }
@@ -141,18 +135,6 @@ export class ViewThumb implements ISubjectView {
       }
     }
   }
-
-  public changed(): void {
-    this.notifyObserverView();
-  }
-
-  public addObserverView(o: IObserverView): void {
-    this.observer = o;
-  }
-
-  public notifyObserverView(): void {
-    if (typeof this.observer !== 'undefined' && typeof this.symbol === 'string') {
-      this.observer.updateView();
-    }
-  }
 }
+
+export { ViewThumb };
