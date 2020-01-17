@@ -1,5 +1,5 @@
 export class ModelHandle {
-  constructor(private value: number) {}
+  constructor(private value: number = 0) {}
 
   public getValue(): number {
     return this.value;

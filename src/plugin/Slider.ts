@@ -18,17 +18,8 @@ import {View} from './view/View';
   ($.fn as any).myPlugin = function(method: {} | string) {
 
     const methods = {
-      init(that: JQuery<HTMLElement>, params: {}) {
+      init(slider: JQuery<HTMLElement>, params: {}) {
         const options = $.extend({}, def, params);
-
-        const handle: ModelHandle[] = [];
-        if (options.range) {
-          for (let i = 0; i < 2; i += 1) {
-            handle.push(new ModelHandle(options.value[i]));
-          }
-        } else {
-          handle.push(new ModelHandle(options.value[0]));
-        }
 
         if (Number.isNaN(options.min)) {
           options.min = 0;
@@ -46,32 +37,27 @@ import {View} from './view/View';
           options.max = options.min + options.step;
         }
 
-        that.data('model', new Model({
-          handle,
+        slider.data('model', new Model({
           max: options.max,
           min: options.min,
+          range: options.range,
           step: options.step,
+          value: options.value,
         }));
-        that.data('view', new View(that));
-        that.data('prazenter', new Prezenter(that.data('view'), that.data('model')));
-        that.data('prazenter').init(options);
-        that.data('prazenter').slide = options.slide;
+        slider.data('view', new View(slider));
+        slider.data('prazenter', new Prezenter(slider.data('view'), slider.data('model')));
+        slider.data('prazenter').init(options);
+        slider.data('prazenter').slide = options.slide;
 
-        if (options.range) {
-          that.data('model').setValue([options.value[0], options.value[1]]);
-        } else {
-          that.data('model').setValue([options.value[0]]);
-        }
-
-        that.data('options', options);
-        return that;
+        slider.data('options', options);
+        return slider;
       },
 
-      value(that: JQuery<HTMLElement>, num: number[]) {
+      value(slider: JQuery<HTMLElement>, num: number[]) {
         if (typeof num === 'undefined') {
-          return that.data('model').getValue();
+          return slider.data('model').getValue();
         } else {
-          that.data('prazenter').set(num);
+          slider.data('prazenter').set(num);
           return this;
         }
       },

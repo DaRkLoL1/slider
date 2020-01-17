@@ -12,15 +12,41 @@ interface IObserverModelControler {
 export class Model implements ISubjectModelControler {
   private min: number;
   private max: number;
+  private possibleValues: number[] = [];
   private step: number;
-  private handle: ModelHandle[];
+  private handle: ModelHandle[] = [];
   private observer: IObserverModelControler | undefined;
 
-  constructor(obj: {min: number, max: number, step: number, handle: ModelHandle[]}) {
-    this.min = obj.min;
-    this.max = obj.max;
-    this.step = obj.step;
-    this.handle = obj.handle;
+  constructor(options: {min: number, max: number, range: boolean, step: number, value: number[]}) {
+    if (Number.isNaN(options.min)) {
+      options.min = 0;
+    }
+    if (Number.isNaN(options.max)) {
+      options.max = 0;
+    }
+    if (Number.isNaN(options.step) || options.step <= 0) {
+      options.step = 1;
+    }
+    if (options.max <= options.min + options.step) {
+      options.max = options.min + options.step;
+    }
+
+    this.min = options.min;
+    this.max = options.max;
+    this.step = options.step;
+
+    for (let index: number = this.min; index <= this.max; index += this.step) {
+      this.possibleValues.push(index);
+    }
+
+    if (options.range) {
+      for (let i = 0; i < 2; i += 1) {
+        this.handle.push(new ModelHandle());
+      }
+    } else {
+      this.handle.push(new ModelHandle());
+    }
+    this.setValue(options.value);
   }
 
   public getMin(): number {
@@ -51,15 +77,9 @@ export class Model implements ISubjectModelControler {
       }
     });
 
-    const arrValues: number[] = [];
-
-    for (let i: number = this.min; i <= this.max; i += this.step) {
-      arrValues.push(i);
-    }
-
     value.forEach((val: number, index: number) => {
       for (let i: number = val; i >= this.min; i -= 1) {
-          if (arrValues.some((val) => {
+          if (this.possibleValues.some((val) => {
             return val === i;
           })) {
           value[index] = i;
@@ -71,39 +91,35 @@ export class Model implements ISubjectModelControler {
     if (this.handle.length > 1) {
       if (value[0] <= this.min) {
         value[0] = this.min;
-      } else if (value[0] >= arrValues[arrValues.length - 1]) {
-        value[0] = arrValues[arrValues.length - 1] - this.step;
+      } else if (value[0] >= this.possibleValues[this.possibleValues.length - 1]) {
+        value[0] = this.possibleValues[this.possibleValues.length - 1] - this.step;
       }
       if (value[1] <= value[0] + this.step) {
         value[1] = value[0] + this.step;
-      } else if (value[1] >= arrValues[arrValues.length - 1]) {
-        value[1] = arrValues[arrValues.length - 1];
+      } else if (value[1] >= this.possibleValues[this.possibleValues.length - 1]) {
+        value[1] = this.possibleValues[this.possibleValues.length - 1];
       }
-      this.handle[0].setValue({value: value[0], min: this.min, max : arrValues[arrValues.length - 1]});
-      this.handle[1].setValue({value: value[1], min: this.min, max : arrValues[arrValues.length - 1]});
+      this.handle[0].setValue({value: value[0], min: this.min, max : this.possibleValues[this.possibleValues.length - 1]});
+      this.handle[1].setValue({value: value[1], min: this.min, max : this.possibleValues[this.possibleValues.length - 1]});
     } else {
-      this.handle[0].setValue({value: value[0], min: this.min, max : arrValues[arrValues.length - 1]});
+      this.handle[0].setValue({value: value[0], min: this.min, max : this.possibleValues[this.possibleValues.length - 1]});
     }
 
     this.notifyObserverModelControler();
   }
 
   public increaseValue(i: number): void {
-    const arrValues: number[] = [];
-    for (let index: number = this.min; index <= this.max; index += this.step) {
-          arrValues.push(index);
-    }
 
     if (this.handle.length > 1) {
       const rightHandle: ModelHandle | undefined = this.handle[i + 1];
 
       if (!rightHandle) {
-        this.handle[i].increaseValue({max: arrValues[arrValues.length - 1], step: this.step});
+        this.handle[i].increaseValue({max: this.possibleValues[this.possibleValues.length - 1], step: this.step});
       } else {
         this.handle[i].increaseValue({max: rightHandle.getValue() - this.step, step: this.step});
       }
     } else {
-      this.handle[i].increaseValue({max: arrValues[arrValues.length - 1], step: this.step});
+      this.handle[i].increaseValue({max: this.possibleValues[this.possibleValues.length - 1], step: this.step});
     }
 
     this.notifyObserverModelControler();

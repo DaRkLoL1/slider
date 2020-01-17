@@ -3,7 +3,7 @@ export class ViewTooltip {
 
   public setTooltip(position: number, value: number): void {
     let width: number | undefined;
-
+    this.tooltip.text(value);
     if (this.tooltip.hasClass('slider__tooltip_vertical')) {
       width = this.tooltip.innerHeight();
     } else {
@@ -19,6 +19,5 @@ export class ViewTooltip {
         this.tooltip.css('left', left);
       }
     }
-    this.tooltip.text(value);
   }
 }

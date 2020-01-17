@@ -95,6 +95,17 @@ class RangeSlider {
         this.$position.prop('checked', true);
       }
     }
+
+    if (this.$startValue && this.$endValue && this.$slider) {
+      const sliderValues = (this.$slider as any).myPlugin('value');
+
+      if (sliderValues > 1) {
+        this.$startValue.val(sliderValues[0]);
+        this.$endValue.val(sliderValues[1]);
+      } else {
+        this.$startValue.val(sliderValues[0]);
+      }
+    }
   }
 
   private addHandlesForValues(): void {
