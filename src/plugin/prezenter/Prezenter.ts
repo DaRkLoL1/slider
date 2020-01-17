@@ -25,23 +25,16 @@ export class Prezenter implements IObserverViewControler, IObserverModelControle
     }) {
     this.model = new Model(options);
     this.view = new View(slider);
-    this.init(options);
+    options.min = this.model.getMin();
+    options.max = this.model.getMax();
+    options.step = this.model.getStep();
+    options.value = this.model.getValue();
+    this.view.createSlider(options);
     if (options.slide) {
       this.slide = options.slide;
     }
     this.view.addObserverViewControler(this);
     this.model.addObserverModelControler(this);
-  }
-
-  public init(obj: {
-    min: number,
-    max: number,
-    step: number,
-    value: number[],
-    range: boolean;
-    tooltip: boolean,
-    position: string}): void {
-    this.view.createSlider(obj);
   }
 
   public updateViewControler(symbol: string[]): void {
