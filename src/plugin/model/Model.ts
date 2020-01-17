@@ -99,10 +99,22 @@ export class Model implements ISubjectModelControler {
       } else if (value[1] >= this.possibleValues[this.possibleValues.length - 1]) {
         value[1] = this.possibleValues[this.possibleValues.length - 1];
       }
-      this.handle[0].setValue({value: value[0], min: this.min, max : this.possibleValues[this.possibleValues.length - 1]});
-      this.handle[1].setValue({value: value[1], min: this.min, max : this.possibleValues[this.possibleValues.length - 1]});
+      this.handle[0].setValue({
+        max : this.possibleValues[this.possibleValues.length - 1],
+        min: this.min,
+        value: value[0],
+      });
+      this.handle[1].setValue({
+        max : this.possibleValues[this.possibleValues.length - 1],
+        min: this.min,
+        value: value[1],
+      });
     } else {
-      this.handle[0].setValue({value: value[0], min: this.min, max : this.possibleValues[this.possibleValues.length - 1]});
+      this.handle[0].setValue({
+        max : this.possibleValues[this.possibleValues.length - 1],
+        min: this.min,
+        value: value[0],
+      });
     }
 
     this.notifyObserverModelControler();

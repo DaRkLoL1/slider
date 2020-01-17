@@ -12,10 +12,23 @@ interface IObserverViewControler {
 export class Prezenter implements IObserverViewControler, IObserverModelControler {
   private view: View;
   private model: Model;
-
-  constructor(view: View, model: Model) {
-    this.view = view;
-    this.model = model;
+  private slide?: (num: number[]) => void;
+  constructor(slider: JQuery<HTMLElement>, options: {
+    min: number,
+    max: number,
+    step: number,
+    value: number[],
+    range: boolean;
+    tooltip: boolean,
+    position: string,
+    slide?(num: number[]): void,
+    }) {
+    this.model = new Model(options);
+    this.view = new View(slider);
+    this.init(options);
+    if (options.slide) {
+      this.slide = options.slide;
+    }
     this.view.addObserverViewControler(this);
     this.model.addObserverModelControler(this);
   }
@@ -42,7 +55,9 @@ export class Prezenter implements IObserverViewControler, IObserverModelControle
   }
 
   public updateModelControler(obj: {min: number, max: number, value: number[], step: number}): void {
-    this.slide(obj.value);
+    if (this.slide) {
+      this.slide(obj.value);
+    }
     this.view.update(obj);
   }
 
@@ -57,6 +72,4 @@ export class Prezenter implements IObserverViewControler, IObserverModelControle
   public set(num: number[]): void {
     this.model.setValue(num);
   }
-
-  public slide(num: number[]): void {}
 }
