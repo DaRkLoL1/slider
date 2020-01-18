@@ -34,43 +34,63 @@ class View extends Observer {
     }
 
     if (typeof width === 'number') {
-      this.interval = width / (obj.max - obj.min) * obj.step;
-      let index: number = 1;
-      if (obj.range) {
-        index = 2;
-      }
-      for (let i = 0; i < index; i += 1) {
-        if (this.position === 'vertical') {
-          $(this.item).find('.slider__field_vertical')
-            .append('<div class="slider__thumb slider__thumb_vertical"></div>');
-          this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb_vertical')[i]), i);
-        } else {
-          $(this.item).find('.slider__field')
-            .append('<div class="slider__thumb"></div>');
-          this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb')[i]), i);
-        }
-        this.thumb[i].installValue( width / (obj.max - obj.min) * (obj.value[i] - obj.min), this.interval );
-        this.thumb[i].addSubscribers('moveThumb', this.updateView.bind(this));
-      }
+      this.createSliderThumbs(width, obj);
 
       if (obj.tooltip) {
-        let index: number = 1;
-        if (obj.range) {
-          index = 2;
-        }
-        for (let i = 0; i < index; i += 1) {
-          if (this.position === 'vertical') {
-            $(this.item).find('.slider__field_vertical')
-              .append($('<div class="slider__tooltip slider__tooltip_vertical"></div>'));
-            this.tooltip[i] = new ViewTooltip($(this.item.find('.slider__tooltip_vertical')[i]));
-          } else {
-            $(this.item).find('.slider__field').append($('<div class="slider__tooltip"></div>'));
-            this.tooltip[i] = new ViewTooltip($(this.item.find('.slider__tooltip')[i]));
-        }
-
-          this.tooltip[i].setTooltip(width / (obj.max - obj.min) * (obj.value[i] - obj.min), obj.value[i]);
-        }
+        this.createSliderTooltips(width, obj);
       }
+    }
+  }
+
+  public createSliderThumbs(width: number, obj: {
+    max: number,
+    min: number,
+    range: boolean,
+    step: number,
+    value: number[],
+  }) {
+    this.interval = width / (obj.max - obj.min) * obj.step;
+    let index: number = 1;
+    if (obj.range) {
+      index = 2;
+    }
+    for (let i = 0; i < index; i += 1) {
+      if (this.position === 'vertical') {
+        $(this.item).find('.slider__field_vertical')
+          .append('<div class="slider__thumb slider__thumb_vertical"></div>');
+        this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb_vertical')[i]), i);
+      } else {
+        $(this.item).find('.slider__field')
+          .append('<div class="slider__thumb"></div>');
+        this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb')[i]), i);
+      }
+      this.thumb[i].installValue( width / (obj.max - obj.min) * (obj.value[i] - obj.min), this.interval );
+      this.thumb[i].addSubscribers('moveThumb', this.updateView.bind(this));
+    }
+  }
+
+  public createSliderTooltips(width: number, obj: {
+    max: number,
+    min: number,
+    range: boolean,
+    step: number,
+    value: number[],
+  }) {
+    let index: number = 1;
+    if (obj.range) {
+      index = 2;
+    }
+    for (let i = 0; i < index; i += 1) {
+      if (this.position === 'vertical') {
+        $(this.item).find('.slider__field_vertical')
+          .append($('<div class="slider__tooltip slider__tooltip_vertical"></div>'));
+        this.tooltip[i] = new ViewTooltip($(this.item.find('.slider__tooltip_vertical')[i]));
+      } else {
+        $(this.item).find('.slider__field').append($('<div class="slider__tooltip"></div>'));
+        this.tooltip[i] = new ViewTooltip($(this.item.find('.slider__tooltip')[i]));
+      }
+
+      this.tooltip[i].setTooltip(width / (obj.max - obj.min) * (obj.value[i] - obj.min), obj.value[i]);
     }
   }
 
