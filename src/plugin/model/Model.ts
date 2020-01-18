@@ -8,7 +8,7 @@ class Model extends Observer {
   private step: number;
   private handle: ModelHandle[] = [];
 
-  constructor(options: {min: number, max: number, range: boolean, step: number, value: number[]}) {
+  constructor(options: {min: number, max: number, range: boolean, step: number, values: number[]}) {
     super();
     this.checkMinMaxStep(options);
     this.min = options.min;
@@ -20,7 +20,7 @@ class Model extends Observer {
     }
 
     this.createModelHandlers(options.range);
-    this.checkValue(options.value);
+    this.checkValue(options.values);
   }
 
   public checkMinMaxStep(options: {min: number, max: number, step: number}): void {
@@ -72,10 +72,10 @@ class Model extends Observer {
     return values;
   }
 
-  public checkValue(value: number[]): void {
-    this.checkValueOnNaN(value);
-    this.checkValueOnPossibleValues(value);
-    this.checkValueOnBoundaryValues(value);
+  public checkValue(values: number[]): void {
+    this.checkValueOnNaN(values);
+    this.checkValueOnPossibleValues(values);
+    this.checkValueOnBoundaryValues(values);
   }
 
   public checkValueOnBoundaryValues(values: number[]): void {
@@ -130,8 +130,8 @@ class Model extends Observer {
     });
   }
 
-  public setValue(value: number[]): void {
-    this.checkValue(value);
+  public setValue(values: number[]): void {
+    this.checkValue(values);
     this.handleModelChangeModel();
   }
 
@@ -188,7 +188,7 @@ class Model extends Observer {
       max: this.getMax(),
       min : this.getMin(),
       step: this.getStep(),
-      value: this.getValue(),
+      values: this.getValue(),
     });
   }
 }

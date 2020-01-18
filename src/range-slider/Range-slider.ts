@@ -19,7 +19,7 @@ class RangeSlider {
     position: string,
     range: boolean,
     tooltip: boolean,
-    value: number[],
+    values: number[],
     slide(num: number[]): void,
   };
 
@@ -156,7 +156,7 @@ class RangeSlider {
       const endValue2 = this.$endValue.val();
 
       if (typeof startValue === 'string' && typeof endValue2 === 'string') {
-        this.options.value = [Number.parseInt(startValue, 10), Number.parseInt(endValue2, 10)];
+        this.options.values = [Number.parseInt(startValue, 10), Number.parseInt(endValue2, 10)];
       }
     }
   }

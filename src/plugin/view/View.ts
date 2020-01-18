@@ -18,7 +18,7 @@ class View extends Observer {
     min: number,
     max: number,
     step: number,
-    value: number[],
+    values: number[],
     tooltip: boolean,
     range: boolean,
     position: string}): void {
@@ -47,7 +47,7 @@ class View extends Observer {
     min: number,
     range: boolean,
     step: number,
-    value: number[],
+    values: number[],
   }) {
     this.interval = width / (obj.max - obj.min) * obj.step;
     let index: number = 1;
@@ -64,7 +64,7 @@ class View extends Observer {
           .append('<div class="slider__thumb"></div>');
         this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb')[i]), i);
       }
-      this.thumb[i].installValue( width / (obj.max - obj.min) * (obj.value[i] - obj.min), this.interval );
+      this.thumb[i].installValue( width / (obj.max - obj.min) * (obj.values[i] - obj.min), this.interval );
       this.thumb[i].addSubscribers('moveThumb', this.updateView.bind(this));
     }
   }
@@ -74,7 +74,7 @@ class View extends Observer {
     min: number,
     range: boolean,
     step: number,
-    value: number[],
+    values: number[],
   }) {
     let index: number = 1;
     if (obj.range) {
@@ -90,11 +90,11 @@ class View extends Observer {
         this.tooltip[i] = new ViewTooltip($(this.item.find('.slider__tooltip')[i]));
       }
 
-      this.tooltip[i].setTooltip(width / (obj.max - obj.min) * (obj.value[i] - obj.min), obj.value[i]);
+      this.tooltip[i].setTooltip(width / (obj.max - obj.min) * (obj.values[i] - obj.min), obj.values[i]);
     }
   }
 
-  public update(obj: {min: number, max: number, value: number[], step: number}): void {
+  public update(obj: {min: number, max: number, values: number[], step: number}): void {
     let width: number | undefined;
 
     if (this.position === 'vertical') {
@@ -107,10 +107,10 @@ class View extends Observer {
       if (typeof width === 'number' && typeof this.thumb === 'object' && typeof this.interval === 'number') {
         this.interval = width / (obj.max - obj.min) * obj.step;
 
-        this.thumb[i].update( width / (obj.max - obj.min) * (obj.value[i] - obj.min), this.interval );
+        this.thumb[i].update( width / (obj.max - obj.min) * (obj.values[i] - obj.min), this.interval );
 
         if (this.tooltip.length > 0) {
-          this.tooltip[i].setTooltip(width / (obj.max - obj.min) * (obj.value[i] - obj.min), obj.value[i]);
+          this.tooltip[i].setTooltip(width / (obj.max - obj.min) * (obj.values[i] - obj.min), obj.values[i]);
         }
       }
     });

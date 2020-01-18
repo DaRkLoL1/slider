@@ -8,7 +8,7 @@ import {Prezenter} from './prezenter/Prezenter';
     range: false,
     step: 25,
     tooltip: false,
-    value: [0],
+    values: [0],
   };
 
   ($.fn as any).myPlugin = function(method: {} | string) {
