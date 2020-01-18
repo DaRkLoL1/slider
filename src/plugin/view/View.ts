@@ -6,7 +6,6 @@ class View extends Observer {
   private item: JQuery<HTMLElement>;
   private interval: number | undefined;
   private thumb: ViewThumb[] = [];
-  private symbol: string[] = [];
   private tooltip: ViewTooltip[] = [];
   private position: string | undefined;
 
@@ -44,11 +43,11 @@ class View extends Observer {
         if (this.position === 'vertical') {
           $(this.item).find('.slider__field_vertical')
             .append('<div class="slider__thumb slider__thumb_vertical"></div>');
-          this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb_vertical')[i]));
+          this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb_vertical')[i]), i);
         } else {
           $(this.item).find('.slider__field')
             .append('<div class="slider__thumb"></div>');
-          this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb')[i]));
+          this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb')[i]), i);
         }
         this.thumb[i].installValue( width / (obj.max - obj.min) * (obj.value[i] - obj.min), this.interval );
         this.thumb[i].addSubscribers('moveThumb', this.updateView.bind(this));
@@ -97,13 +96,8 @@ class View extends Observer {
     });
   }
 
-  public updateView(): void {
-    this.thumb.forEach((val) => {
-     this.symbol.push(val.getSymbol());
-    });
-
-    this.notifySubscribers('changeView', this.symbol);
-    this.symbol = [];
+  public updateView(options: {symbol: string, counet: number, index: number}): void {
+    this.notifySubscribers('changeView', options);
   }
 }
 

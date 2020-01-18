@@ -165,18 +165,30 @@ class Model extends Observer {
     });
   }
 
-  public increaseValue(i: number): void {
+  public increaseValue(i: number, counter: number): void {
 
     if (this.handle.length > 1) {
       const rightHandle: ModelHandle | undefined = this.handle[i + 1];
 
       if (!rightHandle) {
-        this.handle[i].increaseValue({max: this.possibleValues[this.possibleValues.length - 1], step: this.step});
+        this.handle[i].increaseValue({
+          counter,
+          max: this.possibleValues[this.possibleValues.length - 1],
+          step: this.step,
+        });
       } else {
-        this.handle[i].increaseValue({max: rightHandle.getValue() - this.step, step: this.step});
+        this.handle[i].increaseValue({
+          counter,
+          max: rightHandle.getValue() - this.step,
+          step: this.step,
+        });
       }
     } else {
-      this.handle[i].increaseValue({max: this.possibleValues[this.possibleValues.length - 1], step: this.step});
+      this.handle[i].increaseValue({
+        counter,
+        max: this.possibleValues[this.possibleValues.length - 1],
+        step: this.step,
+      });
     }
 
     this.notifySubscribers('changeModel', {
@@ -187,16 +199,12 @@ class Model extends Observer {
     });
   }
 
-  public reduceValue(i: number): void {
-    if (this.handle.length > 1) {
-      if (i === 0) {
-        this.handle[i].reduceValue({min: this.min, step: this.step});
-      } else {
-       const leftHandle: ModelHandle = this.handle[i - 1];
-       this.handle[i].reduceValue({min: leftHandle.getValue() + this.step, step: this.step});
-      }
+  public reduceValue(i: number, counter: number): void {
+    if (i === 0) {
+      this.handle[i].reduceValue({min: this.min, step: this.step, counter});
     } else {
-    this.handle[i].reduceValue({min: this.min, step: this.step});
+      const leftHandle: ModelHandle = this.handle[i - 1];
+      this.handle[i].reduceValue({min: leftHandle.getValue() + this.step, step: this.step, counter});
     }
 
     this.notifySubscribers('changeModel', {
@@ -207,14 +215,12 @@ class Model extends Observer {
     });
   }
 
-  public updateValue(symbol: string[]): void {
-    symbol.forEach((val, i) => {
-      if (val === '+') {
-        this.increaseValue(i);
-      } else if (val === '-') {
-        this.reduceValue(i);
+  public updateValue(options: {symbol: string, counter: number, index: number}): void {
+      if (options.symbol === '+') {
+        this.increaseValue(options.index, options.counter);
+      } else if (options.symbol === '-') {
+        this.reduceValue(options.index, options.counter);
       }
-    });
   }
 }
 

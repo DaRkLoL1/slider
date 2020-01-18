@@ -15,8 +15,8 @@ export class ModelHandle {
     }
   }
 
-  public increaseValue(obj: {max: number, step: number}): void {
-    const count: number = this.value  + obj.step;
+  public increaseValue(obj: {max: number, step: number, counter: number}): void {
+    const count: number = this.value  + obj.step * obj.counter;
 
     if (count > obj.max) {
       this.value = obj.max;
@@ -25,8 +25,8 @@ export class ModelHandle {
     }
   }
 
-  public reduceValue(obj: {min: number, step: number}): void {
-    const count = this.value - obj.step;
+  public reduceValue(obj: {min: number, step: number, counter: number}): void {
+    const count = this.value - obj.step * obj.counter;
 
     if (count < obj.min) {
       this.value = obj.min;

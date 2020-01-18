@@ -3,9 +3,11 @@ import { Observer } from '../observer/Observer';
 class ViewThumb extends Observer {
   private symbol: string = '';
   private interval: number | undefined;
+  private index: number;
 
-  constructor(private thumb: JQuery<HTMLElement>) {
+  constructor(private thumb: JQuery<HTMLElement>, index: number) {
     super();
+    this.index = index;
   }
 
   public installValue(value: number, interval: number): void {
@@ -56,46 +58,49 @@ class ViewThumb extends Observer {
             }
 
             if ( x >= (thumbLeft + this.interval / 2 ) ) {
-
+              let symbol: string = '';
               if (this.thumb.hasClass('slider__thumb_vertical')) {
-                this.symbol = '-';
+                symbol = '-';
               } else {
-                this.symbol = '+';
+                symbol = '+';
               }
               let i = x - thumbLeft;
+              let counter = 0;
               while (i > 0) {
                 if (i - this.interval >= 0) {
                   i -= this.interval;
-                  this.notifySubscribers('moveThumb', undefined);
+                  counter += 1;
                 } else if (i - this.interval / 2 >= 0) {
                   i -= this.interval / 2;
-                  this.notifySubscribers('moveThumb', undefined);
+                  counter += 1;
                 } else {
                   i = 0;
                 }
               }
-              this.symbol = '';
+              this.notifySubscribers('moveThumb', {symbol, counter, index: this.index});
             }
 
             if (x <= (thumbLeft - this.interval / 2 )) {
+              let symbol: string = '';
               if (this.thumb.hasClass('slider__thumb_vertical')) {
-                this.symbol = '+';
+                symbol = '+';
               } else {
-                this.symbol = '-';
+                symbol = '-';
               }
               let i = thumbLeft - x;
+              let counter = 0;
               while (i > 0) {
                 if (i - this.interval >= 0) {
                   i -= this.interval;
-                  this.notifySubscribers('moveThumb', undefined);
+                  counter += 1;
                 } else if (i - this.interval / 2 >= 0) {
                   i -= this.interval / 2;
-                  this.notifySubscribers('moveThumb', undefined);
+                  counter += 1;
                 } else {
                   i = 0;
                 }
               }
-              this.symbol = '';
+              this.notifySubscribers('moveThumb', {symbol, counter, index: this.index});
             }
           }
         };
