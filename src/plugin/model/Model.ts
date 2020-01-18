@@ -10,19 +10,7 @@ class Model extends Observer {
 
   constructor(options: {min: number, max: number, range: boolean, step: number, value: number[]}) {
     super();
-    if (Number.isNaN(options.min)) {
-      options.min = 0;
-    }
-    if (Number.isNaN(options.max)) {
-      options.max = 0;
-    }
-    if (Number.isNaN(options.step) || options.step <= 0) {
-      options.step = 1;
-    }
-    if (options.max <= options.min + options.step) {
-      options.max = options.min + options.step;
-    }
-
+    this.checkMinMaxStep(options);
     this.min = options.min;
     this.max = options.max;
     this.step = options.step;
@@ -31,14 +19,37 @@ class Model extends Observer {
       this.possibleValues.push(index);
     }
 
-    if (options.range) {
+    this.createModelHandlers(options.range);
+
+    this.checkValue(options.value);
+  }
+
+  public checkMinMaxStep(options: {min: number, max: number, step: number}): void {
+    if (Number.isNaN(options.min)) {
+      options.min = 0;
+    }
+
+    if (Number.isNaN(options.max)) {
+      options.max = 0;
+    }
+
+    if (Number.isNaN(options.step) || options.step <= 0) {
+      options.step = 1;
+    }
+
+    if (options.max <= options.min + options.step) {
+      options.max = options.min + options.step;
+    }
+  }
+
+  public createModelHandlers(range: boolean): void {
+    if (range) {
       for (let i = 0; i < 2; i += 1) {
         this.handle.push(new ModelHandle());
       }
     } else {
       this.handle.push(new ModelHandle());
     }
-    this.checkValue(options.value);
   }
 
   public getMin(): number {
