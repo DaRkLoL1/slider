@@ -123,7 +123,7 @@ class Model extends Observer {
   }
 
   public checkValueOnNaN(values: number[]): void {
-    this.possibleValues.forEach((value, index) => {
+    values.forEach((value, index) => {
       if (Number.isNaN(value)) {
         values[index] = this.min;
       }
@@ -136,7 +136,6 @@ class Model extends Observer {
   }
 
   public increaseValue(index: number, counter: number): void {
-
     if (this.handle.length > 1) {
       const rightHandle: ModelValues | undefined = this.handle[index + 1];
 
