@@ -1,7 +1,6 @@
 import { Observer } from '../observer/Observer';
 
 class ViewThumb extends Observer {
-  private symbol: string = '';
   private interval: number | undefined;
   private index: number;
   private target: Element | undefined;
@@ -52,11 +51,11 @@ class ViewThumb extends Observer {
   }
 
   public handleDocumentMouseMove(event: MouseEvent) {
-    let x: number;
+    let coordinate: number;
     if (this.thumb.hasClass('slider__thumb_vertical')) {
-      x =  event.clientY;
+      coordinate =  event.clientY;
     } else {
-      x =  event.clientX;
+      coordinate =  event.clientX;
     }
 
     let thumbLeft: number;
@@ -67,61 +66,61 @@ class ViewThumb extends Observer {
         thumbLeft = this.target.getBoundingClientRect().left + this.width / 2;
       }
 
-      this.increasePositionThumb(x, thumbLeft);
-      this.reducePositionThumb(x, thumbLeft);
+      this.increasePositionThumb(coordinate, thumbLeft);
+      this.reducePositionThumb(coordinate, thumbLeft);
     }
   }
 
-  public increasePositionThumb(x: number, thumbLeft: number) {
+  public increasePositionThumb(coordinate: number, thumbLeft: number) {
     if (this.interval) {
-      if ( x >= (thumbLeft + this.interval / 2 ) ) {
-        let symbol: string = '';
+      if (coordinate >= (thumbLeft + this.interval / 2)) {
+        let symbolMinusOrPlus: string = '';
         if (this.thumb.hasClass('slider__thumb_vertical')) {
-          symbol = '-';
+          symbolMinusOrPlus = '-';
         } else {
-          symbol = '+';
+          symbolMinusOrPlus = '+';
         }
-        let i = x - thumbLeft;
+        let index = coordinate - thumbLeft;
         let counter = 0;
-        while (i > 0) {
-          if (i - this.interval >= 0) {
-            i -= this.interval;
+        while (index > 0) {
+          if (index - this.interval >= 0) {
+            index -= this.interval;
             counter += 1;
-          } else if (i - this.interval / 2 >= 0) {
-            i -= this.interval / 2;
+          } else if (index - this.interval / 2 >= 0) {
+            index -= this.interval / 2;
             counter += 1;
           } else {
-            i = 0;
+            index = 0;
           }
         }
-        this.notifySubscribers('moveThumb', {symbol, counter, index: this.index});
+        this.notifySubscribers('moveThumb', {symbolMinusOrPlus, counter, index: this.index});
       }
     }
   }
 
-  public reducePositionThumb(x: number, thumbLeft: number) {
+  public reducePositionThumb(coordinate: number, thumbLeft: number) {
     if (this.interval) {
-      if (x <= (thumbLeft - this.interval / 2 )) {
-        let symbol: string = '';
+      if (coordinate <= (thumbLeft - this.interval / 2)) {
+        let symbolMinusOrPlus: string = '';
         if (this.thumb.hasClass('slider__thumb_vertical')) {
-          symbol = '+';
+          symbolMinusOrPlus = '+';
         } else {
-          symbol = '-';
+          symbolMinusOrPlus = '-';
         }
-        let i = thumbLeft - x;
+        let index = thumbLeft - coordinate;
         let counter = 0;
-        while (i > 0) {
-          if (i - this.interval >= 0) {
-            i -= this.interval;
+        while (index > 0) {
+          if (index - this.interval >= 0) {
+            index -= this.interval;
             counter += 1;
-          } else if (i - this.interval / 2 >= 0) {
-            i -= this.interval / 2;
+          } else if (index - this.interval / 2 >= 0) {
+            index -= this.interval / 2;
             counter += 1;
           } else {
-            i = 0;
+            index = 0;
           }
         }
-        this.notifySubscribers('moveThumb', {symbol, counter, index: this.index});
+        this.notifySubscribers('moveThumb', {symbolMinusOrPlus, counter, index: this.index});
       }
     }
   }
@@ -129,10 +128,6 @@ class ViewThumb extends Observer {
   public handleDocumentMouseUp() {
     document.removeEventListener('mousemove', this.handleDocumentMouseMove);
     document.removeEventListener('mouseup', this.handleDocumentMouseUp);
-  }
-
-  public getSymbol(): string {
-     return this.symbol;
   }
 
   public update(value: number, interval: number): void {

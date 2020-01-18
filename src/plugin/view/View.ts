@@ -54,18 +54,18 @@ class View extends Observer {
     if (obj.range) {
       index = 2;
     }
-    for (let i = 0; i < index; i += 1) {
+    for (let count = 0; count < index; count += 1) {
       if (this.position === 'vertical') {
         $(this.item).find('.slider__field_vertical')
           .append('<div class="slider__thumb slider__thumb_vertical"></div>');
-        this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb_vertical')[i]), i);
+        this.thumb[count] = new ViewThumb($(this.item.find('.slider__thumb_vertical')[count]), count);
       } else {
         $(this.item).find('.slider__field')
           .append('<div class="slider__thumb"></div>');
-        this.thumb[i] = new ViewThumb($(this.item.find('.slider__thumb')[i]), i);
+        this.thumb[count] = new ViewThumb($(this.item.find('.slider__thumb')[count]), count);
       }
-      this.thumb[i].installValue( width / (obj.max - obj.min) * (obj.values[i] - obj.min), this.interval );
-      this.thumb[i].addSubscribers('moveThumb', this.updateView.bind(this));
+      this.thumb[count].installValue( width / (obj.max - obj.min) * (obj.values[count] - obj.min), this.interval );
+      this.thumb[count].addSubscribers('moveThumb', this.updateView.bind(this));
     }
   }
 
@@ -80,17 +80,17 @@ class View extends Observer {
     if (obj.range) {
       index = 2;
     }
-    for (let i = 0; i < index; i += 1) {
+    for (let count = 0; count < index; count += 1) {
       if (this.position === 'vertical') {
         $(this.item).find('.slider__field_vertical')
           .append($('<div class="slider__tooltip slider__tooltip_vertical"></div>'));
-        this.tooltip[i] = new ViewTooltip($(this.item.find('.slider__tooltip_vertical')[i]));
+        this.tooltip[count] = new ViewTooltip($(this.item.find('.slider__tooltip_vertical')[count]));
       } else {
         $(this.item).find('.slider__field').append($('<div class="slider__tooltip"></div>'));
-        this.tooltip[i] = new ViewTooltip($(this.item.find('.slider__tooltip')[i]));
+        this.tooltip[count] = new ViewTooltip($(this.item.find('.slider__tooltip')[count]));
       }
 
-      this.tooltip[i].setTooltip(width / (obj.max - obj.min) * (obj.values[i] - obj.min), obj.values[i]);
+      this.tooltip[count].setTooltip(width / (obj.max - obj.min) * (obj.values[count] - obj.min), obj.values[count]);
     }
   }
 
@@ -103,20 +103,21 @@ class View extends Observer {
       width = $(this.item).width();
     }
 
-    this.thumb.forEach((val, i) => {
+    this.thumb.forEach((item, index) => {
       if (typeof width === 'number' && typeof this.thumb === 'object' && typeof this.interval === 'number') {
         this.interval = width / (obj.max - obj.min) * obj.step;
 
-        this.thumb[i].update( width / (obj.max - obj.min) * (obj.values[i] - obj.min), this.interval );
+        this.thumb[index].update( width / (obj.max - obj.min) * (obj.values[index] - obj.min), this.interval );
 
         if (this.tooltip.length > 0) {
-          this.tooltip[i].setTooltip(width / (obj.max - obj.min) * (obj.values[i] - obj.min), obj.values[i]);
+          this.tooltip[index].setTooltip(width / (obj.max - obj.min) * (obj.values[index] - obj.min),
+            obj.values[index]);
         }
       }
     });
   }
 
-  public updateView(options: {symbol: string, counet: number, index: number}): void {
+  public updateView(options: {symbolMinusOrPlus: string, counter: number, index: number}): void {
     this.notifySubscribers('changeView', options);
   }
 }

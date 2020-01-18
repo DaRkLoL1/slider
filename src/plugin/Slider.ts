@@ -24,11 +24,11 @@ import {Prezenter} from './prezenter/Prezenter';
         return slider;
       },
 
-      value(slider: JQuery<HTMLElement>, num: number[]) {
-        if (typeof num === 'undefined') {
+      value(slider: JQuery<HTMLElement>, values: number[]) {
+        if (typeof values === 'undefined') {
           return slider.data('prezenter').model.getValue();
         } else {
-          slider.data('prezenter').set(num);
+          slider.data('prezenter').set(values);
           return this;
         }
       },

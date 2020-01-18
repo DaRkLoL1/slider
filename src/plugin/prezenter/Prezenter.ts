@@ -14,7 +14,7 @@ class Prezenter {
     range: boolean;
     tooltip: boolean,
     position: string,
-    slide?(num: number[]): void,
+    slide?(values: number[]): void,
     }) {
     this.model = new Model(options);
     this.view = new View(slider);

@@ -65,8 +65,8 @@ class Model extends Observer {
 
   public getValue(): number[] {
     const values: number[] = [];
-    this.handle.forEach((val) => {
-      values.push(val.getValue());
+    this.handle.forEach((item) => {
+      values.push(item.getValue());
     });
 
     return values;
@@ -111,11 +111,11 @@ class Model extends Observer {
 
   public checkValueOnPossibleValues(values: number[]): void {
     values.forEach((value: number, index: number) => {
-      for (let i: number = value; i >= this.min; i -= 1) {
-          if (this.possibleValues.some((val) => {
-            return val === i;
+      for (let count: number = value; count >= this.min; count -= 1) {
+          if (this.possibleValues.some((item) => {
+            return item === count;
           })) {
-          values[index] = i;
+          values[index] = count;
           break;
         }
       }
@@ -135,26 +135,26 @@ class Model extends Observer {
     this.handleModelChangeModel();
   }
 
-  public increaseValue(i: number, counter: number): void {
+  public increaseValue(index: number, counter: number): void {
 
     if (this.handle.length > 1) {
-      const rightHandle: ModelHandle | undefined = this.handle[i + 1];
+      const rightHandle: ModelHandle | undefined = this.handle[index + 1];
 
       if (!rightHandle) {
-        this.handle[i].increaseValue({
+        this.handle[index].increaseValue({
           counter,
           max: this.possibleValues[this.possibleValues.length - 1],
           step: this.step,
         });
       } else {
-        this.handle[i].increaseValue({
+        this.handle[index].increaseValue({
           counter,
           max: rightHandle.getValue() - this.step,
           step: this.step,
         });
       }
     } else {
-      this.handle[i].increaseValue({
+      this.handle[index].increaseValue({
         counter,
         max: this.possibleValues[this.possibleValues.length - 1],
         step: this.step,
@@ -164,21 +164,21 @@ class Model extends Observer {
     this.handleModelChangeModel();
   }
 
-  public reduceValue(i: number, counter: number): void {
-    if (i === 0) {
-      this.handle[i].reduceValue({min: this.min, step: this.step, counter});
+  public reduceValue(index: number, counter: number): void {
+    if (index === 0) {
+      this.handle[index].reduceValue({min: this.min, step: this.step, counter});
     } else {
-      const leftHandle: ModelHandle = this.handle[i - 1];
-      this.handle[i].reduceValue({min: leftHandle.getValue() + this.step, step: this.step, counter});
+      const leftHandle: ModelHandle = this.handle[index - 1];
+      this.handle[index].reduceValue({min: leftHandle.getValue() + this.step, step: this.step, counter});
     }
 
     this.handleModelChangeModel();
   }
 
-  public updateValue(options: {symbol: string, counter: number, index: number}): void {
-      if (options.symbol === '+') {
+  public updateValue(options: {symbolMinusOrPlus: string, counter: number, index: number}): void {
+      if (options.symbolMinusOrPlus === '+') {
         this.increaseValue(options.index, options.counter);
-      } else if (options.symbol === '-') {
+      } else if (options.symbolMinusOrPlus === '-') {
         this.reduceValue(options.index, options.counter);
       }
   }

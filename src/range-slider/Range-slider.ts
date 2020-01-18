@@ -20,7 +20,7 @@ class RangeSlider {
     range: boolean,
     tooltip: boolean,
     values: number[],
-    slide(num: number[]): void,
+    slide(values: number[]): void,
   };
 
   constructor(rangeSlider: JQuery<HTMLElement>) {
@@ -40,15 +40,15 @@ class RangeSlider {
     this.$tooltip = this.$rangeSlider.find('.js-range-slider__tooltip');
     this.$position = this.$rangeSlider.find('.js-range-slider__position');
 
-    this.options.slide = (num: number[]): void => {
-      if (num.length > 1) {
+    this.options.slide = (values: number[]): void => {
+      if (values.length > 1) {
         if (this.$startValue && this.$endValue) {
-          this.$startValue.val(num[0]);
-          this.$endValue.val(num[1]);
+          this.$startValue.val(values[0]);
+          this.$endValue.val(values[1]);
         }
       } else {
         if (this.$startValue) {
-          this.$startValue.val(num[0]);
+          this.$startValue.val(values[0]);
         }
       }
     };
