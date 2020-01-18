@@ -20,7 +20,6 @@ class Model extends Observer {
     }
 
     this.createModelHandlers(options.range);
-
     this.checkValue(options.value);
   }
 
@@ -74,106 +73,66 @@ class Model extends Observer {
   }
 
   public checkValue(value: number[]): void {
-    value.forEach((val, i) => {
-      if (Number.isNaN(val)) {
-        value[i] = this.min;
-      }
-    });
+    this.checkValueOnNaN(value);
+    this.checkValueOnPossibleValues(value);
+    this.checkValueOnBoundaryValues(value);
+  }
 
-    value.forEach((val: number, index: number) => {
-      for (let i: number = val; i >= this.min; i -= 1) {
-          if (this.possibleValues.some((val) => {
-            return val === i;
-          })) {
-          value[index] = i;
-          break;
-        }
-      }
-    });
-
+  public checkValueOnBoundaryValues(values: number[]): void {
     if (this.handle.length > 1) {
-      if (value[0] <= this.min) {
-        value[0] = this.min;
-      } else if (value[0] >= this.possibleValues[this.possibleValues.length - 1]) {
-        value[0] = this.possibleValues[this.possibleValues.length - 1] - this.step;
+      if (values[0] <= this.min) {
+        values[0] = this.min;
+      } else if (values[0] >= this.possibleValues[this.possibleValues.length - 1]) {
+        values[0] = this.possibleValues[this.possibleValues.length - 1] - this.step;
       }
-      if (value[1] <= value[0] + this.step) {
-        value[1] = value[0] + this.step;
-      } else if (value[1] >= this.possibleValues[this.possibleValues.length - 1]) {
-        value[1] = this.possibleValues[this.possibleValues.length - 1];
+      if (values[1] <= values[0] + this.step) {
+        values[1] = values[0] + this.step;
+      } else if (values[1] >= this.possibleValues[this.possibleValues.length - 1]) {
+        values[1] = this.possibleValues[this.possibleValues.length - 1];
       }
       this.handle[0].setValue({
         max : this.possibleValues[this.possibleValues.length - 1],
         min: this.min,
-        value: value[0],
+        value: values[0],
       });
       this.handle[1].setValue({
         max : this.possibleValues[this.possibleValues.length - 1],
         min: this.min,
-        value: value[1],
+        value: values[1],
       });
     } else {
       this.handle[0].setValue({
         max : this.possibleValues[this.possibleValues.length - 1],
         min: this.min,
-        value: value[0],
+        value: values[0],
       });
     }
   }
 
-  public setValue(value: number[]): void {
-    value.forEach((val, i) => {
-      if (Number.isNaN(val)) {
-        value[i] = this.min;
-      }
-    });
-
-    value.forEach((val: number, index: number) => {
-      for (let i: number = val; i >= this.min; i -= 1) {
+  public checkValueOnPossibleValues(values: number[]): void {
+    values.forEach((value: number, index: number) => {
+      for (let i: number = value; i >= this.min; i -= 1) {
           if (this.possibleValues.some((val) => {
             return val === i;
           })) {
-          value[index] = i;
+          values[index] = i;
           break;
         }
       }
     });
+  }
 
-    if (this.handle.length > 1) {
-      if (value[0] <= this.min) {
-        value[0] = this.min;
-      } else if (value[0] >= this.possibleValues[this.possibleValues.length - 1]) {
-        value[0] = this.possibleValues[this.possibleValues.length - 1] - this.step;
+  public checkValueOnNaN(values: number[]): void {
+    this.possibleValues.forEach((value, index) => {
+      if (Number.isNaN(value)) {
+        values[index] = this.min;
       }
-      if (value[1] <= value[0] + this.step) {
-        value[1] = value[0] + this.step;
-      } else if (value[1] >= this.possibleValues[this.possibleValues.length - 1]) {
-        value[1] = this.possibleValues[this.possibleValues.length - 1];
-      }
-      this.handle[0].setValue({
-        max : this.possibleValues[this.possibleValues.length - 1],
-        min: this.min,
-        value: value[0],
-      });
-      this.handle[1].setValue({
-        max : this.possibleValues[this.possibleValues.length - 1],
-        min: this.min,
-        value: value[1],
-      });
-    } else {
-      this.handle[0].setValue({
-        max : this.possibleValues[this.possibleValues.length - 1],
-        min: this.min,
-        value: value[0],
-      });
-    }
-
-    this.notifySubscribers('changeModel', {
-      max: this.getMax(),
-      min : this.getMin(),
-      step: this.getStep(),
-      value: this.getValue(),
     });
+  }
+
+  public setValue(value: number[]): void {
+    this.checkValue(value);
+    this.handleModelChangeModel();
   }
 
   public increaseValue(i: number, counter: number): void {
@@ -202,12 +161,7 @@ class Model extends Observer {
       });
     }
 
-    this.notifySubscribers('changeModel', {
-      max: this.getMax(),
-      min : this.getMin(),
-      step: this.getStep(),
-      value: this.getValue(),
-    });
+    this.handleModelChangeModel();
   }
 
   public reduceValue(i: number, counter: number): void {
@@ -218,12 +172,7 @@ class Model extends Observer {
       this.handle[i].reduceValue({min: leftHandle.getValue() + this.step, step: this.step, counter});
     }
 
-    this.notifySubscribers('changeModel', {
-      max: this.getMax(),
-      min : this.getMin(),
-      step: this.getStep(),
-      value: this.getValue(),
-    });
+    this.handleModelChangeModel();
   }
 
   public updateValue(options: {symbol: string, counter: number, index: number}): void {
@@ -232,6 +181,15 @@ class Model extends Observer {
       } else if (options.symbol === '-') {
         this.reduceValue(options.index, options.counter);
       }
+  }
+
+  public handleModelChangeModel(): void {
+    this.notifySubscribers('changeModel', {
+      max: this.getMax(),
+      min : this.getMin(),
+      step: this.getStep(),
+      value: this.getValue(),
+    });
   }
 }
 
