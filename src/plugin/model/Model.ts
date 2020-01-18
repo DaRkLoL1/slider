@@ -1,12 +1,12 @@
 import { Observer } from '../observer/Observer';
-import { ModelHandle } from './ModelHandle';
+import { ModelValues } from './ModelValues';
 
 class Model extends Observer {
   private min: number;
   private max: number;
   private possibleValues: number[] = [];
   private step: number;
-  private handle: ModelHandle[] = [];
+  private handle: ModelValues[] = [];
 
   constructor(options: {min: number, max: number, range: boolean, step: number, values: number[]}) {
     super();
@@ -19,7 +19,7 @@ class Model extends Observer {
       this.possibleValues.push(index);
     }
 
-    this.createModelHandlers(options.range);
+    this.createModelValues(options.range);
     this.checkValue(options.values);
   }
 
@@ -41,13 +41,13 @@ class Model extends Observer {
     }
   }
 
-  public createModelHandlers(range: boolean): void {
+  public createModelValues(range: boolean): void {
     if (range) {
       for (let i = 0; i < 2; i += 1) {
-        this.handle.push(new ModelHandle());
+        this.handle.push(new ModelValues());
       }
     } else {
-      this.handle.push(new ModelHandle());
+      this.handle.push(new ModelValues());
     }
   }
 
@@ -138,7 +138,7 @@ class Model extends Observer {
   public increaseValue(index: number, counter: number): void {
 
     if (this.handle.length > 1) {
-      const rightHandle: ModelHandle | undefined = this.handle[index + 1];
+      const rightHandle: ModelValues | undefined = this.handle[index + 1];
 
       if (!rightHandle) {
         this.handle[index].increaseValue({
@@ -168,7 +168,7 @@ class Model extends Observer {
     if (index === 0) {
       this.handle[index].reduceValue({min: this.min, step: this.step, counter});
     } else {
-      const leftHandle: ModelHandle = this.handle[index - 1];
+      const leftHandle: ModelValues = this.handle[index - 1];
       this.handle[index].reduceValue({min: leftHandle.getValue() + this.step, step: this.step, counter});
     }
 

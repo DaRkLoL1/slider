@@ -1,4 +1,4 @@
-import {Prezenter} from './prezenter/Prezenter';
+import { Prezenter } from './prezenter/Prezenter';
 
 (function( $ ) {
   const def = {

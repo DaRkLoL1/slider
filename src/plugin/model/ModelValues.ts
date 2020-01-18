@@ -1,4 +1,4 @@
-export class ModelHandle {
+class ModelValues {
   constructor(private value: number = 0) {}
 
   public getValue(): number {
@@ -35,3 +35,5 @@ export class ModelHandle {
     }
   }
 }
+
+export { ModelValues };

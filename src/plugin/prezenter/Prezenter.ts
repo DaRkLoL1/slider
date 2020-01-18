@@ -1,5 +1,5 @@
-import {Model} from '../model/Model';
-import {View} from '../view/View';
+import { Model } from '../model/Model';
+import { View } from '../view/View';
 
 class Prezenter {
   private view: View;
