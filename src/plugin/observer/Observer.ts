@@ -2,7 +2,8 @@ class Observer {
   private subscribers: { [key: string]: Array<(data: any) => void>} = {};
 
   public addSubscribers(eventName: string, func: (data: any) => void) {
-    if (!this.subscribers.hasOwnProperty(eventName)) {
+    const has = Object.prototype.hasOwnProperty;
+    if (!has.call(this.subscribers, eventName)) {
       this.subscribers[eventName] = [];
     }
 
