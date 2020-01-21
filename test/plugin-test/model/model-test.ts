@@ -1,11 +1,11 @@
-import {Model} from '../../../src/plugin/model/Model';
-import {ModelHandle} from '../../../src/plugin/model/ModelHandle';
+import { Model } from '../../../src/plugin/model/Model';
+import { ModelValues } from '../../../src/plugin/model/ModelValues';
 
 describe('Model', () => {
   let model: Model;
 
   beforeEach(() => {
-    model = new Model({min: 0, max: 100, step: 1, handle: [new ModelHandle(0)]});
+    model = new Model({min: 0, max: 100, step: 1, range: false, values: [0]});
   });
 
   it('создать конструктор для присвоения min max и вернуть их', () => {
@@ -16,7 +16,7 @@ describe('Model', () => {
   });
 
   it('создать конструктор для присвоения min max и вернуть их', () => {
-    const model: Model = new Model({min: 20, max: 50, step: 1, handle: [new ModelHandle(0)]});
+    const model: Model = new Model({min: 20, max: 50, step: 1, range: false, values: [0]});
     const min = model.getMin();
     const max = model.getMax();
     expect(min).toEqual(20);
@@ -33,36 +33,36 @@ describe('Model', () => {
 
 describe('model handle', () => {
 
-  let handle: ModelHandle;
+  let handle: ModelValues;
 
   beforeEach(() => {
-     handle = new ModelHandle(0);
+     handle = new ModelValues(0);
   });
 
   it('создать ручку и получить значение', () => {
-    const handle: ModelHandle = new ModelHandle(50);
+    const handle: ModelValues = new ModelValues(50);
     const value: number = handle.getValue();
     expect(value).toEqual(50);
   });
 
   it('увеличить значение на step', () => {
-    handle.increaseValue({max: 100, step: 1});
+    handle.increaseValue({max: 100, step: 1, counter: 1});
     expect(handle.getValue()).toEqual(1);
   });
 
   it('увеличить значение на 110', () => {
-    handle.increaseValue({max: 100, step: 110});
+    handle.increaseValue({max: 100, step: 110, counter: 1});
     expect(handle.getValue()).toEqual(100);
   });
 
   it('уменьшить значение на 10', () => {
     handle.setValue({value: 40, min: 0, max: 100});
-    handle.reduceValue({min: 0, step: 10});
+    handle.reduceValue({min: 0, step: 10, counter: 1});
     expect(handle.getValue()).toEqual(30);
   });
 
   it('уменьшить значение на 10', () => {
-    handle.reduceValue({min: 0, step: 10});
+    handle.reduceValue({min: 0, step: 10, counter: 1});
     expect(handle.getValue()).toEqual(0);
   });
 
@@ -83,29 +83,11 @@ describe('model handle', () => {
 
 });
 
-describe('изменить, увеличивать и уменьшать значения из Model',  () => {
+describe('изменить значение из Model',  () => {
 
   it('изменить значение из Model',  () => {
-    const handle = new ModelHandle(0);
-    const model = new Model({min: 0, max: 100, step: 1, handle: [handle]});
-
-    model.setValue([30]);
+    const model = new Model({min: 0, max: 100, step: 1, range: false, values: [0]});
+    model.checkValue([30]);
     expect(model.getValue()).toEqual([30]);
-  });
-
-  it('увеличить значение из Model',  () => {
-    const handle = new ModelHandle(50);
-    const model = new Model({min: 0, max: 100, step: 10, handle: [handle]});
-
-    model.increaseValue(0);
-    expect(model.getValue()).toEqual([60]);
-  });
-
-  it('уменьшить значение из Model',  () => {
-    const handle = new ModelHandle(50);
-    const model = new Model({min: 0, max: 100, step: 10, handle: [handle]});
-
-    model.reduceValue(0);
-    expect(model.getValue()).toEqual([40]);
   });
 });

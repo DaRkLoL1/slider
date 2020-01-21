@@ -1,7 +1,7 @@
 import {View} from '../../../src/plugin/view/View';
 
 describe('view',  () => {
-  let item: JQuery<HTMLElement>;
+  let $item: JQuery<HTMLElement>;
 
   beforeEach(() => {
     setFixtures('<div class="root"></div>');
@@ -61,13 +61,13 @@ describe('view',  () => {
               top: auto;
               bottom: 240px;
               left: -7.5px; }`);
-    item  = $('.root');
+    $item  = $('.root');
 
-    item.css('width', 500);
+    $item.css('width', 500);
 
-    const dom = new View(item);
+    const dom = new View($item, 0);
 
-    dom.createSlider({min: 0, max: 100, step: 10, value: [50], tooltip: true, range: false, position: 'horizontal'});
+    dom.createSlider({min: 0, max: 100, step: 10, values: [50], tooltip: true, range: false, position: 'horizontal'});
   });
 
   it('добавить бегунок', () => {
@@ -95,7 +95,7 @@ describe('view',  () => {
 });
 
 describe('viewVertical', () => {
-  let item: JQuery<HTMLElement>;
+  let $item: JQuery<HTMLElement>;
 
   beforeEach(() => {
     setFixtures('<div class="root"></div>');
@@ -155,11 +155,11 @@ describe('viewVertical', () => {
           top: auto;
           bottom: 240px;
           left: -7.5px; }`);
-    item  = $('.root');
-    item.css('height', 500);
-    const dom = new View(item);
+    $item  = $('.root');
+    $item.css('height', 500);
+    const dom = new View($item, 0);
 
-    dom.createSlider({min: 0, max: 100, step: 10, value: [50], tooltip: true, range: false, position: 'vertical'});
+    dom.createSlider({min: 0, max: 100, step: 10, values: [50], tooltip: true, range: false, position: 'vertical'});
   });
 
   it('добавить бегунок', () => {
