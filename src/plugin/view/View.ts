@@ -4,14 +4,16 @@ import { ViewTooltip } from './ViewTooltip';
 
 class View extends Observer {
   private item: JQuery<HTMLElement>;
+  private sliderIndex: number;
   private interval: number | undefined;
   private thumb: ViewThumb[] = [];
   private tooltip: ViewTooltip[] = [];
   private position: string | undefined;
 
-  constructor(item: JQuery<HTMLElement>) {
+  constructor(item: JQuery<HTMLElement>, sliderIndex: number) {
     super();
     this.item = item;
+    this.sliderIndex = sliderIndex;
   }
 
   public createSlider(obj: {
@@ -58,11 +60,11 @@ class View extends Observer {
       if (this.position === 'vertical') {
         $(this.item).find('.slider__field_vertical')
           .append('<div class="slider__thumb slider__thumb_vertical"></div>');
-        this.thumb[count] = new ViewThumb($(this.item.find('.slider__thumb_vertical')[count]), count);
+        this.thumb[count] = new ViewThumb($(this.item.find('.slider__thumb_vertical')[count]), count, this.sliderIndex);
       } else {
         $(this.item).find('.slider__field')
           .append('<div class="slider__thumb"></div>');
-        this.thumb[count] = new ViewThumb($(this.item.find('.slider__thumb')[count]), count);
+        this.thumb[count] = new ViewThumb($(this.item.find('.slider__thumb')[count]), count, this.sliderIndex);
       }
       this.thumb[count].installValue( width / (obj.max - obj.min) * (obj.values[count] - obj.min), this.interval );
       this.thumb[count].addSubscribers('moveThumb', this.updateView.bind(this));

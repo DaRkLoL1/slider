@@ -6,7 +6,7 @@ class Prezenter {
   private model: Model;
   private slide?: (num: number[]) => void;
 
-  constructor(slider: JQuery<HTMLElement>, options: {
+  constructor(sliderIndex: number, slider: JQuery<HTMLElement>, options: {
     min: number,
     max: number,
     step: number,
@@ -17,7 +17,7 @@ class Prezenter {
     slide?(values: number[]): void,
     }) {
     this.model = new Model(options);
-    this.view = new View(slider);
+    this.view = new View(slider, sliderIndex);
     options.min = this.model.getMin();
     options.max = this.model.getMax();
     options.step = this.model.getStep();

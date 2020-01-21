@@ -1,6 +1,8 @@
 import { Prezenter } from './prezenter/Prezenter';
 
 (function( $ ) {
+  let sliderIndex = 0;
+
   const def = {
     max: 100,
     min: 0,
@@ -16,11 +18,12 @@ import { Prezenter } from './prezenter/Prezenter';
     const methods = {
       init(slider: JQuery<HTMLElement>, params: {}) {
         const options = $.extend({}, def, params);
-        slider.data('prezenter', new Prezenter(slider, options));
+        slider.data('prezenter', new Prezenter(sliderIndex, slider, options));
         options.min = slider.data('prezenter').model.getMin();
         options.max = slider.data('prezenter').model.getMax();
         options.step = slider.data('prezenter').model.getStep();
         slider.data('options', options);
+        sliderIndex += 1;
         return slider;
       },
 
