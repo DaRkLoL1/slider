@@ -11,6 +11,7 @@ class RangeSlider {
   private $range: JQuery<HTMLElement> | undefined;
   private $tooltip: JQuery<HTMLElement> | undefined;
   private $position: JQuery<HTMLElement> | undefined;
+  private index: number;
 
   private options: {
     min: number,
@@ -23,8 +24,9 @@ class RangeSlider {
     slide(values: number[]): void,
   };
 
-  constructor(rangeSlider: JQuery<HTMLElement>) {
+  constructor(rangeSlider: JQuery<HTMLElement>, index: number) {
     this.$rangeSlider = rangeSlider;
+    this.index = index;
     this.options = rangeSlider.data('options');
     this.initSlider();
   }
@@ -110,32 +112,32 @@ class RangeSlider {
 
   private addHandlesForValues(): void {
     if (this.$startValue && this.$endValue) {
-      this.$startValue.on('change', this.handleValueChange.bind(this));
-      this.$endValue.on('change', this.handleValueChange.bind(this));
+      this.$startValue.on(`change.startValue${this.index}`, this.handleValueChange.bind(this));
+      this.$endValue.on(`change.endValue${this.index}`, this.handleValueChange.bind(this));
     }
 
     if (this.$min) {
-      this.$min.on('change', this.handleMinChange.bind(this));
+      this.$min.on(`change.min${this.index}`, this.handleMinChange.bind(this));
     }
 
     if (this.$max) {
-      this.$max.on('change', this.handleMaxChange.bind(this));
+      this.$max.on(`change.max${this.index}`, this.handleMaxChange.bind(this));
     }
 
     if (this.$step) {
-      this.$step.on('change', this.handleStepChange.bind(this));
+      this.$step.on(`change.step${this.index}`, this.handleStepChange.bind(this));
     }
 
     if (this.$range) {
-      this.$range.on('change', this.handleRangeChange.bind(this));
+      this.$range.on(`change.range${this.index}`, this.handleRangeChange.bind(this));
     }
 
     if (this.$tooltip) {
-      this.$tooltip.on('change', this.handleTooltipChange.bind(this));
+      this.$tooltip.on(`change.tooltip${this.index}`, this.handleTooltipChange.bind(this));
     }
 
     if (this.$position) {
-      this.$position.on('change', this.handlePositionChange.bind(this));
+      this.$position.on(`change.position${this.index}`, this.handlePositionChange.bind(this));
     }
   }
 
