@@ -16,22 +16,22 @@ import { Prezenter } from './prezenter/Prezenter';
   ($.fn as any).myPlugin = function(method: {} | string) {
 
     const methods = {
-      init(slider: JQuery<HTMLElement>, params: {}) {
+      init($slider: JQuery<HTMLElement>, params: {}) {
         const options = $.extend({}, def, params);
-        slider.data('prezenter', new Prezenter(sliderIndex, slider, options));
-        options.min = slider.data('prezenter').model.getMin();
-        options.max = slider.data('prezenter').model.getMax();
-        options.step = slider.data('prezenter').model.getStep();
-        slider.data('options', options);
+        $slider.data('prezenter', new Prezenter(sliderIndex, $slider, options));
+        options.min = $slider.data('prezenter').model.getMin();
+        options.max = $slider.data('prezenter').model.getMax();
+        options.step = $slider.data('prezenter').model.getStep();
+        $slider.data('options', options);
         sliderIndex += 1;
-        return slider;
+        return $slider;
       },
 
-      value(slider: JQuery<HTMLElement>, values: number[]) {
+      value($slider: JQuery<HTMLElement>, values: number[]) {
         if (typeof values === 'undefined') {
-          return slider.data('prezenter').model.getValue();
+          return $slider.data('prezenter').model.getValue();
         } else {
-          slider.data('prezenter').set(values);
+          $slider.data('prezenter').set(values);
           return this;
         }
       },

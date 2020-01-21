@@ -7,7 +7,7 @@ class ViewThumb extends Observer {
   private target: Element | undefined;
   private width: number | undefined;
 
-  constructor(private thumb: JQuery<HTMLElement>, index: number, sliderIndex: number) {
+  constructor(private $thumb: JQuery<HTMLElement>, index: number, sliderIndex: number) {
     super();
     this.index = index;
     this.sliderIndex = sliderIndex;
@@ -16,19 +16,19 @@ class ViewThumb extends Observer {
   public installValue(value: number, interval: number): void {
     this.interval = interval;
 
-    if (this.thumb.hasClass('slider__thumb_vertical')) {
-      this.width  = $(this.thumb).height();
+    if (this.$thumb.hasClass('slider__thumb_vertical')) {
+      this.width  = this.$thumb.height();
     } else {
-      this.width  = $(this.thumb).width();
+      this.width  = this.$thumb.width();
     }
 
     if (typeof this.width === 'number') {
       const left: string = value - this.width / 2 + 'px';
 
-      if (this.thumb.hasClass('slider__thumb_vertical')) {
-        this.thumb.css('bottom', left);
+      if (this.$thumb.hasClass('slider__thumb_vertical')) {
+        this.$thumb.css('bottom', left);
       } else {
-        this.thumb.css('left', left);
+        this.$thumb.css('left', left);
       }
 
       this.addHandlersEvents();
@@ -36,9 +36,9 @@ class ViewThumb extends Observer {
   }
 
   public addHandlersEvents() {
-    this.thumb.on(`dragstart.thumb${this.sliderIndex}`, this.handleThumbDragStart);
+    this.$thumb.on(`dragstart.thumb${this.sliderIndex}`, this.handleThumbDragStart);
     $(document).on(`selectstart.document${this.sliderIndex}`, this.handleThumbDragStart);
-    this.thumb.on(`mousedown.thumb${this.sliderIndex}`, this.handleThumbMouseDown.bind(this));
+    this.$thumb.on(`mousedown.thumb${this.sliderIndex}`, this.handleThumbMouseDown.bind(this));
   }
 
   public handleThumbDragStart() {
@@ -54,7 +54,7 @@ class ViewThumb extends Observer {
 
   public handleDocumentMouseMove(event: MouseEvent) {
     let coordinate: number;
-    if (this.thumb.hasClass('slider__thumb_vertical')) {
+    if (this.$thumb.hasClass('slider__thumb_vertical')) {
       coordinate =  event.clientY;
     } else {
       coordinate =  event.clientX;
@@ -62,7 +62,7 @@ class ViewThumb extends Observer {
 
     let thumbLeft: number;
     if (typeof this.width === 'number' && typeof this.interval === 'number' && this.target) {
-      if (this.thumb.hasClass('slider__thumb_vertical')) {
+      if (this.$thumb.hasClass('slider__thumb_vertical')) {
         thumbLeft = this.target.getBoundingClientRect().top + this.width / 2;
       } else {
         thumbLeft = this.target.getBoundingClientRect().left + this.width / 2;
@@ -77,7 +77,7 @@ class ViewThumb extends Observer {
     if (this.interval) {
       if (coordinate >= (thumbLeft + this.interval / 2)) {
         let symbolMinusOrPlus: string = '';
-        if (this.thumb.hasClass('slider__thumb_vertical')) {
+        if (this.$thumb.hasClass('slider__thumb_vertical')) {
           symbolMinusOrPlus = '-';
         } else {
           symbolMinusOrPlus = '+';
@@ -104,7 +104,7 @@ class ViewThumb extends Observer {
     if (this.interval) {
       if (coordinate <= (thumbLeft - this.interval / 2)) {
         let symbolMinusOrPlus: string = '';
-        if (this.thumb.hasClass('slider__thumb_vertical')) {
+        if (this.$thumb.hasClass('slider__thumb_vertical')) {
           symbolMinusOrPlus = '+';
         } else {
           symbolMinusOrPlus = '-';
@@ -137,19 +137,19 @@ class ViewThumb extends Observer {
 
     let width: number | undefined;
 
-    if (this.thumb.hasClass('slider__thumb_vertical')) {
-      width  = $(this.thumb).height();
+    if (this.$thumb.hasClass('slider__thumb_vertical')) {
+      width  = this.$thumb.height();
     } else {
-      width  = $(this.thumb).width();
+      width  = this.$thumb.width();
     }
 
     if (typeof width === 'number') {
       const left: string = value - width / 2 + 'px';
 
-      if (this.thumb.hasClass('slider__thumb_vertical')) {
-         this.thumb.css('bottom', left);
+      if (this.$thumb.hasClass('slider__thumb_vertical')) {
+         this.$thumb.css('bottom', left);
       } else {
-        this.thumb.css('left', left);
+        this.$thumb.css('left', left);
       }
     }
   }

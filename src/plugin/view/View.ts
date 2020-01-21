@@ -3,16 +3,16 @@ import { ViewThumb } from './ViewThumb';
 import { ViewTooltip } from './ViewTooltip';
 
 class View extends Observer {
-  private item: JQuery<HTMLElement>;
+  private $item: JQuery<HTMLElement>;
   private sliderIndex: number;
   private interval: number | undefined;
   private thumb: ViewThumb[] = [];
   private tooltip: ViewTooltip[] = [];
   private position: string | undefined;
 
-  constructor(item: JQuery<HTMLElement>, sliderIndex: number) {
+  constructor($item: JQuery<HTMLElement>, sliderIndex: number) {
     super();
-    this.item = item;
+    this.$item = $item;
     this.sliderIndex = sliderIndex;
   }
 
@@ -28,11 +28,11 @@ class View extends Observer {
 
     let width: number | undefined;
     if (this.position === 'vertical') {
-      $(this.item).html('<div class="slider slider_vertical"><div class="slider__field slider__field_vertical"></div></div>');
-      width  = $(this.item).height();
+      this.$item.html('<div class="slider slider_vertical"><div class="slider__field slider__field_vertical js-slider__field_vertical"></div></div>');
+      width  = this.$item.height();
     } else {
-      $(this.item).html('<div class="slider"><div class="slider__field"></div></div>');
-      width  = $(this.item).width();
+      this.$item.html('<div class="slider"><div class="slider__field js-slider__field"></div></div>');
+      width  = this.$item.width();
     }
 
     if (typeof width === 'number') {
@@ -58,13 +58,17 @@ class View extends Observer {
     }
     for (let count = 0; count < index; count += 1) {
       if (this.position === 'vertical') {
-        $(this.item).find('.slider__field_vertical')
-          .append('<div class="slider__thumb slider__thumb_vertical"></div>');
-        this.thumb[count] = new ViewThumb($(this.item.find('.slider__thumb_vertical')[count]), count, this.sliderIndex);
+        this.$item.find('.js-slider__field_vertical')
+          .append('<div class="slider__thumb slider__thumb_vertical js-slider__thumb_vertical"></div>');
+        this.thumb[count] = new ViewThumb(
+          this.$item.find('.js-slider__thumb_vertical').eq(count),
+          count,
+          this.sliderIndex,
+        );
       } else {
-        $(this.item).find('.slider__field')
-          .append('<div class="slider__thumb"></div>');
-        this.thumb[count] = new ViewThumb($(this.item.find('.slider__thumb')[count]), count, this.sliderIndex);
+        this.$item.find('.js-slider__field')
+          .append('<div class="slider__thumb js-slider__thumb"></div>');
+        this.thumb[count] = new ViewThumb(this.$item.find('.js-slider__thumb').eq(count), count, this.sliderIndex);
       }
       this.thumb[count].installValue( width / (obj.max - obj.min) * (obj.values[count] - obj.min), this.interval );
       this.thumb[count].addSubscribers('moveThumb', this.updateView.bind(this));
@@ -84,12 +88,12 @@ class View extends Observer {
     }
     for (let count = 0; count < index; count += 1) {
       if (this.position === 'vertical') {
-        $(this.item).find('.slider__field_vertical')
-          .append($('<div class="slider__tooltip slider__tooltip_vertical"></div>'));
-        this.tooltip[count] = new ViewTooltip($(this.item.find('.slider__tooltip_vertical')[count]));
+        this.$item.find('.js-slider__field_vertical')
+          .append($('<div class="slider__tooltip slider__tooltip_vertical js-slider__tooltip_vertical"></div>'));
+        this.tooltip[count] = new ViewTooltip($(this.$item.find('.js-slider__tooltip_vertical')[count]));
       } else {
-        $(this.item).find('.slider__field').append($('<div class="slider__tooltip"></div>'));
-        this.tooltip[count] = new ViewTooltip($(this.item.find('.slider__tooltip')[count]));
+        this.$item.find('.js-slider__field').append($('<div class="slider__tooltip js-slider__tooltip"></div>'));
+        this.tooltip[count] = new ViewTooltip($(this.$item.find('.js-slider__tooltip')[count]));
       }
 
       this.tooltip[count].setTooltip(width / (obj.max - obj.min) * (obj.values[count] - obj.min), obj.values[count]);
@@ -100,9 +104,9 @@ class View extends Observer {
     let width: number | undefined;
 
     if (this.position === 'vertical') {
-      width = $(this.item).height();
+      width = this.$item.height();
     } else {
-      width = $(this.item).width();
+      width = this.$item.width();
     }
 
     this.thumb.forEach((item, index) => {
