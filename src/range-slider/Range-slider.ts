@@ -147,7 +147,13 @@ class RangeSlider {
       const endValue2 = this.$endValue.val();
 
       if (typeof startValue === 'string' && typeof endValue2 === 'string') {
-        (this.$slider as any).myPlugin('value', [Number.parseInt(startValue, 10), Number.parseInt(endValue2, 10)]);
+        (this.$slider as any).myPlugin(
+          'value',
+          [
+            Math.floor(Number.parseFloat(startValue)),
+            Math.floor(Number.parseFloat(endValue2)),
+          ],
+        );
       }
     }
   }
@@ -158,7 +164,10 @@ class RangeSlider {
       const endValue2 = this.$endValue.val();
 
       if (typeof startValue === 'string' && typeof endValue2 === 'string') {
-        this.options.values = [Number.parseInt(startValue, 10), Number.parseInt(endValue2, 10)];
+        this.options.values = [
+          Math.floor(Number.parseFloat(startValue)),
+          Math.floor(Number.parseFloat(endValue2)),
+        ];
       }
     }
   }
@@ -168,7 +177,7 @@ class RangeSlider {
       const min = this.$min.val();
 
       if (typeof min === 'string') {
-        this.options.min = Number.parseInt(min, 10);
+        this.options.min = Math.floor(Number.parseFloat(min));
       }
     }
 
@@ -181,7 +190,7 @@ class RangeSlider {
       const max = this.$max.val();
 
       if (typeof max === 'string') {
-        this.options.max = Number.parseInt(max, 10);
+        this.options.max = Math.floor(Number.parseFloat(max));
       }
     }
 
@@ -194,7 +203,7 @@ class RangeSlider {
       const step = this.$step.val();
 
       if (typeof step === 'string') {
-        this.options.step = Number.parseInt(step, 10);
+        this.options.step = Math.floor(Number.parseFloat(step));
       }
     }
 
