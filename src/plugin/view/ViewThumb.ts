@@ -82,19 +82,12 @@ class ViewThumb extends Observer {
         } else {
           symbolMinusOrPlus = '+';
         }
-        let index = coordinate - thumbLeft;
+
+        const width = coordinate - thumbLeft;
         let counter = 0;
-        while (index > 0) {
-          if (index - this.interval >= 0) {
-            index -= this.interval;
-            counter += 1;
-          } else if (index - this.interval / 2 >= 0) {
-            index -= this.interval / 2;
-            counter += 1;
-          } else {
-            index = 0;
-          }
-        }
+        counter += Math.floor(width / this.interval);
+        counter += Math.floor((width - counter * this.interval) / (this.interval / 2));
+
         this.notifySubscribers('moveThumb', {symbolMinusOrPlus, counter, index: this.index});
       }
     }
@@ -109,19 +102,11 @@ class ViewThumb extends Observer {
         } else {
           symbolMinusOrPlus = '-';
         }
-        let index = thumbLeft - coordinate;
+        const width = thumbLeft - coordinate;
         let counter = 0;
-        while (index > 0) {
-          if (index - this.interval >= 0) {
-            index -= this.interval;
-            counter += 1;
-          } else if (index - this.interval / 2 >= 0) {
-            index -= this.interval / 2;
-            counter += 1;
-          } else {
-            index = 0;
-          }
-        }
+        counter += Math.floor(width / this.interval);
+        counter += Math.floor((width - counter * this.interval) / (this.interval / 2));
+
         this.notifySubscribers('moveThumb', {symbolMinusOrPlus, counter, index: this.index});
       }
     }
