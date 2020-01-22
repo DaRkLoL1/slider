@@ -4,7 +4,7 @@ import { ModelValues } from './ModelValues';
 class Model extends Observer {
   private min: number;
   private max: number;
-  private possibleValues: number[] = [];
+  private maxValue: number;
   private step: number;
   private handle: ModelValues[] = [];
 
@@ -15,9 +15,12 @@ class Model extends Observer {
     this.max = options.max;
     this.step = options.step;
 
-    for (let index: number = this.min; index <= this.max; index += this.step) {
-      this.possibleValues.push(index);
+    let count = this.max;
+    if ((count - this.min) % this.step !== 0) {
+      count -= (count - this.min) % this.step;
     }
+
+    this.maxValue = count;
 
     this.createModelValues(options.range);
     this.checkValue(options.values);
@@ -82,27 +85,27 @@ class Model extends Observer {
     if (this.handle.length > 1) {
       if (values[0] <= this.min) {
         values[0] = this.min;
-      } else if (values[0] >= this.possibleValues[this.possibleValues.length - 1]) {
-        values[0] = this.possibleValues[this.possibleValues.length - 1] - this.step;
+      } else if (values[0] >= this.maxValue) {
+        values[0] = this.maxValue - this.step;
       }
       if (values[1] <= values[0] + this.step) {
         values[1] = values[0] + this.step;
-      } else if (values[1] >= this.possibleValues[this.possibleValues.length - 1]) {
-        values[1] = this.possibleValues[this.possibleValues.length - 1];
+      } else if (values[1] >= this.maxValue) {
+        values[1] = this.maxValue;
       }
       this.handle[0].setValue({
-        max : this.possibleValues[this.possibleValues.length - 1],
+        max : this.maxValue,
         min: this.min,
         value: values[0],
       });
       this.handle[1].setValue({
-        max : this.possibleValues[this.possibleValues.length - 1],
+        max : this.maxValue,
         min: this.min,
         value: values[1],
       });
     } else {
       this.handle[0].setValue({
-        max : this.possibleValues[this.possibleValues.length - 1],
+        max : this.maxValue,
         min: this.min,
         value: values[0],
       });
@@ -111,13 +114,9 @@ class Model extends Observer {
 
   public checkValueOnPossibleValues(values: number[]): void {
     values.forEach((value: number, index: number) => {
-      for (let count: number = value; count >= this.min; count -= 1) {
-          if (this.possibleValues.some((item) => {
-            return item === count;
-          })) {
-          values[index] = count;
-          break;
-        }
+      if ((value - this.min) % this.step !== 0) {
+        value -= (value - this.min) % this.step;
+        values[index] = value;
       }
     });
   }
@@ -142,7 +141,7 @@ class Model extends Observer {
       if (!rightHandle) {
         this.handle[index].increaseValue({
           counter,
-          max: this.possibleValues[this.possibleValues.length - 1],
+          max: this.maxValue,
           step: this.step,
         });
       } else {
@@ -155,7 +154,7 @@ class Model extends Observer {
     } else {
       this.handle[index].increaseValue({
         counter,
-        max: this.possibleValues[this.possibleValues.length - 1],
+        max: this.maxValue,
         step: this.step,
       });
     }
