@@ -1,5 +1,5 @@
 class ViewTooltip {
-  constructor(private $tooltip: JQuery<HTMLElement>) {}
+  constructor(public $tooltip: JQuery<HTMLElement>) {}
 
   public setTooltip(position: number, value: number): void {
     let width: number | undefined;

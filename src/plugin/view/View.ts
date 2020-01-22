@@ -28,7 +28,7 @@ class View extends Observer {
 
     let width: number | undefined;
     if (this.position === 'vertical') {
-      this.$item.html('<div class="slider slider_vertical"><div class="slider__field slider__field_vertical js-slider__field_vertical"></div></div>');
+      this.$item.html('<div class="slider slider_vertical"><div class="slider__field js-slider__field slider__field_vertical"></div></div>');
       width  = this.$item.height();
     } else {
       this.$item.html('<div class="slider"><div class="slider__field js-slider__field"></div></div>');
@@ -40,6 +40,10 @@ class View extends Observer {
 
       if (obj.tooltip) {
         this.createSliderTooltips(width, obj);
+      }
+
+      if (obj.range) {
+        this.checkPositionThumb(width);
       }
     }
   }
@@ -56,12 +60,15 @@ class View extends Observer {
     if (obj.range) {
       index = 2;
     }
+
     for (let count = 0; count < index; count += 1) {
       if (this.position === 'vertical') {
-        this.$item.find('.js-slider__field_vertical')
-          .append('<div class="slider__thumb slider__thumb_vertical js-slider__thumb_vertical"></div>');
+        this.$item.find('.js-slider__field')
+          .append(
+            '<div class="slider__thumb js-slider__thumb slider__thumb_vertical"></div>',
+          );
         this.thumb[count] = new ViewThumb(
-          this.$item.find('.js-slider__thumb_vertical').eq(count),
+          this.$item.find('.js-slider__thumb').eq(count),
           count,
           this.sliderIndex,
         );
@@ -88,15 +95,55 @@ class View extends Observer {
     }
     for (let count = 0; count < index; count += 1) {
       if (this.position === 'vertical') {
-        this.$item.find('.js-slider__field_vertical')
-          .append($('<div class="slider__tooltip slider__tooltip_vertical js-slider__tooltip_vertical"></div>'));
-        this.tooltip[count] = new ViewTooltip($(this.$item.find('.js-slider__tooltip_vertical')[count]));
+        this.$item.find('.js-slider__field')
+          .append($('<div class="slider__tooltip slider__tooltip_vertical js-slider__tooltip"></div>'));
+        this.tooltip[count] = new ViewTooltip($(this.$item.find('.js-slider__tooltip')[count]));
       } else {
         this.$item.find('.js-slider__field').append($('<div class="slider__tooltip js-slider__tooltip"></div>'));
         this.tooltip[count] = new ViewTooltip($(this.$item.find('.js-slider__tooltip')[count]));
       }
 
       this.tooltip[count].setTooltip(width / (obj.max - obj.min) * (obj.values[count] - obj.min), obj.values[count]);
+    }
+  }
+
+  public checkPositionThumb(width: number) {
+    let positionLeftThumb: number;
+    const $field: JQuery<HTMLElement> = this.$item.find('.js-slider__field');
+    const $leftThumb: JQuery<HTMLElement> = this.thumb[0].$thumb;
+
+    if ($leftThumb.hasClass('slider__thumb_vertical')) {
+      positionLeftThumb = $leftThumb.position().top;
+
+      if (width - positionLeftThumb > positionLeftThumb) {
+        this.addBack($field, $leftThumb);
+      } else {
+        this.addForward($field, $leftThumb);
+      }
+    } else {
+      positionLeftThumb = $leftThumb.position().left;
+
+      if (width - positionLeftThumb < positionLeftThumb) {
+        this.addBack($field, $leftThumb);
+      } else {
+        this.addForward($field, $leftThumb);
+      }
+    }
+  }
+
+  public addBack($field: JQuery<HTMLElement>, $leftThumb: JQuery<HTMLElement>) {
+    $field.append($leftThumb);
+
+    if (this.tooltip.length > 0) {
+      $field.append(this.tooltip[0].$tooltip);
+    }
+  }
+
+  public addForward($field: JQuery<HTMLElement>, $leftThumb: JQuery<HTMLElement>) {
+    $field.prepend($leftThumb);
+
+    if (this.tooltip.length > 0) {
+      $field.prepend(this.tooltip[0].$tooltip);
     }
   }
 
@@ -110,7 +157,7 @@ class View extends Observer {
     }
 
     this.thumb.forEach((item, index) => {
-      if (typeof width === 'number' && typeof this.thumb === 'object' && typeof this.interval === 'number') {
+      if (typeof width === 'number' && typeof this.thumb && typeof this.interval === 'number') {
         this.interval = width / (obj.max - obj.min) * obj.step;
 
         this.thumb[index].update( width / (obj.max - obj.min) * (obj.values[index] - obj.min), this.interval );
@@ -119,6 +166,8 @@ class View extends Observer {
           this.tooltip[index].setTooltip(width / (obj.max - obj.min) * (obj.values[index] - obj.min),
             obj.values[index]);
         }
+
+        this.checkPositionThumb(width);
       }
     });
   }

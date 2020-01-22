@@ -7,7 +7,7 @@ class ViewThumb extends Observer {
   private target: Element | undefined;
   private width: number | undefined;
 
-  constructor(private $thumb: JQuery<HTMLElement>, index: number, sliderIndex: number) {
+  constructor(public $thumb: JQuery<HTMLElement>, index: number, sliderIndex: number) {
     super();
     this.index = index;
     this.sliderIndex = sliderIndex;
