@@ -1,7 +1,7 @@
 import '../plugin/Slider.ts';
 
-class RangeSlider {
-  private $rangeSlider: JQuery<HTMLElement>;
+class ToolbarOptions {
+  private $toolbarOptions: JQuery<HTMLElement>;
   private $startValue: JQuery<HTMLElement> | undefined;
   private $endValue: JQuery<HTMLElement> | undefined;
   private $slider: JQuery<HTMLElement> | undefined;
@@ -24,23 +24,23 @@ class RangeSlider {
     slide(values: number[]): void,
   };
 
-  constructor(rangeSlider: JQuery<HTMLElement>, index: number) {
-    this.$rangeSlider = rangeSlider;
+  constructor(toolbarOptions: JQuery<HTMLElement>, index: number) {
+    this.$toolbarOptions = toolbarOptions;
     this.index = index;
-    this.options = rangeSlider.data('options');
+    this.options = toolbarOptions.data('options');
     this.initSlider();
   }
 
   private initSlider(): void {
-    this.$startValue = this.$rangeSlider.find('.js-range-slider__start-value');
-    this.$endValue = this.$rangeSlider.find('.js-range-slider__end-value');
-    this.$slider = this.$rangeSlider.find('.js-range-slider__slider');
-    this.$min = this.$rangeSlider.find('.js-range-slider__min');
-    this.$max = this.$rangeSlider.find('.js-range-slider__max');
-    this.$step = this.$rangeSlider.find('.js-range-slider__step');
-    this.$range = this.$rangeSlider.find('.js-range-slider__range');
-    this.$tooltip = this.$rangeSlider.find('.js-range-slider__tooltip');
-    this.$position = this.$rangeSlider.find('.js-range-slider__position');
+    this.$startValue = this.$toolbarOptions.find('.js-toolbar-options__start-value');
+    this.$endValue = this.$toolbarOptions.find('.js-toolbar-options__end-value');
+    this.$slider = this.$toolbarOptions.find('.js-toolbar-options__slider');
+    this.$min = this.$toolbarOptions.find('.js-toolbar-options__min');
+    this.$max = this.$toolbarOptions.find('.js-toolbar-options__max');
+    this.$step = this.$toolbarOptions.find('.js-toolbar-options__step');
+    this.$range = this.$toolbarOptions.find('.js-toolbar-options__range');
+    this.$tooltip = this.$toolbarOptions.find('.js-toolbar-options__tooltip');
+    this.$position = this.$toolbarOptions.find('.js-toolbar-options__position');
 
     this.options.slide = (values: number[]): void => {
       if (values.length > 1) {
@@ -245,4 +245,4 @@ class RangeSlider {
   }
 }
 
-export { RangeSlider };
+export { ToolbarOptions };

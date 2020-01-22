@@ -1,0 +1,64 @@
+
+mixin toolbar-options({min = 0, max = 100, step = 1, values = [0], range = false, tooltip = false, position = 'horizontal'} = {})
+  - 
+    obj = {
+      min,
+      max,
+      values,
+      step,
+      range,
+      tooltip,
+      position,
+    }
+  .toolbar-options.js-toolbar-options(data-options=obj)
+    .toolbar-options__slider.js-toolbar-options__slider
+    .toolbar-options__configure-panel.js-toolbar-options__configure-panel
+      - 
+        const typeText = [
+          {
+            name: "value1",
+            class: "toolbar-options__start-value js-toolbar-options__start-value",
+          },
+          {
+            name: "value2",
+            class: "toolbar-options__end-value js-toolbar-options__end-value",
+          },
+          {
+            name: "min",
+            class: "toolbar-options__min js-toolbar-options__min",
+          },
+          {
+            name: "max",
+            class: "toolbar-options__max js-toolbar-options__max",
+          },
+          {
+            name: "step",
+            class: "toolbar-options__step js-toolbar-options__step",
+          },
+        ]
+
+      each obj in typeText
+        label.toolbar-options__label= obj.name
+          input(class=obj.class)
+      
+      - 
+        const typeCheckbox = [
+          {
+            name: "range",
+            class: "toolbar-options__range js-toolbar-options__range",
+          },
+          {
+            name: "tooltip",
+            class: "toolbar-options__tooltip js-toolbar-options__tooltip",
+          },
+          {
+            name: "position",
+            class: "toolbar-options__position js-toolbar-options__position",
+          },
+        ]
+
+      each obj in typeCheckbox
+        label.toolbar-options__label 
+          input(type="checkbox" class=obj.class)
+          |
+          =obj.name
