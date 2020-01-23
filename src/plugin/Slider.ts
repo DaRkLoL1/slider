@@ -1,9 +1,21 @@
+import { Model } from './model/Model';
 import { Prezenter } from './prezenter/Prezenter';
+import { View } from './view/View';
 
 (function( $ ) {
   let sliderIndex = 0;
+  interface IDefault {
+    max: number;
+    min: number;
+    position: string;
+    range: boolean;
+    step: number;
+    tooltip: boolean;
+    values: number[];
+    slide?: (values: number[]) => void;
+  }
 
-  const def = {
+  const def: IDefault = {
     max: 100,
     min: 0,
     position: 'horizontal',
@@ -18,18 +30,26 @@ import { Prezenter } from './prezenter/Prezenter';
     const methods = {
       init($slider: JQuery<HTMLElement>, params: {}) {
         const options = $.extend({}, def, params);
-        $slider.data('prezenter', new Prezenter(sliderIndex, $slider, options));
-        options.min = $slider.data('prezenter').model.getMin();
-        options.max = $slider.data('prezenter').model.getMax();
-        options.step = $slider.data('prezenter').model.getStep();
+        $slider.data('model', new Model(options));
+        $slider.data('view', new View($slider, sliderIndex));
+
+        options.min = $slider.data('model').getMin();
+        options.max = $slider.data('model').getMax();
+        options.step = $slider.data('model').getStep();
+        options.values = $slider.data('model').getValue();
+
+        $slider.data('view').createSlider(options);
+        $slider.data('prezenter', new Prezenter($slider.data('model'), $slider.data('view'), options.slide));
         $slider.data('options', options);
+
         sliderIndex += 1;
+
         return $slider;
       },
 
       value($slider: JQuery<HTMLElement>, values: number[]) {
         if (typeof values === 'undefined') {
-          return $slider.data('prezenter').model.getValue();
+          return $slider.data('model').getValue();
         } else {
           $slider.data('prezenter').set(values);
           return this;

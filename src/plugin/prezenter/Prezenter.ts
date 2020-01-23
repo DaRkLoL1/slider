@@ -6,26 +6,13 @@ class Prezenter {
   private model: Model;
   private slide?: (num: number[]) => void;
 
-  constructor(sliderIndex: number, $slider: JQuery<HTMLElement>, options: {
-    min: number,
-    max: number,
-    step: number,
-    values: number[],
-    range: boolean;
-    tooltip: boolean,
-    position: string,
-    slide?(values: number[]): void,
-    }) {
-    this.model = new Model(options);
-    this.view = new View($slider, sliderIndex);
-    options.min = this.model.getMin();
-    options.max = this.model.getMax();
-    options.step = this.model.getStep();
-    options.values = this.model.getValue();
-    this.view.createSlider(options);
-    if (options.slide) {
-      this.slide = options.slide;
+  constructor(model: Model, view: View, slide?: (values: number[]) => void) {
+    this.model = model;
+    this.view = view;
+    if (slide) {
+      this.slide = slide;
     }
+
     this.view.addSubscribers('changeView', this.model.updateValue.bind(this.model));
     this.model.addSubscribers('changeModel', this.view.update.bind(this.view));
     this.model.addSubscribers('changeModel', this.updateSlider.bind(this));
