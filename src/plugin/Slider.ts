@@ -51,7 +51,7 @@ import { View } from './view/View';
         if (typeof values === 'undefined') {
           return $slider.data('model').getValue();
         } else {
-          $slider.data('prezenter').set(values);
+          $slider.data('prezenter').setValues(values);
           return this;
         }
       },

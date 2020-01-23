@@ -78,7 +78,7 @@ class View extends Observer {
         this.thumb[count] = new ViewThumb(this.$item.find('.js-slider__thumb').eq(count), count, this.sliderIndex);
       }
       this.thumb[count].installValue( width / (obj.max - obj.min) * (obj.values[count] - obj.min), this.interval );
-      this.thumb[count].addSubscribers('moveThumb', this.updateView.bind(this));
+      this.thumb[count].addSubscribers('moveThumb', this.updateValue.bind(this));
     }
   }
 
@@ -147,7 +147,7 @@ class View extends Observer {
     }
   }
 
-  public update(obj: {min: number, max: number, values: number[], step: number}): void {
+  public updateView(obj: {min: number, max: number, values: number[], step: number}): void {
     let width: number | undefined;
 
     if (this.position === 'vertical') {
@@ -160,7 +160,7 @@ class View extends Observer {
       if (typeof width === 'number' && typeof this.thumb && typeof this.interval === 'number') {
         this.interval = width / (obj.max - obj.min) * obj.step;
 
-        this.thumb[index].update( width / (obj.max - obj.min) * (obj.values[index] - obj.min), this.interval );
+        this.thumb[index].updateThumb( width / (obj.max - obj.min) * (obj.values[index] - obj.min), this.interval );
 
         if (this.tooltip.length > 0) {
           this.tooltip[index].setTooltip(width / (obj.max - obj.min) * (obj.values[index] - obj.min),
@@ -172,7 +172,7 @@ class View extends Observer {
     });
   }
 
-  public updateView(options: {symbolMinusOrPlus: string, counter: number, index: number}): void {
+  public updateValue(options: {symbolMinusOrPlus: string, counter: number, index: number}): void {
     this.notifySubscribers('changeView', options);
   }
 }

@@ -117,7 +117,7 @@ class ViewThumb extends Observer {
     document.removeEventListener('mouseup', this.handleDocumentMouseUp);
   }
 
-  public update(value: number, interval: number): void {
+  public updateThumb(value: number, interval: number): void {
     this.interval = interval;
 
     let width: number | undefined;
