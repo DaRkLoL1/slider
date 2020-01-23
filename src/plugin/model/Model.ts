@@ -14,16 +14,8 @@ class Model extends Observer {
     this.min = options.min;
     this.max = options.max;
     this.step = options.step;
-
-    let count = this.max;
-    if ((count - this.min) % this.step !== 0) {
-      count -= (count - this.min) % this.step;
-    }
-
-    this.maxValue = count;
-
-    this.createModelValues(options.range);
-    this.checkValue(options.values);
+    this.maxValue = this.addMaxValue();
+    this.createModelValues(options.range, options.values);
   }
 
   public checkMinMaxStep(options: {min: number, max: number, step: number}): void {
@@ -44,7 +36,15 @@ class Model extends Observer {
     }
   }
 
-  public createModelValues(range: boolean): void {
+  public addMaxValue() {
+    let count = this.max;
+    if ((count - this.min) % this.step !== 0) {
+      count -= (count - this.min) % this.step;
+    }
+    return count;
+  }
+
+  public createModelValues(range: boolean, values: number[]): void {
     if (range) {
       for (let i = 0; i < 2; i += 1) {
         this.handle.push(new ModelValues());
@@ -52,6 +52,8 @@ class Model extends Observer {
     } else {
       this.handle.push(new ModelValues());
     }
+
+    this.checkValue(values);
   }
 
   public getMin(): number {
@@ -88,16 +90,19 @@ class Model extends Observer {
       } else if (values[0] >= this.maxValue) {
         values[0] = this.maxValue - this.step;
       }
+
       if (values[1] <= values[0] + this.step) {
         values[1] = values[0] + this.step;
       } else if (values[1] >= this.maxValue) {
         values[1] = this.maxValue;
       }
+
       this.handle[0].setValue({
         max : this.maxValue,
         min: this.min,
         value: values[0],
       });
+
       this.handle[1].setValue({
         max : this.maxValue,
         min: this.min,
@@ -137,13 +142,12 @@ class Model extends Observer {
   public increaseValue(index: number, counter: number): void {
     if (this.handle.length > 1) {
       const rightHandle: ModelValues | undefined = this.handle[index + 1];
-
       if (!rightHandle) {
         this.handle[index].increaseValue({
           counter,
           max: this.maxValue,
           step: this.step,
-        });
+          });
       } else {
         this.handle[index].increaseValue({
           counter,

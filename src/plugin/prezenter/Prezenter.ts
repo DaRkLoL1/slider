@@ -13,6 +13,10 @@ class Prezenter {
       this.slide = slide;
     }
 
+    this.addForModelAndViewSubscribers();
+  }
+
+  public addForModelAndViewSubscribers() {
     this.view.addSubscribers('changeView', this.model.updateValue.bind(this.model));
     this.model.addSubscribers('changeModel', this.view.update.bind(this.view));
     this.model.addSubscribers('changeModel', this.updateSlider.bind(this));
