@@ -1,0 +1,9 @@
+.demo-plugin {
+  display: flex;
+
+  &__slider {
+    height: 400px;
+    width: 400px;
+    padding: 50px;
+  }
+}

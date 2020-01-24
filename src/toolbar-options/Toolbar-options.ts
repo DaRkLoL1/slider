@@ -1,10 +1,10 @@
+import { Observer } from '../plugin/observer/Observer';
 import '../plugin/Slider.ts';
 
-class ToolbarOptions {
+class ToolbarOptions extends Observer {
   private $toolbarOptions: JQuery<HTMLElement>;
   private $startValue: JQuery<HTMLElement> | undefined;
   private $endValue: JQuery<HTMLElement> | undefined;
-  private $slider: JQuery<HTMLElement> | undefined;
   private $min: JQuery<HTMLElement> | undefined;
   private $max: JQuery<HTMLElement> | undefined;
   private $step: JQuery<HTMLElement> | undefined;
@@ -13,99 +13,83 @@ class ToolbarOptions {
   private $position: JQuery<HTMLElement> | undefined;
   private index: number;
 
-  private options: {
-    min: number,
-    max: number,
-    step: number,
-    position: string,
-    range: boolean,
-    tooltip: boolean,
-    values: number[],
-    slide(values: number[]): void,
-  };
-
   constructor(toolbarOptions: JQuery<HTMLElement>, index: number) {
+    super();
     this.$toolbarOptions = toolbarOptions;
     this.index = index;
-    this.options = toolbarOptions.data('options');
-    this.initSlider();
+    this.initOptions();
+    this.addHandlesForValues();
   }
 
-  private initSlider(): void {
+  public initOptions(): void {
     this.$startValue = this.$toolbarOptions.find('.js-toolbar-options__start-value');
     this.$endValue = this.$toolbarOptions.find('.js-toolbar-options__end-value');
-    this.$slider = this.$toolbarOptions.find('.js-toolbar-options__slider');
     this.$min = this.$toolbarOptions.find('.js-toolbar-options__min');
     this.$max = this.$toolbarOptions.find('.js-toolbar-options__max');
     this.$step = this.$toolbarOptions.find('.js-toolbar-options__step');
     this.$range = this.$toolbarOptions.find('.js-toolbar-options__range');
     this.$tooltip = this.$toolbarOptions.find('.js-toolbar-options__tooltip');
     this.$position = this.$toolbarOptions.find('.js-toolbar-options__position');
+  }
 
-    this.options.slide = (values: number[]): void => {
-      if (values.length > 1) {
-        if (this.$startValue && this.$endValue) {
-          this.$startValue.val(values[0]);
-          this.$endValue.val(values[1]);
-        }
-      } else {
-        if (this.$startValue) {
-          this.$startValue.val(values[0]);
-        }
+  public getFunctionSlide(values: number[]): void {
+    if (values.length > 1) {
+      if (this.$startValue && this.$endValue) {
+        this.$startValue.val(values[0]);
+        this.$endValue.val(values[1]);
       }
-    };
-
-    this.createSlider();
-    this.addHandlesForValues();
-  }
-
-  private createSlider() {
-    if (this.$slider) {
-      this.options = (this.$slider as any).myPlugin(this.options).data('options');
+    } else {
+      if (this.$startValue) {
+      this.$startValue.val(values[0]);
+      }
     }
-
-    this.initPanel();
   }
 
-  private initPanel() {
+  public setValuesInOptions(options: {
+    min: number,
+    max: number,
+    step: number,
+    range: boolean,
+    tooltip: boolean,
+    position: string,
+    values: number[],
+  }) {
     if (this.$min) {
-      this.$min.val(this.options.min);
+      this.$min.val(options.min);
     }
 
     if (this.$max) {
-      this.$max.val(this.options.max);
+      this.$max.val(options.max);
     }
 
     if (this.$step) {
-      this.$step.val(this.options.step);
+      this.$step.val(options.step);
     }
 
     if (this.$range) {
-      if (this.options.range) {
+      if (options.range) {
         this.$range.prop('checked', true);
       }
     }
 
     if (this.$tooltip) {
-      if (this.options.tooltip) {
+      if (options.tooltip) {
         this.$tooltip.prop('checked', true);
       }
     }
 
     if (this.$position) {
-      if (this.options.position === 'vertical') {
+      if (options.position === 'vertical') {
         this.$position.prop('checked', true);
       }
     }
 
-    if (this.$startValue && this.$endValue && this.$slider) {
-      const sliderValues = (this.$slider as any).myPlugin('value');
-
-      if (sliderValues.length > 1) {
-        this.$startValue.val(sliderValues[0]);
-        this.$endValue.val(sliderValues[1]);
+    if (this.$startValue && this.$endValue) {
+      if (options.values.length > 1) {
+        this.$startValue.val(options.values[0]);
+        this.$endValue.val(options.values[1]);
       } else {
-        this.$startValue.val(sliderValues[0]);
+        this.$startValue.val(options.values[0]);
       }
     }
   }
@@ -117,54 +101,79 @@ class ToolbarOptions {
     }
 
     if (this.$min) {
-      this.$min.on(`change.min${this.index}`, this.handleMinChange.bind(this));
+      this.$min.on(`change.min${this.index}`, this.handleOptionsChange.bind(this));
     }
 
     if (this.$max) {
-      this.$max.on(`change.max${this.index}`, this.handleMaxChange.bind(this));
+      this.$max.on(`change.max${this.index}`, this.handleOptionsChange.bind(this));
     }
 
     if (this.$step) {
-      this.$step.on(`change.step${this.index}`, this.handleStepChange.bind(this));
+      this.$step.on(`change.step${this.index}`, this.handleOptionsChange.bind(this));
     }
 
     if (this.$range) {
-      this.$range.on(`change.range${this.index}`, this.handleRangeChange.bind(this));
+      this.$range.on(`change.range${this.index}`, this.handleOptionsChange.bind(this));
     }
 
     if (this.$tooltip) {
-      this.$tooltip.on(`change.tooltip${this.index}`, this.handleTooltipChange.bind(this));
+      this.$tooltip.on(`change.tooltip${this.index}`, this.handleOptionsChange.bind(this));
     }
 
     if (this.$position) {
-      this.$position.on(`change.position${this.index}`, this.handlePositionChange.bind(this));
+      this.$position.on(`change.position${this.index}`, this.handleOptionsChange.bind(this));
     }
   }
 
-  private handleValueChange() {
+  private handleValueChange(): void {
     if (this.$startValue && this.$endValue) {
       const startValue = this.$startValue.val();
       const endValue2 = this.$endValue.val();
 
       if (typeof startValue === 'string' && typeof endValue2 === 'string') {
-        (this.$slider as any).myPlugin(
-          'value',
-          [
-            Math.floor(Number.parseFloat(startValue)),
-            Math.floor(Number.parseFloat(endValue2)),
-          ],
-        );
+        const values: number[] = [
+          Math.floor(Number.parseFloat(startValue)),
+          Math.floor(Number.parseFloat(endValue2)),
+        ];
+
+        this.notifySubscribers('updateStartAndEndValue', values);
       }
     }
   }
 
-  private updateValueInOptions() {
+  private handleOptionsChange(): void {
+    this.notifySubscribers('updateOptions', this.getValuesInOptions());
+  }
+
+  private getValuesInOptions() {
+    interface IOptions {
+      min?: number;
+      max?: number;
+      step?: number;
+      range?: boolean;
+      position?: string;
+      tooltip?: boolean;
+      values?: number[];
+    }
+
+    const options: IOptions = {};
+    options.values = this.getStartAndEndValues();
+    options.min = this.getMinValue();
+    options.max = this.getMaxValue();
+    options.step = this.getStepValue();
+    options.range = this.getRangeValue();
+    options.tooltip = this.getTooltipValue();
+    options.position = this.getPositionValue();
+    return options;
+  }
+
+  private getStartAndEndValues(): number[] | undefined {
     if (this.$startValue && this.$endValue) {
       const startValue = this.$startValue.val();
       const endValue2 = this.$endValue.val();
 
       if (typeof startValue === 'string' && typeof endValue2 === 'string') {
-        this.options.values = [
+        return [
           Math.floor(Number.parseFloat(startValue)),
           Math.floor(Number.parseFloat(endValue2)),
         ];
@@ -172,76 +181,58 @@ class ToolbarOptions {
     }
   }
 
-  private handleMinChange() {
+  private getMinValue(): number | undefined {
     if (this.$min) {
       const min = this.$min.val();
 
       if (typeof min === 'string') {
-        this.options.min = Math.floor(Number.parseFloat(min));
+        return Math.floor(Number.parseFloat(min));
       }
     }
-
-    this.updateValueInOptions();
-    this.createSlider();
   }
 
-  private handleMaxChange() {
+  private getMaxValue(): number | undefined {
     if (this.$max) {
       const max = this.$max.val();
 
       if (typeof max === 'string') {
-        this.options.max = Math.floor(Number.parseFloat(max));
+        return Math.floor(Number.parseFloat(max));
       }
     }
-
-    this.updateValueInOptions();
-    this.createSlider();
   }
 
-  private handleStepChange() {
+  private getStepValue(): number | undefined {
     if (this.$step) {
       const step = this.$step.val();
 
       if (typeof step === 'string') {
-        this.options.step = Math.floor(Number.parseFloat(step));
+        return Math.floor(Number.parseFloat(step));
       }
     }
-
-    this.updateValueInOptions();
-    this.createSlider();
   }
 
-  private handleRangeChange() {
+  private getRangeValue(): boolean | undefined {
     if (this.$range) {
-      this.options.range = this.$range.prop('checked');
+      return this.$range.prop('checked');
     }
-
-    this.updateValueInOptions();
-    this.createSlider();
   }
 
-  private handleTooltipChange() {
+  private getTooltipValue(): boolean | undefined {
     if (this.$tooltip) {
-      this.options.tooltip = this.$tooltip.prop('checked');
+      return this.$tooltip.prop('checked');
     }
-
-    this.updateValueInOptions();
-    this.createSlider();
   }
 
-  private handlePositionChange() {
+  private getPositionValue(): string | undefined {
     if (this.$position) {
       const position = this.$position.prop('checked');
 
       if (position) {
-        this.options.position = 'vertical';
+        return 'vertical';
       } else {
-        this.options.position = 'horizontal';
+        return 'horizontal';
       }
     }
-
-    this.updateValueInOptions();
-    this.createSlider();
   }
 }
 

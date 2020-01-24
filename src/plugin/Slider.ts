@@ -4,18 +4,8 @@ import { View } from './view/View';
 
 (function( $ ) {
   let sliderIndex = 0;
-  interface IDefault {
-    max: number;
-    min: number;
-    position: string;
-    range: boolean;
-    step: number;
-    tooltip: boolean;
-    values: number[];
-    slide?: (values: number[]) => void;
-  }
 
-  const def: IDefault = {
+  const def = {
     max: 100,
     min: 0,
     position: 'horizontal',
@@ -29,7 +19,18 @@ import { View } from './view/View';
 
     const methods = {
       init($slider: JQuery<HTMLElement>, params: {}) {
-        const options = $.extend({}, def, params);
+        interface IOptions {
+          max: number;
+          min: number;
+          position: string;
+          range: boolean;
+          step: number;
+          tooltip: boolean;
+          values: number[];
+          slide?: (values: number[]) => void;
+        }
+
+        const options: IOptions = $.extend({}, def, params);
         $slider.data('model', new Model(options));
         $slider.data('view', new View($slider, sliderIndex));
 

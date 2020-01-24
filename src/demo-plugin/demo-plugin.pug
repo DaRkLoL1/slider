@@ -1,0 +1,16 @@
+include ../toolbar-options/toolbar-options.pug
+
+mixin demo-plugin({min = 0, max = 100, step = 1, values = [0], range = false, tooltip = false, position = 'horizontal'} = {})
+  - 
+    obj = {
+      min,
+      max,
+      values,
+      step,
+      range,
+      tooltip,
+      position,
+    }
+  .demo-plugin.js-demo-plugin(data-options=obj)
+    .demo-plugin__slider.js-demo-plugin__slider
+    +toolbar-options
