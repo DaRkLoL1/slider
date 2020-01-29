@@ -1,5 +1,4 @@
-import { Observer } from '../plugin/observer/Observer';
-import '../plugin/Slider.ts';
+import { Observer } from '../../plugin/observer/Observer';
 
 class ToolbarOptions extends Observer {
   private $toolbarOptions: JQuery<HTMLElement>;

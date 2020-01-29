@@ -1,4 +1,4 @@
-import { ModelValues } from '../../../src/plugin/model/ModelValues';
+import { ModelValues } from '../../../src/plugin/model/Model-values';
 
 describe('model handle', () => {
 

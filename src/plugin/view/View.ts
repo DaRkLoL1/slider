@@ -1,6 +1,6 @@
 import { Observer } from '../observer/Observer';
-import { ViewThumb } from './ViewThumb';
-import { ViewTooltip } from './ViewTooltip';
+import { ViewThumb } from './View-thumb';
+import { ViewTooltip } from './View-tooltip';
 
 class View extends Observer {
   private $item: JQuery<HTMLElement>;

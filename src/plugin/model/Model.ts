@@ -1,5 +1,5 @@
 import { Observer } from '../observer/Observer';
-import { ModelValues } from './ModelValues';
+import { ModelValues } from './Model-values';
 
 class Model extends Observer {
   private min: number;

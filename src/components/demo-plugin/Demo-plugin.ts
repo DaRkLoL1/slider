@@ -1,4 +1,4 @@
-import '../plugin/Slider';
+import '../../plugin/Slider';
 import { ToolbarOptions } from '../toolbar-options/Toolbar-options';
 
 class DemoPlugin {
