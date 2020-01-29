@@ -9,7 +9,7 @@ describe('model handle', () => {
   });
 
   it('создать ручку и получить значение', () => {
-    const handle: ModelValues = new ModelValues(50);
+    handle = new ModelValues(50);
     const value: number = handle.getValue();
     expect(value).toEqual(50);
   });
