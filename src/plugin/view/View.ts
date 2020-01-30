@@ -16,15 +16,15 @@ class View extends Observer {
     this.sliderIndex = sliderIndex;
   }
 
-  public createSlider(obj: {
-    min: number,
-    max: number,
-    step: number,
-    values: number[],
-    tooltip: boolean,
-    range: boolean,
-    position: string}): void {
-    this.position = obj.position;
+  public createSlider({
+    max = 100,
+    min = 0,
+    step = 10,
+    values = [50],
+    tooltip = false,
+    range = false,
+    position = 'horizontal'} = {}): void {
+    this.position = position;
 
     let width: number | undefined;
     if (this.position === 'vertical') {
@@ -36,28 +36,28 @@ class View extends Observer {
     }
 
     if (typeof width === 'number') {
-      this.createSliderThumbs(width, obj);
+      this.createSliderThumbs(width, {max, min, range, step, values});
 
-      if (obj.tooltip) {
-        this.createSliderTooltips(width, obj);
+      if (tooltip) {
+        this.createSliderTooltips(width, {max, min, range, step, values});
       }
 
-      if (obj.range) {
+      if (range) {
         this.checkPositionThumb(width);
       }
     }
   }
 
-  public createSliderThumbs(width: number, obj: {
-    max: number,
-    min: number,
-    range: boolean,
-    step: number,
-    values: number[],
-  }) {
-    this.interval = width / (obj.max - obj.min) * obj.step;
+  public createSliderThumbs(width: number, {
+    max = 100,
+    min = 0,
+    range = false,
+    step = 10,
+    values = [50],
+  } = {}) {
+    this.interval = width / (max - min) * step;
     let index: number = 1;
-    if (obj.range) {
+    if (range) {
       index = 2;
     }
 
@@ -77,20 +77,20 @@ class View extends Observer {
           .append('<div class="slider__thumb js-slider__thumb"></div>');
         this.thumb[count] = new ViewThumb(this.$item.find('.js-slider__thumb').eq(count), count, this.sliderIndex);
       }
-      this.thumb[count].installValue( width / (obj.max - obj.min) * (obj.values[count] - obj.min), this.interval );
+      this.thumb[count].installValue( width / (max - min) * (values[count] - min), this.interval );
       this.thumb[count].addSubscribers('moveThumb', this.updateValue.bind(this));
     }
   }
 
-  public createSliderTooltips(width: number, obj: {
-    max: number,
-    min: number,
-    range: boolean,
-    step: number,
-    values: number[],
-  }) {
+  public createSliderTooltips(width: number, {
+    max = 100,
+    min = 0,
+    range = false,
+    step = 10,
+    values = [50],
+  } = {}) {
     let index: number = 1;
-    if (obj.range) {
+    if (range) {
       index = 2;
     }
     for (let count = 0; count < index; count += 1) {
@@ -103,7 +103,7 @@ class View extends Observer {
         this.tooltip[count] = new ViewTooltip($(this.$item.find('.js-slider__tooltip')[count]));
       }
 
-      this.tooltip[count].setTooltip(width / (obj.max - obj.min) * (obj.values[count] - obj.min), obj.values[count]);
+      this.tooltip[count].setTooltip(width / (max - min) * (values[count] - min), values[count]);
     }
   }
 
@@ -147,7 +147,7 @@ class View extends Observer {
     }
   }
 
-  public updateView(obj: {min: number, max: number, values: number[], step: number}): void {
+  public updateView({min = 0, max = 100, values = [50], step = 1} = {}): void {
     let width: number | undefined;
 
     if (this.position === 'vertical') {
@@ -158,13 +158,12 @@ class View extends Observer {
 
     this.thumb.forEach((item, index) => {
       if (typeof width === 'number' && typeof this.thumb && typeof this.interval === 'number') {
-        this.interval = width / (obj.max - obj.min) * obj.step;
+        this.interval = width / (max - min) * step;
 
-        this.thumb[index].updateThumb( width / (obj.max - obj.min) * (obj.values[index] - obj.min), this.interval );
+        this.thumb[index].updateThumb( width / (max - min) * (values[index] - min), this.interval );
 
         if (this.tooltip.length > 0) {
-          this.tooltip[index].setTooltip(width / (obj.max - obj.min) * (obj.values[index] - obj.min),
-            obj.values[index]);
+          this.tooltip[index].setTooltip(width / (max - min) * (values[index] - min), values[index]);
         }
 
         this.checkPositionThumb(width);

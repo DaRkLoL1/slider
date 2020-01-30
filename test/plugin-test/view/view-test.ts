@@ -12,10 +12,11 @@ describe('view',  () => {
     $item  = $('.root');
     $item.css('width', 500);
     dom = new View($item, 0);
-    dom.createSlider({min: 0, max: 100, step: 10, values: [50], tooltip: false, range: false, position: 'horizontal'});
+    dom.createSlider();
   });
 
   it('добавить бегунок', () => {
+    dom.createSliderThumbs(500);
     expect($('.slider__thumb')).toExist();
   });
 
@@ -24,12 +25,17 @@ describe('view',  () => {
   });
 
   it('добавить подсказку', () => {
-    dom.createSlider({min: 0, max: 100, step: 10, values: [50], tooltip: true, range: false, position: 'horizontal'});
+    dom.createSliderTooltips(500);
     const tooltip = $('.slider__tooltip');
 
     expect(tooltip).toExist();
     expect(tooltip.css('left')).toEqual('235px');
     expect(tooltip.text()).toEqual('50');
+  });
+
+  it('updateView default', () => {
+    dom.updateView();
+    expect($('.slider__thumb').css('left')).toEqual('240px');
   });
 
   it('updateView', () => {
@@ -55,7 +61,7 @@ describe('viewVertical', () => {
     $item  = $('.root');
     $item.css('height', 500);
     dom = new View($item, 0);
-    dom.createSlider({min: 0, max: 100, step: 10, values: [50], tooltip: false, range: false, position: 'vertical'});
+    dom.createSlider({position: 'vertical'});
   });
 
   it('добавить бегунок', () => {
@@ -67,7 +73,7 @@ describe('viewVertical', () => {
   });
 
   it('добавить подсказку', () => {
-    dom.createSlider({min: 0, max: 100, step: 10, values: [50], tooltip: true, range: false, position: 'vertical'});
+    dom.createSlider({tooltip: true, position: 'vertical'});
     const tooltip = $('.slider__tooltip_vertical');
 
     expect(tooltip).toExist();
@@ -81,7 +87,7 @@ describe('viewVertical', () => {
   });
 
   it('updateView c подсказкой' , () => {
-    dom.createSlider({min: 0, max: 100, step: 10, values: [50], tooltip: true, range: false, position: 'vertical'});
+    dom.createSlider({values: [50], tooltip: true, position: 'vertical'});
     const tooltip = $('.slider__tooltip_vertical');
     dom.updateView({min: 0, max: 100, values: [40], step: 1});
 
@@ -104,12 +110,7 @@ describe('view',  () => {
     dom = new View($item, 0);
     dom.createSlider(
       {
-        max: 100,
-        min: 0,
-        position: 'horizontal',
         range: true,
-        step: 10,
-        tooltip: false,
         values: [10, 60],
       },
     );
@@ -118,12 +119,7 @@ describe('view',  () => {
   it('добавить 2 бегунка с последним значением снизу', () => {
     dom.createSlider(
       {
-        max: 100,
-        min: 0,
-        position: 'horizontal',
         range: true,
-        step: 10,
-        tooltip: false,
         values: [90, 100],
       },
     );
@@ -133,11 +129,7 @@ describe('view',  () => {
   it('добавить 2 бегунка с подсказками', () => {
     dom.createSlider(
       {
-        max: 100,
-        min: 0,
-        position: 'horizontal',
         range: true,
-        step: 10,
         tooltip: true,
         values: [90, 100],
       },
@@ -157,12 +149,8 @@ describe('viewVertical c 2 значениями', () => {
     dom = new View($item, 0);
     dom.createSlider(
       {
-        max: 100,
-        min: 0,
         position: 'vertical',
         range: true,
-        step: 10,
-        tooltip: false,
         values: [10, 60],
       },
     );
@@ -171,12 +159,8 @@ describe('viewVertical c 2 значениями', () => {
   it('добавить 2 бегунка с последним значением снизу', () => {
     dom.createSlider(
       {
-        max: 100,
-        min: 0,
         position: 'vertical',
         range: true,
-        step: 10,
-        tooltip: false,
         values: [90, 100],
       },
     );
@@ -186,11 +170,8 @@ describe('viewVertical c 2 значениями', () => {
   it('добавить 2 бегунка с подсказками', () => {
     dom.createSlider(
       {
-        max: 100,
-        min: 0,
         position: 'vertical',
         range: true,
-        step: 10,
         tooltip: true,
         values: [90, 100],
       },
