@@ -67,7 +67,7 @@ describe('изменить значение из Model',  () => {
   });
 
   it('увеличить значение', () => {
-    model.updateValue({symbolMinusOrPlus: '+', index: 0, counter: 1});
+    model.updateValue();
     expect(model.getValue()).toEqual([1]);
   });
 

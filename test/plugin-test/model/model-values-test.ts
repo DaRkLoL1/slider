@@ -30,14 +30,29 @@ describe('model handle', () => {
     expect(handle.getValue()).toEqual(30);
   });
 
+  it('увеличить значение', () => {
+    handle.increaseValue();
+    expect(handle.getValue()).toEqual(1);
+  });
+
   it('уменьшить значение на 10', () => {
     handle.reduceValue({min: 0, step: 10, counter: 1});
+    expect(handle.getValue()).toEqual(0);
+  });
+
+  it('уменьшить значение', () => {
+    handle.reduceValue();
     expect(handle.getValue()).toEqual(0);
   });
 
   it('изменить значение ручки больше мах значения', () => {
     handle.setValue({value: 200, min: 0, max: 100});
     expect(handle.getValue()).toEqual(100);
+  });
+
+  it('изменить значение ручки', () => {
+    handle.setValue();
+    expect(handle.getValue()).toEqual(1);
   });
 
   it('изменить значение ручки меньше мin значения', () => {

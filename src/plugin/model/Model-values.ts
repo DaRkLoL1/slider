@@ -5,31 +5,31 @@ class ModelValues {
     return this.value;
   }
 
-  public setValue(obj: {value: number, min: number, max: number}): void {
-    if (obj.value > obj.max) {
-      this.value = obj.max;
-    } else if (obj.value < obj.min) {
-      this.value = obj.min;
+  public setValue({value = 1, min = 0, max = 1} = {}): void {
+    if (value > max) {
+      this.value = max;
+    } else if (value < min) {
+      this.value = min;
     } else {
-      this.value = obj.value;
+      this.value = value;
     }
   }
 
-  public increaseValue(obj: {max: number, step: number, counter: number}): void {
-    const count: number = this.value  + obj.step * obj.counter;
+  public increaseValue({max = 1, step = 1, counter = 1} = {}): void {
+    const count: number = this.value  + step * counter;
 
-    if (count > obj.max) {
-      this.value = obj.max;
+    if (count > max) {
+      this.value = max;
     } else {
       this.value = count;
     }
   }
 
-  public reduceValue(obj: {min: number, step: number, counter: number}): void {
-    const count = this.value - obj.step * obj.counter;
+  public reduceValue({min = 0, step = 1, counter = 1} = {}): void {
+    const count = this.value - step * counter;
 
-    if (count < obj.min) {
-      this.value = obj.min;
+    if (count < min) {
+      this.value = min;
     } else {
       this.value = count;
     }

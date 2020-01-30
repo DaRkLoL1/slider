@@ -177,11 +177,11 @@ class Model extends Observer {
     this.handleModelChangeModel();
   }
 
-  public updateValue(options: {symbolMinusOrPlus: string, counter: number, index: number}): void {
-      if (options.symbolMinusOrPlus === '+') {
-        this.increaseValue(options.index, options.counter);
-      } else if (options.symbolMinusOrPlus === '-') {
-        this.reduceValue(options.index, options.counter);
+  public updateValue({symbolMinusOrPlus =  '+', counter = 1, index = 0} = {}): void {
+      if (symbolMinusOrPlus === '+') {
+        this.increaseValue(index, counter);
+      } else if (symbolMinusOrPlus === '-') {
+        this.reduceValue(index, counter);
       }
   }
 
