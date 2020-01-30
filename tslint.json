@@ -3,9 +3,15 @@
     "extends": [
         "tslint:recommended"
     ],
+    "linterOptions": {
+        "exclude": [
+            "node_modules/**"
+        ]
+    },
     "jsRules": {},
     "rules": {
         "quotemark": [true, "single", "avoid-escape"]
     },
     "rulesDirectory": []
+
 }
