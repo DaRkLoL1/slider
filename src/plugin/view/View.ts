@@ -1,7 +1,9 @@
+import autobind from 'autobind-decorator';
 import { Observer } from '../observer/Observer';
 import { ViewThumb } from './View-thumb';
 import { ViewTooltip } from './View-tooltip';
 
+@autobind
 class View extends Observer {
   private $item: JQuery<HTMLElement>;
   private sliderIndex: number;
@@ -78,7 +80,7 @@ class View extends Observer {
         this.thumb[count] = new ViewThumb(this.$item.find('.js-slider__thumb').eq(count), count, this.sliderIndex);
       }
       this.thumb[count].installValue( width / (max - min) * (values[count] - min), this.interval );
-      this.thumb[count].addSubscribers('moveThumb', this.updateValue.bind(this));
+      this.thumb[count].addSubscribers('moveThumb', this.updateValue);
     }
   }
 

@@ -1,6 +1,8 @@
+import autobind from 'autobind-decorator';
 import { Observer } from '../observer/Observer';
 import { ModelValues } from './Model-values';
 
+@autobind
 class Model extends Observer {
   private min: number;
   private max: number;

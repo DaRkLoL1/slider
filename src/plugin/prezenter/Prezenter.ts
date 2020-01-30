@@ -1,3 +1,4 @@
+import autobind from 'autobind-decorator';
 import { Model } from '../model/Model';
 import { View } from '../view/View';
 
@@ -17,11 +18,12 @@ class Prezenter {
   }
 
   public addForModelAndViewSubscribers() {
-    this.view.addSubscribers('changeView', this.model.updateValue.bind(this.model));
-    this.model.addSubscribers('changeModel', this.view.updateView.bind(this.view));
-    this.model.addSubscribers('changeModel', this.updateSlider.bind(this));
+    this.view.addSubscribers('changeView', this.model.updateValue);
+    this.model.addSubscribers('changeModel', this.view.updateView);
+    this.model.addSubscribers('changeModel', this.updateSlider);
   }
 
+  @autobind
   public updateSlider(obj: {values: number[]}): void {
     if (this.slideThumb) {
       this.slideThumb(obj.values);

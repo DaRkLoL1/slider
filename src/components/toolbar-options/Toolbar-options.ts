@@ -1,5 +1,7 @@
+import autobind from 'autobind-decorator';
 import { Observer } from '../../plugin/observer/Observer';
 
+@autobind
 class ToolbarOptions extends Observer {
   private $toolbarOptions: JQuery<HTMLElement>;
   private $startValue: JQuery<HTMLElement> | undefined;
@@ -95,32 +97,32 @@ class ToolbarOptions extends Observer {
 
   private addHandlesForValues(): void {
     if (this.$startValue && this.$endValue) {
-      this.$startValue.on(`change.startValue${this.index}`, this.handleValueChange.bind(this));
-      this.$endValue.on(`change.endValue${this.index}`, this.handleValueChange.bind(this));
+      this.$startValue.on(`change.startValue${this.index}`, this.handleValueChange);
+      this.$endValue.on(`change.endValue${this.index}`, this.handleValueChange);
     }
 
     if (this.$min) {
-      this.$min.on(`change.min${this.index}`, this.handleOptionsChange.bind(this));
+      this.$min.on(`change.min${this.index}`, this.handleOptionsChange);
     }
 
     if (this.$max) {
-      this.$max.on(`change.max${this.index}`, this.handleOptionsChange.bind(this));
+      this.$max.on(`change.max${this.index}`, this.handleOptionsChange);
     }
 
     if (this.$step) {
-      this.$step.on(`change.step${this.index}`, this.handleOptionsChange.bind(this));
+      this.$step.on(`change.step${this.index}`, this.handleOptionsChange);
     }
 
     if (this.$range) {
-      this.$range.on(`change.range${this.index}`, this.handleOptionsChange.bind(this));
+      this.$range.on(`change.range${this.index}`, this.handleOptionsChange);
     }
 
     if (this.$tooltip) {
-      this.$tooltip.on(`change.tooltip${this.index}`, this.handleOptionsChange.bind(this));
+      this.$tooltip.on(`change.tooltip${this.index}`, this.handleOptionsChange);
     }
 
     if (this.$position) {
-      this.$position.on(`change.position${this.index}`, this.handleOptionsChange.bind(this));
+      this.$position.on(`change.position${this.index}`, this.handleOptionsChange);
     }
   }
 

@@ -1,6 +1,8 @@
+import autobind from 'autobind-decorator';
 import '../../plugin/Slider';
 import { ToolbarOptions } from '../toolbar-options/Toolbar-options';
 
+@autobind
 class DemoPlugin {
   private $demoPlugin: JQuery<HTMLElement>;
   private toolbarOptions: ToolbarOptions;
@@ -37,7 +39,7 @@ class DemoPlugin {
       slide?(values: number[]): void;
     }
 
-    this.options.slide = this.toolbarOptions.getFunctionSlide.bind(this.toolbarOptions);
+    this.options.slide = this.toolbarOptions.getFunctionSlide;
     const options: IOptions = (this.$slider as any).myPlugin(this.options).data('options');
     this.toolbarOptions.setValuesInOptions(options);
   }
@@ -58,9 +60,10 @@ class DemoPlugin {
     this.options = options;
     this.init();
   }
+
   private subscribeOnEvent() {
-    this.toolbarOptions.addSubscribers('updateStartAndEndValue', this.setValues.bind(this));
-    this.toolbarOptions.addSubscribers('updateOptions', this.setOptions.bind(this));
+    this.toolbarOptions.addSubscribers('updateStartAndEndValue', this.setValues);
+    this.toolbarOptions.addSubscribers('updateOptions', this.setOptions);
   }
 }
 

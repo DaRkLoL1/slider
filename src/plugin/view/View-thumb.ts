@@ -1,5 +1,7 @@
+import autobind from 'autobind-decorator';
 import { Observer } from '../observer/Observer';
 
+@autobind
 class ViewThumb extends Observer {
   private interval: number | undefined;
   private index: number;
@@ -38,7 +40,7 @@ class ViewThumb extends Observer {
   public addHandlersEvents() {
     this.$thumb.on(`dragstart.thumb${this.sliderIndex}`, this.handleThumbDragStart);
     $(document).on(`selectstart.document${this.sliderIndex}`, this.handleThumbDragStart);
-    this.$thumb.on(`mousedown.thumb${this.sliderIndex}`, this.handleThumbMouseDown.bind(this));
+    this.$thumb.on(`mousedown.thumb${this.sliderIndex}`, this.handleThumbMouseDown);
   }
 
   public handleThumbDragStart() {
@@ -47,9 +49,8 @@ class ViewThumb extends Observer {
 
   public handleThumbMouseDown(event: Event) {
     this.target = (event.currentTarget as Element);
-    this.handleDocumentMouseMove = this.handleDocumentMouseMove.bind(this);
     document.addEventListener('mousemove', this.handleDocumentMouseMove);
-    document.addEventListener('mouseup', this.handleDocumentMouseUp.bind(this));
+    document.addEventListener('mouseup', this.handleDocumentMouseUp);
   }
 
   public handleDocumentMouseMove(event: MouseEvent) {
