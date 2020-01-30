@@ -1,19 +1,17 @@
 import autobind from 'autobind-decorator';
 import { Model } from '../model/Model';
+import { Observer } from '../observer/Observer';
 import { View } from '../view/View';
 
-class Prezenter {
+@autobind
+class Prezenter extends Observer {
   private view: View;
   private model: Model;
-  private slideThumb?: (num: number[]) => void;
 
-  constructor(model: Model, view: View, slideThumb?: (values: number[]) => void) {
+  constructor(model: Model, view: View) {
+    super();
     this.model = model;
     this.view = view;
-    if (slideThumb) {
-      this.slideThumb = slideThumb;
-    }
-
     this.addForModelAndViewSubscribers();
   }
 
@@ -23,11 +21,8 @@ class Prezenter {
     this.model.addSubscribers('changeModel', this.updateSlider);
   }
 
-  @autobind
-  public updateSlider(obj: {values: number[]}): void {
-    if (this.slideThumb) {
-      this.slideThumb(obj.values);
-    }
+  public updateSlider({values = [50]} = {}): void {
+    this.notifySubscribers('changeModel', values);
   }
 
   public setValues(num: number[]) {

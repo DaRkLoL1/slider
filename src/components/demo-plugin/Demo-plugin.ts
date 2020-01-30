@@ -15,7 +15,6 @@ class DemoPlugin {
     range?: boolean,
     tooltip?: boolean,
     values?: number[],
-    slide?(values: number[]): void,
   };
 
   constructor($demoPlugin: JQuery<HTMLElement>, index: number) {
@@ -36,11 +35,10 @@ class DemoPlugin {
       range: boolean;
       tooltip: boolean;
       values: number[];
-      slide?(values: number[]): void;
     }
 
-    this.options.slide = this.toolbarOptions.getFunctionSlide;
     const options: IOptions = (this.$slider as any).myPlugin(this.options).data('options');
+    this.toolbarOptions.subscribeOnEvent(this.$slider);
     this.toolbarOptions.setValuesInOptions(options);
   }
 

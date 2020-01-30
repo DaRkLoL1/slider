@@ -33,7 +33,11 @@ class ToolbarOptions extends Observer {
     this.$position = this.$toolbarOptions.find('.js-toolbar-options__position');
   }
 
-  public getFunctionSlide(values: number[]): void {
+  public subscribeOnEvent($slider: JQuery<HTMLElement>) {
+    $slider.data('prezenter').addSubscribers('changeModel', this.setValuesWhenSlidingThumb);
+  }
+
+  public setValuesWhenSlidingThumb(values: number[]): void {
     if (values.length > 1) {
       if (this.$startValue && this.$endValue) {
         this.$startValue.val(values[0]);

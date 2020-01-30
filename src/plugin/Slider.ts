@@ -27,7 +27,6 @@ import { View } from './view/View';
           step: number;
           tooltip: boolean;
           values: number[];
-          slide?: (values: number[]) => void;
         }
 
         const options: IOptions = $.extend({}, def, params);
@@ -40,7 +39,7 @@ import { View } from './view/View';
         options.values = $slider.data('model').getValue();
 
         $slider.data('view').createSlider(options);
-        $slider.data('prezenter', new Prezenter($slider.data('model'), $slider.data('view'), options.slide));
+        $slider.data('prezenter', new Prezenter($slider.data('model'), $slider.data('view')));
         $slider.data('options', options);
 
         sliderIndex += 1;
