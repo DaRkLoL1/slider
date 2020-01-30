@@ -53,4 +53,15 @@ describe('ViewThumb вертикальный вид', () => {
     thumb.reducePositionThumb(10, 200);
     expect(count).toEqual('+');
   });
+
+  it('вызвать handleDocumentMouseMove', () => {
+    const event = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      clientX: 100,
+      clientY: 100,
+    });
+
+    thumb.handleDocumentMouseMove(event);
+  });
 });
