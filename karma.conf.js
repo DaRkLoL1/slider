@@ -8,7 +8,7 @@ module.exports = function(config) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['jasmine-jquery', 'jasmine'],
+        frameworks: ['jasmine-jquery', 'jasmine', 'fixture'],
 
         // list of files / patterns to load in the browser
         files: ['test/*.ts'],
@@ -19,7 +19,8 @@ module.exports = function(config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'test/**/*.ts': ['webpack']
+            'test/**/*.ts': ['webpack'],
+            'test/style.css': ['file-fixtures']
         },
         plugins: [
           '@metahub/karma-jasmine-jquery',

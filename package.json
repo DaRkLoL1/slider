@@ -22,6 +22,8 @@
     "karma-chrome-launcher": "^3.1.0",
     "karma-cli": "^2.0.0",
     "karma-coverage-istanbul-reporter": "^2.1.1",
+    "karma-file-fixtures-preprocessor": "^3.0.1",
+    "karma-fixture": "^0.2.6",
     "karma-jasmine": "^2.0.1",
     "karma-jquery": "^0.2.4",
     "karma-spec-reporter": "0.0.32",
