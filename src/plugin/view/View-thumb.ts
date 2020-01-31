@@ -5,14 +5,12 @@ import { Observer } from '../observer/Observer';
 class ViewThumb extends Observer {
   private interval: number | undefined;
   private index: number;
-  private sliderIndex: number;
   private target: Element | undefined;
   private width: number | undefined;
 
-  constructor(public $thumb: JQuery<HTMLElement>, index: number, sliderIndex: number) {
+  constructor(public $thumb: JQuery<HTMLElement>, index: number) {
     super();
     this.index = index;
-    this.sliderIndex = sliderIndex;
   }
 
   public installValue(value: number, interval: number): void {
@@ -38,9 +36,9 @@ class ViewThumb extends Observer {
   }
 
   public addHandlersEvents() {
-    this.$thumb.on(`dragstart.thumb${this.sliderIndex}`, this.handleThumbDragStart);
-    $(document).on(`selectstart.document${this.sliderIndex}`, this.handleThumbDragStart);
-    this.$thumb.on(`mousedown.thumb${this.sliderIndex}`, this.handleThumbMouseDown);
+    this.$thumb.on('dragstart.thumb', this.handleThumbDragStart);
+    $(document).on('selectstart.document', this.handleThumbDragStart);
+    this.$thumb.on('mousedown.thumb', this.handleThumbMouseDown);
   }
 
   public handleThumbDragStart() {

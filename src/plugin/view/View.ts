@@ -6,16 +6,14 @@ import { ViewTooltip } from './View-tooltip';
 @autobind
 class View extends Observer {
   private $item: JQuery<HTMLElement>;
-  private sliderIndex: number;
   private interval: number | undefined;
   private thumb: ViewThumb[] = [];
   private tooltip: ViewTooltip[] = [];
   private position: string | undefined;
 
-  constructor($item: JQuery<HTMLElement>, sliderIndex: number) {
+  constructor($item: JQuery<HTMLElement>) {
     super();
     this.$item = $item;
-    this.sliderIndex = sliderIndex;
   }
 
   public createSlider({
@@ -69,15 +67,11 @@ class View extends Observer {
           .append(
             '<div class="slider__thumb js-slider__thumb slider__thumb_vertical"></div>',
           );
-        this.thumb[count] = new ViewThumb(
-          this.$item.find('.js-slider__thumb').eq(count),
-          count,
-          this.sliderIndex,
-        );
+        this.thumb[count] = new ViewThumb(this.$item.find('.js-slider__thumb').eq(count), count);
       } else {
         this.$item.find('.js-slider__field')
           .append('<div class="slider__thumb js-slider__thumb"></div>');
-        this.thumb[count] = new ViewThumb(this.$item.find('.js-slider__thumb').eq(count), count, this.sliderIndex);
+        this.thumb[count] = new ViewThumb(this.$item.find('.js-slider__thumb').eq(count), count);
       }
       this.thumb[count].installValue( width / (max - min) * (values[count] - min), this.interval );
       this.thumb[count].addSubscribers('moveThumb', this.updateValue);

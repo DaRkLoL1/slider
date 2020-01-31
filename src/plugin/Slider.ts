@@ -3,8 +3,6 @@ import { Prezenter } from './prezenter/Prezenter';
 import { View } from './view/View';
 
 (function( $ ) {
-  let sliderIndex = 0;
-
   const def = {
     max: 100,
     min: 0,
@@ -31,7 +29,7 @@ import { View } from './view/View';
 
         const options: IOptions = $.extend({}, def, params);
         $slider.data('model', new Model(options));
-        $slider.data('view', new View($slider, sliderIndex));
+        $slider.data('view', new View($slider));
 
         options.min = $slider.data('model').getMin();
         options.max = $slider.data('model').getMax();
@@ -41,8 +39,6 @@ import { View } from './view/View';
         $slider.data('view').createSlider(options);
         $slider.data('prezenter', new Prezenter($slider.data('model'), $slider.data('view')));
         $slider.data('options', options);
-
-        sliderIndex += 1;
 
         return $slider;
       },
