@@ -6,26 +6,6 @@ describe('Model', () => {
     model = new Model({min: 0, max: 100, step: 1, range: false, values: [0]});
   });
 
-  it('создать конструктор для присвоения min max и вернуть их', () => {
-    const min = model.getOptions().min;
-    const max = model.getOptions().max;
-    expect(min).toEqual(0);
-    expect(max).toEqual(100);
-  });
-
-  it('создать конструктор для присвоения min max и вернуть их', () => {
-    model = new Model({min: 20, max: 50, step: 1, range: false, values: [0]});
-    const min = model.getOptions().min;
-    const max = model.getOptions().max;
-    expect(min).toEqual(20);
-    expect(max).toEqual(50);
-  });
-
-  it('получить значение шага', () => {
-    const step: number = model.getOptions().step;
-    expect(step).toEqual(1);
-  });
-
   it('добавить 2 значение', () => {
     model = new Model({min: 20, max: 50, step: 1, range: true, values: [1, 2]});
     expect(model.getOptions().values).toEqual([20, 21]);
@@ -49,14 +29,14 @@ describe('Model', () => {
   });
 });
 
-describe('изменить значение из Model',  () => {
+describe('изменить значение Model',  () => {
   let model: Model;
   beforeEach(() => {
     model = new Model({min: 0, max: 100, step: 1, range: false, values: [0]});
     model.addSubscribers('changeModel', () => true);
   });
 
-  it('изменить значение из Model',  () => {
+  it('изменить значение Model',  () => {
     model.setValue([40]);
     expect(model.getOptions().values).toEqual([40]);
   });
@@ -79,23 +59,49 @@ describe('изменить значение из Model для 2 ModelValues', ()
     model.addSubscribers('changeModel', () => true);
   });
 
-  it('увеличить значение для 1 ModelValues', () => {
-    model.updateValue({symbolMinusOrPlus: '+', index: 0, counter: 1});
+  it('увеличить значение для 1 values', () => {
+    model.updateValue({symbolMinusOrPlus: '+', index: 0, counter: 10});
     expect(model.getOptions().values).toEqual([0, 1]);
   });
 
-  it('увеличить значение для 2 ModelValues', () => {
-    model.updateValue({symbolMinusOrPlus: '+', index: 1, counter: 1});
-    expect(model.getOptions().values).toEqual([0, 2]);
+  it('увеличить значение для 1 values', () => {
+    model = new Model({min: 0, max: 100, step: 1, range: true, values: [0, 100]});
+    model.addSubscribers('changeModel', () => true);
+    model.updateValue({symbolMinusOrPlus: '+', index: 0, counter: 10});
+    expect(model.getOptions().values).toEqual([10, 100]);
   });
 
-  it('уменьшить значение для 1 ModelValues', () => {
-    model.updateValue({symbolMinusOrPlus: '-', index: 0, counter: 1});
+  it('увеличить значение для 2 values', () => {
+    model.updateValue({symbolMinusOrPlus: '+', index: 1, counter: 10});
+    expect(model.getOptions().values).toEqual([0, 11]);
+  });
+
+  it('увеличить значение для 2 values', () => {
+    model.updateValue({symbolMinusOrPlus: '+', index: 1, counter: 101});
+    expect(model.getOptions().values).toEqual([0, 100]);
+  });
+
+  it('уменьшить значение для 1 values', () => {
+    model.updateValue({symbolMinusOrPlus: '-', index: 0, counter: 10});
     expect(model.getOptions().values).toEqual([0, 1]);
   });
 
-  it('уменьшить значение для 2 ModelValues', () => {
-    model.updateValue({symbolMinusOrPlus: '-', index: 1, counter: 1});
+  it('уменьшить значение для 1 values', () => {
+    model = new Model({min: 0, max: 100, step: 1, range: true, values: [50, 100]});
+    model.addSubscribers('changeModel', () => true);
+    model.updateValue({symbolMinusOrPlus: '-', index: 0, counter: 10});
+    expect(model.getOptions().values).toEqual([40, 100]);
+  });
+
+  it('уменьшить значение для 2 values', () => {
+    model = new Model({min: 0, max: 100, step: 1, range: true, values: [0, 100]});
+    model.addSubscribers('changeModel', () => true);
+    model.updateValue({symbolMinusOrPlus: '-', index: 1, counter: 10});
+    expect(model.getOptions().values).toEqual([0, 90]);
+  });
+
+  it('уменьшить значение для 2 values', () => {
+    model.updateValue({symbolMinusOrPlus: '-', index: 1, counter: 10});
     expect(model.getOptions().values).toEqual([0, 1]);
   });
 });

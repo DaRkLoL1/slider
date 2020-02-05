@@ -10,7 +10,7 @@ class Observer {
     this.subscribers[eventName].push(func);
   }
 
-  protected notifySubscribers(eventName: string, data: any) {
+  public notifySubscribers(eventName: string, data: any) {
     this.subscribers[eventName].forEach((item) => {
       item(data);
     });
