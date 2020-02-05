@@ -1,6 +1,5 @@
 import { Prezenter } from './prezenter/Prezenter';
 
-(function( $ ) {
   const def = {
     max: 100,
     min: 0,
@@ -64,4 +63,3 @@ import { Prezenter } from './prezenter/Prezenter';
       return methods.init(this, method);
     }
   };
-})(jQuery);
