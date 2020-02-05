@@ -1,6 +1,4 @@
-import { Model } from './model/Model';
 import { Prezenter } from './prezenter/Prezenter';
-import { View } from './view/View';
 
 (function( $ ) {
   const def = {
@@ -28,34 +26,40 @@ import { View } from './view/View';
         }
 
         const options: IOptions = $.extend({}, def, params);
-        $slider.data('model', new Model(options));
-        $slider.data('view', new View($slider));
-
-        options.min = $slider.data('model').getMin();
-        options.max = $slider.data('model').getMax();
-        options.step = $slider.data('model').getStep();
-        options.values = $slider.data('model').getValue();
-
-        $slider.data('view').createSlider(options);
-        $slider.data('prezenter', new Prezenter($slider.data('model'), $slider.data('view')));
-        $slider.data('options', options);
+        $slider.data('prezenter', new Prezenter($slider, options));
+        $slider.data('options', {...options, ...$slider.data('prezenter').getModelOptions()});
 
         return $slider;
       },
 
       value($slider: JQuery<HTMLElement>, values: number[]) {
         if (typeof values === 'undefined') {
-          return $slider.data('model').getValue();
+          return $slider.data('prezenter').getValues();
         } else {
           $slider.data('prezenter').setValues(values);
           return this;
         }
       },
+
+      slide($slider: JQuery<HTMLElement>, func: (values: number[]) => void) {
+        $slider.data('prezenter').addSubscribers('changeModel', func);
+        if (typeof func === 'undefined') {
+          return this
+        } else {
+          $slider.data('prezenter').addSubscribers('changeModel', func);
+          return this;
+        }
+      }
     };
 
-    if (typeof method === 'string' && (method === 'value') ) {
+    if (typeof method === 'string' && (method === 'value')) {
       return methods[method].call(this, this, arguments[1]);
     }
+
+    if (typeof method === 'string' && (method === 'slide')) {
+      methods[method].call(this, this, arguments[1]);
+    }
+
     if ( typeof method === 'object' || !method ) {
       return methods.init(this, method);
     }

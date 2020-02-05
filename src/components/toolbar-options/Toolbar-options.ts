@@ -34,7 +34,7 @@ class ToolbarOptions extends Observer {
   }
 
   public subscribeOnEvent($slider: JQuery<HTMLElement>) {
-    $slider.data('prezenter').addSubscribers('changeModel', this.setValuesWhenSlidingThumb);
+    ($slider as any).myPlugin('slide', this.setValuesWhenSlidingThumb);
   }
 
   public setValuesWhenSlidingThumb(values: number[]): void {

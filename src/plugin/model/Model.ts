@@ -57,20 +57,18 @@ class Model extends Observer {
     this.checkValue(values);
   }
 
-  public getMin(): number {
-    return this.min;
-  }
-
-  public getMax(): number {
-    return this.max;
-  }
-
-  public getStep(): number {
-    return this.step;
-  }
-
-  public getValue(): number[] {
-    return this.values;
+  public getOptions(): {
+    min: number;
+    max: number;
+    step: number;
+    values: number[];
+  } {
+    return {
+      min: this.min,
+      max: this.max,
+      step: this.step,
+      values: this.values,
+    }
   }
 
   public checkValue(values: number[]): void {
@@ -187,12 +185,7 @@ class Model extends Observer {
   }
 
   public handleModelChangeModel(): void {
-    this.notifySubscribers('changeModel', {
-      max: this.getMax(),
-      min : this.getMin(),
-      step: this.getStep(),
-      values: this.getValue(),
-    });
+    this.notifySubscribers('changeModel', this.getOptions());
   }
 }
 

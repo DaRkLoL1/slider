@@ -8,10 +8,19 @@ class Prezenter extends Observer {
   private view: View;
   private model: Model;
 
-  constructor(model: Model, view: View) {
+  constructor($slider: JQuery<HTMLElement>, options: {
+    max: number;
+    min: number;
+    position: string;
+    range: boolean;
+    step: number;
+    tooltip: boolean;
+    values: number[];
+  }) {
     super();
-    this.model = model;
-    this.view = view;
+    this.model = new Model(options);
+    this.view = new View($slider);
+    this.view.createSlider({...options, ...this.model.getOptions()});
     this.addForModelAndViewSubscribers();
   }
 
@@ -23,6 +32,20 @@ class Prezenter extends Observer {
 
   public updateSlider({values = [50]} = {}): void {
     this.notifySubscribers('changeModel', values);
+  }
+
+  public getModelOptions() : {
+    min: number;
+    max: number;
+    step: number;
+    values: number[];
+  } {
+    return this.model.getOptions();
+  }
+
+  public getValues(): number[] {
+    const options = this.model.getOptions();
+    return options.values;
   }
 
   public setValues(num: number[]) {
