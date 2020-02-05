@@ -19,7 +19,7 @@ class Model extends Observer {
     this.createModelValues(options.range, options.values);
   }
 
-  public checkMinMaxStep(options: {min: number, max: number, step: number}): void {
+  private checkMinMaxStep(options: {min: number, max: number, step: number}): void {
     if (Number.isNaN(options.min)) {
       options.min = 0;
     }
@@ -37,7 +37,7 @@ class Model extends Observer {
     }
   }
 
-  public addMaxValue() {
+  private addMaxValue() {
     let count = this.max;
     if ((count - this.min) % this.step !== 0) {
       count -= (count - this.min) % this.step;
@@ -45,7 +45,7 @@ class Model extends Observer {
     return count;
   }
 
-  public createModelValues(range: boolean, values: number[]): void {
+  private createModelValues(range: boolean, values: number[]): void {
     if (range) {
       for (let i = 0; i < 2; i += 1) {
         this.values.push(0);
@@ -71,13 +71,13 @@ class Model extends Observer {
     }
   }
 
-  public checkValue(values: number[]): void {
+  private checkValue(values: number[]): void {
     this.checkValueOnNaN(values);
     this.checkValueOnPossibleValues(values);
     this.checkValueOnBoundaryValues(values);
   }
 
-  public checkValueOnBoundaryValues(values: number[]): void {
+  private checkValueOnBoundaryValues(values: number[]): void {
     if (this.values.length > 1) {
       if (values[0] <= this.min) {
         values[0] = this.min;
@@ -104,7 +104,7 @@ class Model extends Observer {
     }
   }
 
-  public checkValueOnPossibleValues(values: number[]): void {
+  private checkValueOnPossibleValues(values: number[]): void {
     values.forEach((value: number, index: number) => {
       if ((value - this.min) % this.step !== 0) {
         value -= (value - this.min) % this.step;
@@ -113,7 +113,7 @@ class Model extends Observer {
     });
   }
 
-  public checkValueOnNaN(values: number[]): void {
+  private checkValueOnNaN(values: number[]): void {
     values.forEach((value, index) => {
       if (Number.isNaN(value)) {
         values[index] = this.min;
@@ -126,7 +126,7 @@ class Model extends Observer {
     this.notifySubscribers('changeModel', this.getOptions());
   }
 
-  public increaseValue(index: number, counter: number): void {
+  private increaseValue(index: number, counter: number): void {
     const count: number = this.values[index]  + this.step * counter;
 
     if (this.values.length > 1) {
@@ -155,7 +155,7 @@ class Model extends Observer {
     this.notifySubscribers('changeModel', this.getOptions());
   }
 
-  public reduceValue(index: number, counter: number): void {
+  private reduceValue(index: number, counter: number): void {
     const count = this.values[index] - this.step * counter;
 
     if (index === 0) {

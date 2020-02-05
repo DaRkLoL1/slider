@@ -35,23 +35,23 @@ class ViewThumb extends Observer {
     }
   }
 
-  public addHandlersEvents() {
+  private addHandlersEvents() {
     this.$thumb.on('dragstart.thumb', this.handleThumbDragStart);
     $(document).on('selectstart.document', this.handleThumbDragStart);
     this.$thumb.on('mousedown.thumb', this.handleThumbMouseDown);
   }
 
-  public handleThumbDragStart() {
+  private handleThumbDragStart() {
     return false;
   }
 
-  public handleThumbMouseDown(event: Event) {
+  private handleThumbMouseDown(event: Event) {
     this.target = (event.currentTarget as Element);
     document.addEventListener('mousemove', this.handleDocumentMouseMove);
     document.addEventListener('mouseup', this.handleDocumentMouseUp);
   }
 
-  public handleDocumentMouseMove(event: MouseEvent) {
+  private handleDocumentMouseMove(event: MouseEvent) {
     let coordinate: number;
     if (this.$thumb.hasClass('slider__thumb_vertical')) {
       coordinate =  event.clientY;
@@ -72,7 +72,7 @@ class ViewThumb extends Observer {
     }
   }
 
-  public increasePositionThumb(coordinate: number, thumbLeft: number) {
+  private increasePositionThumb(coordinate: number, thumbLeft: number) {
     if (this.interval) {
       if (coordinate >= (thumbLeft + this.interval / 2)) {
         let symbolMinusOrPlus: string = '';
@@ -92,7 +92,7 @@ class ViewThumb extends Observer {
     }
   }
 
-  public reducePositionThumb(coordinate: number, thumbLeft: number) {
+  private reducePositionThumb(coordinate: number, thumbLeft: number) {
     if (this.interval) {
       if (coordinate <= (thumbLeft - this.interval / 2)) {
         let symbolMinusOrPlus: string = '';
@@ -111,7 +111,7 @@ class ViewThumb extends Observer {
     }
   }
 
-  public handleDocumentMouseUp() {
+  private handleDocumentMouseUp() {
     document.removeEventListener('mousemove', this.handleDocumentMouseMove);
     document.removeEventListener('mouseup', this.handleDocumentMouseUp);
   }

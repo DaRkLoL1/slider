@@ -22,7 +22,7 @@ class ToolbarOptions extends Observer {
     this.addHandlesForValues();
   }
 
-  public initOptions(): void {
+  private initOptions(): void {
     this.$startValue = this.$toolbarOptions.find('.js-toolbar-options__start-value');
     this.$endValue = this.$toolbarOptions.find('.js-toolbar-options__end-value');
     this.$min = this.$toolbarOptions.find('.js-toolbar-options__min');
@@ -37,7 +37,7 @@ class ToolbarOptions extends Observer {
     ($slider as any).myPlugin('slide', this.setValuesWhenSlidingThumb);
   }
 
-  public setValuesWhenSlidingThumb(values: number[]): void {
+  private setValuesWhenSlidingThumb(values: number[]): void {
     if (values.length > 1) {
       if (this.$startValue && this.$endValue) {
         this.$startValue.val(values[0]);

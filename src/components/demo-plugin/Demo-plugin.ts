@@ -26,7 +26,7 @@ class DemoPlugin {
     this.subscribeOnEvent();
   }
 
-  public init() {
+  private init() {
     interface IOptions {
       min: number;
       max: number;
@@ -42,11 +42,11 @@ class DemoPlugin {
     this.toolbarOptions.setValuesInOptions(options);
   }
 
-  public setValues(values: number[]): void {
+  private setValues(values: number[]): void {
     (this.$slider as any).myPlugin('value', values);
   }
 
-  public setOptions(options: {
+  private setOptions(options: {
     min?: number,
     max?: number,
     step?: number,

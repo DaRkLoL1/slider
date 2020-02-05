@@ -24,13 +24,13 @@ class Prezenter extends Observer {
     this.addForModelAndViewSubscribers();
   }
 
-  public addForModelAndViewSubscribers() {
+  private addForModelAndViewSubscribers() {
     this.view.addSubscribers('changeView', this.model.updateValue);
     this.model.addSubscribers('changeModel', this.view.updateView);
     this.model.addSubscribers('changeModel', this.updateSlider);
   }
 
-  public updateSlider({values = [50]} = {}): void {
+  private updateSlider({values = [50]} = {}): void {
     this.notifySubscribers('changeModel', values);
   }
 

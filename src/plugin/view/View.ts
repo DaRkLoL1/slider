@@ -48,7 +48,7 @@ class View extends Observer {
     }
   }
 
-  public createSliderThumbs(width: number, {
+  private createSliderThumbs(width: number, {
     max = 100,
     min = 0,
     range = false,
@@ -78,7 +78,7 @@ class View extends Observer {
     }
   }
 
-  public createSliderTooltips(width: number, {
+  private createSliderTooltips(width: number, {
     max = 100,
     min = 0,
     range = false,
@@ -103,7 +103,7 @@ class View extends Observer {
     }
   }
 
-  public checkPositionThumb(width: number) {
+  private checkPositionThumb(width: number) {
     let positionLeftThumb: number;
     const $field: JQuery<HTMLElement> = this.$item.find('.js-slider__field');
     const $leftThumb: JQuery<HTMLElement> = this.thumb[0].$thumb;
@@ -127,7 +127,7 @@ class View extends Observer {
     }
   }
 
-  public addBack($field: JQuery<HTMLElement>, $leftThumb: JQuery<HTMLElement>) {
+  private addBack($field: JQuery<HTMLElement>, $leftThumb: JQuery<HTMLElement>) {
     $field.append($leftThumb);
 
     if (this.tooltip.length > 0) {
@@ -135,7 +135,7 @@ class View extends Observer {
     }
   }
 
-  public addForward($field: JQuery<HTMLElement>, $leftThumb: JQuery<HTMLElement>) {
+  private addForward($field: JQuery<HTMLElement>, $leftThumb: JQuery<HTMLElement>) {
     $field.prepend($leftThumb);
 
     if (this.tooltip.length > 0) {
@@ -167,7 +167,7 @@ class View extends Observer {
     });
   }
 
-  public updateValue(options: {symbolMinusOrPlus: string, counter: number, index: number}): void {
+  private updateValue(options: {symbolMinusOrPlus: string, counter: number, index: number}): void {
     this.notifySubscribers('changeView', options);
   }
 }
