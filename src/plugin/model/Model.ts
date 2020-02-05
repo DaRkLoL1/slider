@@ -1,6 +1,5 @@
 import autobind from 'autobind-decorator';
 import { Observer } from '../observer/Observer';
-import { ModelValues } from './Model-values';
 
 @autobind
 class Model extends Observer {
@@ -8,7 +7,7 @@ class Model extends Observer {
   private max: number;
   private maxValue: number;
   private step: number;
-  private handle: ModelValues[] = [];
+  private values: number[] = [];
 
   constructor(options: {min: number, max: number, range: boolean, step: number, values: number[]}) {
     super();
@@ -49,10 +48,10 @@ class Model extends Observer {
   public createModelValues(range: boolean, values: number[]): void {
     if (range) {
       for (let i = 0; i < 2; i += 1) {
-        this.handle.push(new ModelValues());
+        this.values.push(0);
       }
     } else {
-      this.handle.push(new ModelValues());
+      this.values.push(0);
     }
 
     this.checkValue(values);
@@ -71,12 +70,7 @@ class Model extends Observer {
   }
 
   public getValue(): number[] {
-    const values: number[] = [];
-    this.handle.forEach((item) => {
-      values.push(item.getValue());
-    });
-
-    return values;
+    return this.values;
   }
 
   public checkValue(values: number[]): void {
@@ -86,7 +80,7 @@ class Model extends Observer {
   }
 
   public checkValueOnBoundaryValues(values: number[]): void {
-    if (this.handle.length > 1) {
+    if (this.values.length > 1) {
       if (values[0] <= this.min) {
         values[0] = this.min;
       } else if (values[0] >= this.maxValue) {
@@ -99,23 +93,16 @@ class Model extends Observer {
         values[1] = this.maxValue;
       }
 
-      this.handle[0].setValue({
-        max : this.maxValue,
-        min: this.min,
-        value: values[0],
-      });
-
-      this.handle[1].setValue({
-        max : this.maxValue,
-        min: this.min,
-        value: values[1],
-      });
+      this.values[0] = values[0];
+      this.values[1] = values[1];
     } else {
-      this.handle[0].setValue({
-        max : this.maxValue,
-        min: this.min,
-        value: values[0],
-      });
+      if (values[0] <= this.min) {
+        values[0] = this.min;
+      } else if (values[0] >= this.maxValue) {
+        values[0] = this.maxValue;
+      }
+
+      this.values[0] = values[0];
     }
   }
 
@@ -142,38 +129,50 @@ class Model extends Observer {
   }
 
   public increaseValue(index: number, counter: number): void {
-    if (this.handle.length > 1) {
-      const rightHandle: ModelValues | undefined = this.handle[index + 1];
-      if (!rightHandle) {
-        this.handle[index].increaseValue({
-          counter,
-          max: this.maxValue,
-          step: this.step,
-          });
+    const count: number = this.values[index]  + this.step * counter;
+
+    if (this.values.length > 1) {
+      const rightValue: number | undefined = this.values[index + 1];
+      if (!rightValue) {
+        if (count > this.maxValue) {
+          this.values[index] = this.maxValue;
+        } else {
+          this.values[index] = count;
+        }
       } else {
-        this.handle[index].increaseValue({
-          counter,
-          max: rightHandle.getValue() - this.step,
-          step: this.step,
-        });
+        if (count > (rightValue - this.step)) {
+        this.values[index] = rightValue - this.step;
+        } else {
+        this.values[index] = count;
+        }
       }
     } else {
-      this.handle[index].increaseValue({
-        counter,
-        max: this.maxValue,
-        step: this.step,
-      });
+      if (count > this.maxValue) {
+        this.values[index] = this.maxValue;
+      } else {
+        this.values[index] = count;
+      }
     }
 
     this.handleModelChangeModel();
   }
 
   public reduceValue(index: number, counter: number): void {
+    const count = this.values[index] - this.step * counter;
+
     if (index === 0) {
-      this.handle[index].reduceValue({min: this.min, step: this.step, counter});
+      if (count < this.min) {
+        this.values[index] = this.min;
+      } else {
+        this.values[index] = count;
+      }
     } else {
-      const leftHandle: ModelValues = this.handle[index - 1];
-      this.handle[index].reduceValue({min: leftHandle.getValue() + this.step, step: this.step, counter});
+      const leftValue: number = this.values[index - 1];
+      if (count < (leftValue + this.step)) {
+        this.values[index] = leftValue + this.step;
+      } else {
+        this.values[index] = count;
+      }
     }
 
     this.handleModelChangeModel();
