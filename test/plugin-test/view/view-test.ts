@@ -11,26 +11,12 @@ describe('view',  () => {
 
     $item  = $('.root');
     $item.css('width', 500);
-    dom = new View($item, 0);
+    dom = new View($item);
     dom.createSlider();
-  });
-
-  it('добавить бегунок', () => {
-    dom.createSliderThumbs(500);
-    expect($('.slider__thumb')).toExist();
   });
 
   it('добавить значения', ()  => {
     expect($('.slider__thumb').css('left')).toEqual('240px');
-  });
-
-  it('добавить подсказку', () => {
-    dom.createSliderTooltips(500);
-    const tooltip = $('.slider__tooltip');
-
-    expect(tooltip).toExist();
-    expect(tooltip.css('left')).toEqual('235px');
-    expect(tooltip.text()).toEqual('50');
   });
 
   it('updateView default', () => {
@@ -60,7 +46,7 @@ describe('viewVertical', () => {
     setStyleFixtures(css);
     $item  = $('.root');
     $item.css('height', 500);
-    dom = new View($item, 0);
+    dom = new View($item);
     dom.createSlider({position: 'vertical'});
   });
 
@@ -107,7 +93,7 @@ describe('view',  () => {
 
     $item  = $('.root');
     $item.css('width', 500);
-    dom = new View($item, 0);
+    dom = new View($item);
     dom.createSlider(
       {
         range: true,
@@ -146,7 +132,7 @@ describe('viewVertical c 2 значениями', () => {
     setStyleFixtures(css);
     $item  = $('.root');
     $item.css('height', 500);
-    dom = new View($item, 0);
+    dom = new View($item);
     dom.createSlider(
       {
         position: 'vertical',
