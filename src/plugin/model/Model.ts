@@ -123,7 +123,7 @@ class Model extends Observer {
 
   public setValue(values: number[]): void {
     this.checkValue(values);
-    this.handleModelChangeModel();
+    this.notifySubscribers('changeModel', this.getOptions());
   }
 
   public increaseValue(index: number, counter: number): void {
@@ -152,7 +152,7 @@ class Model extends Observer {
       }
     }
 
-    this.handleModelChangeModel();
+    this.notifySubscribers('changeModel', this.getOptions());
   }
 
   public reduceValue(index: number, counter: number): void {
@@ -173,7 +173,7 @@ class Model extends Observer {
       }
     }
 
-    this.handleModelChangeModel();
+    this.notifySubscribers('changeModel', this.getOptions());
   }
 
   public updateValue({symbolMinusOrPlus =  '+', counter = 1, index = 0} = {}): void {
@@ -182,10 +182,6 @@ class Model extends Observer {
       } else if (symbolMinusOrPlus === '-') {
         this.reduceValue(index, counter);
       }
-  }
-
-  public handleModelChangeModel(): void {
-    this.notifySubscribers('changeModel', this.getOptions());
   }
 }
 
