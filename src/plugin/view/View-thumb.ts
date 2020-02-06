@@ -5,7 +5,6 @@ import { Observer } from '../observer/Observer';
 class ViewThumb extends Observer {
   private interval: number | undefined;
   private index: number;
-  private target: Element | undefined;
   private width: number | undefined;
 
   constructor(public $thumb: JQuery<HTMLElement>, index: number) {
@@ -87,7 +86,7 @@ class ViewThumb extends Observer {
     }
   }
 
-  private calculateDistance(): number | undefined {
+  public calculateDistance(): number | undefined {
     const distances = this.$thumb.offset();
     let distanceToPage: number | undefined;
 
@@ -102,7 +101,7 @@ class ViewThumb extends Observer {
     return distanceToPage
   }
 
-  private increasePositionThumb(coordinate: number, distanceToPage: number) {
+  public increasePositionThumb(coordinate: number, distanceToPage: number) {
     if (this.interval) {
       if (coordinate >= (distanceToPage + this.interval / 2)) {
         let symbolMinusOrPlus: string = '';
@@ -122,7 +121,7 @@ class ViewThumb extends Observer {
     }
   }
 
-  private reducePositionThumb(coordinate: number, distanceToPage: number) {
+  public reducePositionThumb(coordinate: number, distanceToPage: number) {
     if (this.interval) {
       if (coordinate <= (distanceToPage - this.interval / 2)) {
         let symbolMinusOrPlus: string = '';

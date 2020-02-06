@@ -46,6 +46,8 @@ class View extends Observer {
         this.checkPositionThumb(width);
       }
     }
+
+    this.addHandlerEvent();
   }
 
   public updateView({min = 0, max = 100, values = [50], step = 1} = {}): void {
@@ -164,6 +166,42 @@ class View extends Observer {
 
     if (this.tooltip.length > 0) {
       $field.prepend(this.tooltip[0].$tooltip);
+    }
+  }
+
+  private addHandlerEvent() {
+    this.$item.find('.js-slider__field').on('click', this.handleFieldClick)
+  }
+
+  private handleFieldClick(event: any) {
+    const $target: JQuery<HTMLElement> = $(event.currentTarget);
+    let coordinate: number;
+    if ($target.hasClass('slider__field_vertical')) {
+      coordinate =  event.pageY;
+    } else {
+      coordinate =  event.pageX;
+    }
+
+    if (this.thumb.length > 1) {
+      const distanceLeftThumb: number | undefined = this.thumb[0].calculateDistance();
+      const distanceRightThumb:  number | undefined = this.thumb[1].calculateDistance();
+      if (distanceLeftThumb && distanceRightThumb) {
+        const countLeft: number = Math.abs(distanceLeftThumb - coordinate);
+        const countRight: number = Math.abs(distanceRightThumb - coordinate);
+        if (countLeft <= countRight) {
+          this.thumb[0].increasePositionThumb(coordinate, distanceLeftThumb);
+          this.thumb[0].reducePositionThumb(coordinate, distanceLeftThumb);
+        } else {
+          this.thumb[1].increasePositionThumb(coordinate, distanceRightThumb);
+          this.thumb[1].reducePositionThumb(coordinate, distanceRightThumb);
+        }
+      }
+    } else {
+      const distanceLeftThumb: number | undefined = this.thumb[0].calculateDistance();
+      if (distanceLeftThumb) {
+        this.thumb[0].increasePositionThumb(coordinate, distanceLeftThumb);
+        this.thumb[0].reducePositionThumb(coordinate, distanceLeftThumb);
+      }
     }
   }
 
