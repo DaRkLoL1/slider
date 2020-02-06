@@ -22,32 +22,8 @@ class ToolbarOptions extends Observer {
     this.addHandlesForValues();
   }
 
-  private initOptions(): void {
-    this.$startValue = this.$toolbarOptions.find('.js-toolbar-options__start-value');
-    this.$endValue = this.$toolbarOptions.find('.js-toolbar-options__end-value');
-    this.$min = this.$toolbarOptions.find('.js-toolbar-options__min');
-    this.$max = this.$toolbarOptions.find('.js-toolbar-options__max');
-    this.$step = this.$toolbarOptions.find('.js-toolbar-options__step');
-    this.$range = this.$toolbarOptions.find('.js-toolbar-options__range');
-    this.$tooltip = this.$toolbarOptions.find('.js-toolbar-options__tooltip');
-    this.$position = this.$toolbarOptions.find('.js-toolbar-options__position');
-  }
-
   public subscribeOnEvent($slider: JQuery<HTMLElement>) {
     ($slider as any).myPlugin('slide', this.setValuesWhenSlidingThumb);
-  }
-
-  private setValuesWhenSlidingThumb(values: number[]): void {
-    if (values.length > 1) {
-      if (this.$startValue && this.$endValue) {
-        this.$startValue.val(values[0]);
-        this.$endValue.val(values[1]);
-      }
-    } else {
-      if (this.$startValue) {
-      this.$startValue.val(values[0]);
-      }
-    }
   }
 
   public setValuesInOptions(options: {
@@ -95,6 +71,30 @@ class ToolbarOptions extends Observer {
         this.$endValue.val(options.values[1]);
       } else {
         this.$startValue.val(options.values[0]);
+      }
+    }
+  }
+
+  private initOptions(): void {
+    this.$startValue = this.$toolbarOptions.find('.js-toolbar-options__start-value');
+    this.$endValue = this.$toolbarOptions.find('.js-toolbar-options__end-value');
+    this.$min = this.$toolbarOptions.find('.js-toolbar-options__min');
+    this.$max = this.$toolbarOptions.find('.js-toolbar-options__max');
+    this.$step = this.$toolbarOptions.find('.js-toolbar-options__step');
+    this.$range = this.$toolbarOptions.find('.js-toolbar-options__range');
+    this.$tooltip = this.$toolbarOptions.find('.js-toolbar-options__tooltip');
+    this.$position = this.$toolbarOptions.find('.js-toolbar-options__position');
+  }
+
+  private setValuesWhenSlidingThumb(values: number[]): void {
+    if (values.length > 1) {
+      if (this.$startValue && this.$endValue) {
+        this.$startValue.val(values[0]);
+        this.$endValue.val(values[1]);
+      }
+    } else {
+      if (this.$startValue) {
+      this.$startValue.val(values[0]);
       }
     }
   }

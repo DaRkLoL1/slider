@@ -48,6 +48,30 @@ class View extends Observer {
     }
   }
 
+  public updateView({min = 0, max = 100, values = [50], step = 1} = {}): void {
+    let width: number | undefined;
+
+    if (this.position === 'vertical') {
+      width = this.$item.height();
+    } else {
+      width = this.$item.width();
+    }
+
+    this.thumb.forEach((item, index) => {
+      if (typeof width === 'number' && typeof this.thumb && typeof this.interval === 'number') {
+        this.interval = width / (max - min) * step;
+
+        this.thumb[index].updateThumb( width / (max - min) * (values[index] - min), this.interval );
+
+        if (this.tooltip.length > 0) {
+          this.tooltip[index].setTooltip(width / (max - min) * (values[index] - min), values[index]);
+        }
+
+        this.checkPositionThumb(width);
+      }
+    });
+  }
+
   private createSliderThumbs(width: number, {
     max = 100,
     min = 0,
@@ -141,30 +165,6 @@ class View extends Observer {
     if (this.tooltip.length > 0) {
       $field.prepend(this.tooltip[0].$tooltip);
     }
-  }
-
-  public updateView({min = 0, max = 100, values = [50], step = 1} = {}): void {
-    let width: number | undefined;
-
-    if (this.position === 'vertical') {
-      width = this.$item.height();
-    } else {
-      width = this.$item.width();
-    }
-
-    this.thumb.forEach((item, index) => {
-      if (typeof width === 'number' && typeof this.thumb && typeof this.interval === 'number') {
-        this.interval = width / (max - min) * step;
-
-        this.thumb[index].updateThumb( width / (max - min) * (values[index] - min), this.interval );
-
-        if (this.tooltip.length > 0) {
-          this.tooltip[index].setTooltip(width / (max - min) * (values[index] - min), values[index]);
-        }
-
-        this.checkPositionThumb(width);
-      }
-    });
   }
 
   private updateValue(options: {symbolMinusOrPlus: string, counter: number, index: number}): void {

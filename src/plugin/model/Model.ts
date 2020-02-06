@@ -19,6 +19,28 @@ class Model extends Observer {
     this.createModelValues(options.range, options.values);
   }
 
+  public getOptions(): {
+    min: number;
+    max: number;
+    step: number;
+    values: number[];
+  } {
+    return {
+      min: this.min,
+      max: this.max,
+      step: this.step,
+      values: this.values,
+    }
+  }
+
+  public updateValue({symbolMinusOrPlus =  '+', counter = 1, index = 0} = {}): void {
+    if (symbolMinusOrPlus === '+') {
+      this.increaseValue(index, counter);
+    } else if (symbolMinusOrPlus === '-') {
+      this.reduceValue(index, counter);
+    }
+  }
+
   private checkMinMaxStep(options: {min: number, max: number, step: number}): void {
     if (Number.isNaN(options.min)) {
       options.min = 0;
@@ -55,20 +77,6 @@ class Model extends Observer {
     }
 
     this.checkValue(values);
-  }
-
-  public getOptions(): {
-    min: number;
-    max: number;
-    step: number;
-    values: number[];
-  } {
-    return {
-      min: this.min,
-      max: this.max,
-      step: this.step,
-      values: this.values,
-    }
   }
 
   private checkValue(values: number[]): void {
@@ -174,14 +182,6 @@ class Model extends Observer {
     }
 
     this.notifySubscribers('changeModel', this.getOptions());
-  }
-
-  public updateValue({symbolMinusOrPlus =  '+', counter = 1, index = 0} = {}): void {
-      if (symbolMinusOrPlus === '+') {
-        this.increaseValue(index, counter);
-      } else if (symbolMinusOrPlus === '-') {
-        this.reduceValue(index, counter);
-      }
   }
 }
 

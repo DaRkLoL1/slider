@@ -24,16 +24,6 @@ class Prezenter extends Observer {
     this.addForModelAndViewSubscribers();
   }
 
-  private addForModelAndViewSubscribers() {
-    this.view.addSubscribers('changeView', this.model.updateValue);
-    this.model.addSubscribers('changeModel', this.view.updateView);
-    this.model.addSubscribers('changeModel', this.updateSlider);
-  }
-
-  private updateSlider({values = [50]} = {}): void {
-    this.notifySubscribers('changeModel', values);
-  }
-
   public getModelOptions() : {
     min: number;
     max: number;
@@ -50,6 +40,16 @@ class Prezenter extends Observer {
 
   public setValues(num: number[]) {
     this.model.setValue(num);
+  }
+
+  private addForModelAndViewSubscribers() {
+    this.view.addSubscribers('changeView', this.model.updateValue);
+    this.model.addSubscribers('changeModel', this.view.updateView);
+    this.model.addSubscribers('changeModel', this.updateSlider);
+  }
+
+  private updateSlider({values = [50]} = {}): void {
+    this.notifySubscribers('changeModel', values);
   }
 }
 

@@ -35,6 +35,28 @@ class ViewThumb extends Observer {
     }
   }
 
+  public updateThumb(value: number, interval: number): void {
+    this.interval = interval;
+
+    let width: number | undefined;
+
+    if (this.$thumb.hasClass('slider__thumb_vertical')) {
+      width  = this.$thumb.height();
+    } else {
+      width  = this.$thumb.width();
+    }
+
+    if (typeof width === 'number') {
+      const left: string = value - width / 2 + 'px';
+
+      if (this.$thumb.hasClass('slider__thumb_vertical')) {
+         this.$thumb.css('bottom', left);
+      } else {
+        this.$thumb.css('left', left);
+      }
+    }
+  }
+
   private addHandlersEvents() {
     this.$thumb.on('dragstart.thumb', this.handleThumbDragStart);
     $(document).on('selectstart.document', this.handleThumbDragStart);
@@ -114,28 +136,6 @@ class ViewThumb extends Observer {
   private handleDocumentMouseUp() {
     document.removeEventListener('mousemove', this.handleDocumentMouseMove);
     document.removeEventListener('mouseup', this.handleDocumentMouseUp);
-  }
-
-  public updateThumb(value: number, interval: number): void {
-    this.interval = interval;
-
-    let width: number | undefined;
-
-    if (this.$thumb.hasClass('slider__thumb_vertical')) {
-      width  = this.$thumb.height();
-    } else {
-      width  = this.$thumb.width();
-    }
-
-    if (typeof width === 'number') {
-      const left: string = value - width / 2 + 'px';
-
-      if (this.$thumb.hasClass('slider__thumb_vertical')) {
-         this.$thumb.css('bottom', left);
-      } else {
-        this.$thumb.css('left', left);
-      }
-    }
   }
 }
 
