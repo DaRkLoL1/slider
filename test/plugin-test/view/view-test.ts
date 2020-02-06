@@ -36,6 +36,10 @@ describe('view',  () => {
 
     dom.notifySubscribers('changeView', {});
   });
+
+  it ('call event click', () => {
+    $('.js-slider__field').click();
+  });
 });
 
 describe('viewVertical', () => {
@@ -82,6 +86,10 @@ describe('viewVertical', () => {
     expect(tooltip.css('bottom')).toEqual('185px');
     expect(tooltip.text()).toEqual('40');
   });
+
+  it ('call event click', () => {
+    $('.js-slider__field').click();
+  });
 });
 
 describe('view',  () => {
@@ -121,6 +129,10 @@ describe('view',  () => {
       },
     );
     expect($('.slider__thumb').length).toEqual(2);
+  });
+
+  it ('call event click', () => {
+    $('.js-slider__field').click();
   });
 });
 
