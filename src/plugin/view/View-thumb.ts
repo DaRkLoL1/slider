@@ -56,36 +56,6 @@ class ViewThumb extends Observer {
     }
   }
 
-  private addHandlersEvents() {
-    this.$thumb.on('dragstart.thumb', this.handleThumbDragStart);
-    $(document).on('selectstart.document', this.handleThumbDragStart);
-    this.$thumb.on('mousedown.thumb', this.handleThumbMouseDown);
-  }
-
-  private handleThumbDragStart() {
-    return false;
-  }
-
-  private handleThumbMouseDown() {
-    document.addEventListener('mousemove', this.handleDocumentMouseMove);
-    document.addEventListener('mouseup', this.handleDocumentMouseUp);
-  }
-
-  private handleDocumentMouseMove(event: MouseEvent) {
-    let coordinate: number;
-    if (this.$thumb.hasClass('slider__thumb_vertical')) {
-      coordinate =  event.pageY;
-    } else {
-      coordinate =  event.pageX;
-    }
-
-    const distanceToPage = this.calculateDistance();
-    if (distanceToPage) {
-      this.increasePositionThumb(coordinate, distanceToPage);
-      this.reducePositionThumb(coordinate, distanceToPage);
-    }
-  }
-
   public calculateDistance(): number | undefined {
     const distances = this.$thumb.offset();
     let distanceToPage: number | undefined;
@@ -138,6 +108,36 @@ class ViewThumb extends Observer {
 
         this.notifySubscribers('moveThumb', {symbolMinusOrPlus, counter, index: this.index});
       }
+    }
+  }
+
+  private addHandlersEvents() {
+    this.$thumb.on('dragstart.thumb', this.handleThumbDragStart);
+    $(document).on('selectstart.document', this.handleThumbDragStart);
+    this.$thumb.on('mousedown.thumb', this.handleThumbMouseDown);
+  }
+
+  private handleThumbDragStart() {
+    return false;
+  }
+
+  private handleThumbMouseDown() {
+    document.addEventListener('mousemove', this.handleDocumentMouseMove);
+    document.addEventListener('mouseup', this.handleDocumentMouseUp);
+  }
+
+  private handleDocumentMouseMove(event: MouseEvent) {
+    let coordinate: number;
+    if (this.$thumb.hasClass('slider__thumb_vertical')) {
+      coordinate =  event.pageY;
+    } else {
+      coordinate =  event.pageX;
+    }
+
+    const distanceToPage = this.calculateDistance();
+    if (distanceToPage) {
+      this.increasePositionThumb(coordinate, distanceToPage);
+      this.reducePositionThumb(coordinate, distanceToPage);
     }
   }
 
