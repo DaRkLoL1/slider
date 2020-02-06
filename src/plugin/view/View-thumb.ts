@@ -67,8 +67,7 @@ class ViewThumb extends Observer {
     return false;
   }
 
-  private handleThumbMouseDown(event: Event) {
-    this.target = (event.currentTarget as Element);
+  private handleThumbMouseDown() {
     document.addEventListener('mousemove', this.handleDocumentMouseMove);
     document.addEventListener('mouseup', this.handleDocumentMouseUp);
   }
@@ -76,27 +75,36 @@ class ViewThumb extends Observer {
   private handleDocumentMouseMove(event: MouseEvent) {
     let coordinate: number;
     if (this.$thumb.hasClass('slider__thumb_vertical')) {
-      coordinate =  event.clientY;
+      coordinate =  event.pageY;
     } else {
-      coordinate =  event.clientX;
+      coordinate =  event.pageX;
     }
 
-    let thumbLeft: number;
-    if (typeof this.width === 'number' && typeof this.interval === 'number' && this.target) {
-      if (this.$thumb.hasClass('slider__thumb_vertical')) {
-        thumbLeft = this.target.getBoundingClientRect().top + this.width / 2;
-      } else {
-        thumbLeft = this.target.getBoundingClientRect().left + this.width / 2;
-      }
-
-      this.increasePositionThumb(coordinate, thumbLeft);
-      this.reducePositionThumb(coordinate, thumbLeft);
+    const distanceToPage = this.calculateDistance();
+    if (distanceToPage) {
+      this.increasePositionThumb(coordinate, distanceToPage);
+      this.reducePositionThumb(coordinate, distanceToPage);
     }
   }
 
-  private increasePositionThumb(coordinate: number, thumbLeft: number) {
+  private calculateDistance(): number | undefined {
+    const distances = this.$thumb.offset();
+    let distanceToPage: number | undefined;
+
+    if (this.width && distances) {
+      if (this.$thumb.hasClass('slider__thumb_vertical')) {
+        distanceToPage = distances.top + this.width / 2;
+      } else {
+        distanceToPage = distances.left + this.width / 2;
+      }
+    }
+
+    return distanceToPage
+  }
+
+  private increasePositionThumb(coordinate: number, distanceToPage: number) {
     if (this.interval) {
-      if (coordinate >= (thumbLeft + this.interval / 2)) {
+      if (coordinate >= (distanceToPage + this.interval / 2)) {
         let symbolMinusOrPlus: string = '';
         if (this.$thumb.hasClass('slider__thumb_vertical')) {
           symbolMinusOrPlus = '-';
@@ -104,7 +112,7 @@ class ViewThumb extends Observer {
           symbolMinusOrPlus = '+';
         }
 
-        const width = coordinate - thumbLeft;
+        const width = coordinate - distanceToPage;
         let counter = 0;
         counter += Math.floor(width / this.interval);
         counter += Math.floor((width - counter * this.interval) / (this.interval / 2));
@@ -114,16 +122,17 @@ class ViewThumb extends Observer {
     }
   }
 
-  private reducePositionThumb(coordinate: number, thumbLeft: number) {
+  private reducePositionThumb(coordinate: number, distanceToPage: number) {
     if (this.interval) {
-      if (coordinate <= (thumbLeft - this.interval / 2)) {
+      if (coordinate <= (distanceToPage - this.interval / 2)) {
         let symbolMinusOrPlus: string = '';
         if (this.$thumb.hasClass('slider__thumb_vertical')) {
           symbolMinusOrPlus = '+';
         } else {
           symbolMinusOrPlus = '-';
         }
-        const width = thumbLeft - coordinate;
+
+        const width = distanceToPage - coordinate;
         let counter = 0;
         counter += Math.floor(width / this.interval);
         counter += Math.floor((width - counter * this.interval) / (this.interval / 2));
